@@ -1,0 +1,7 @@
+<h1>Add Line Item</h1>
+
+<p>Invoice: <%= @invoice.invoice_number %></p>
+
+<%= render "form", line_item: @line_item, url: invoice_line_items_path(@invoice) %>
+
+<%= link_to "Back to invoice", invoice_path(@invoice) %>

@@ -1,0 +1,47 @@
+<h1>Invoices</h1>
+
+<%= link_to "New invoice", new_invoice_path %>
+
+<% if @invoices.any? %>
+  <%# Group invoices by status in lifecycle order: draft → sent → paid → void. %>
+  <% { draft: 0, sent: 1, paid: 2, void: 3 }.each do |status, _| %>
+    <% group = @invoices.select { |i| i.status == status.to_s } %>
+    <% next if group.empty? %>
+
+    <section>
+      <h2><%= status.to_s.titleize %> (<%= group.size %>)</h2>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Number</th>
+            <th>Client</th>
+            <th>Issued</th>
+            <th>Due</th>
+            <th>Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% group.each do |invoice| %>
+            <tr>
+              <td><%= link_to invoice.invoice_number, invoice_path(invoice) %></td>
+              <td><%= invoice.client.name %></td>
+              <td><%= invoice.issued_on %></td>
+              <td><%= invoice.due_on %></td>
+              <td><%= number_to_currency(invoice.total / 100.0, unit: "€") %></td>
+              <td><%= invoice.status %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+      <p>
+        <strong>Group total:</strong>
+        <%= number_to_currency(group.sum(&:total) / 100.0, unit: "€") %>
+      </p>
+    </section>
+  <% end %>
+<% else %>
+  <p>No invoices yet. <%= link_to "Create your first invoice", new_invoice_path %>.</p>
+<% end %>

@@ -7,7 +7,14 @@ Rails.application.routes.draw do
 
   resources :clients
 
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+  resources :invoices, shallow: true do
+    resources :line_items, only: %i[new create edit update destroy]
+
+    # Status transitions — modelled as REST resources, not custom member actions.
+    resources :invoice_sends, only: %i[create]
+    resources :invoice_payments, only: %i[create]
+    resources :invoice_voids, only: %i[create]
+  end
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
   # Can be used by load balancers and uptime monitors to verify that the app is live.
@@ -17,6 +24,5 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Root path — we'll point this at invoices index once that exists
-  root "clients#index"
+  root "invoices#index"
 end

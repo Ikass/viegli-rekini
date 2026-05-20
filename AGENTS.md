@@ -8,22 +8,51 @@ Coding agent context for the Invoicio e-invoicing Rails app. Read this before ma
 
 A focused Rails 8 invoicing application. Single-user for now, but the data model is built for multi-tenancy. PostgreSQL. Deployed to Render.
 
-This is a portfolio project — code quality and architectural clarity matter as much as feature completeness.
+Portfolio project — code quality and architectural clarity matter as much as feature completeness.
 
 ---
 
 ## Stack
 
-- **Rails 8** — use modern Rails idioms; no legacy patterns
-- **PostgreSQL** — not SQLite; use `structure.sql` (already configured)
-- **Hotwire** — Turbo for navigation and form submissions; Stimulus for any JS behaviour
-- **Vanilla CSS** — no Tailwind, no Bootstrap; CSS custom properties for tokens
-- **Minitest** — system tests primary; model and service unit tests alongside
-- **Render** — deployment target; environment variables via Render dashboard
+- **Rails 8.1.2** — modern idioms; `params.expect()` for strong parameters
+- **PostgreSQL** — `structure.sql` configured (`config.active_record.schema_format = :sql`)
+- **Hotwire** — Turbo + Stimulus
+- **Pico CSS** from CDN + `application.css` for overrides
+- **Minitest** — model, service, and system tests
+- **Render** — deployment target
 
 ---
 
-## Architecture rules — follow these strictly
+## Quick commands
+
+| Task | Command |
+|---|---|
+| Run everything CI checks | `bin/ci` |
+| Setup / reset dev env | `bin/setup` or `bin/setup --reset` |
+| Start dev server | `bin/dev` (or `bin/setup` without `--skip-server`) |
+| Single test file | `bin/rails test test/models/invoice_test.rb` |
+| All model/service tests | `bin/rails test` |
+| System tests | `bin/rails test:system` (currently commented out in `config/ci.rb`) |
+| Security scan | `bin/brakeman --quiet --no-pager` |
+| Style check | `bin/rubocop` |
+
+`bin/ci` runs: setup → rubocop → bundler-audit → importmap audit → brakeman → `bin/rails test` → seed replant. System tests are optional and currently disabled in CI.
+
+---
+
+## Operational gotchas
+
+### Dev server must restart when new top-level directories are added
+
+Zeitwerk caches the autoload tree at boot time. If you create a new file in a directory that did not exist when the server started (e.g. `app/services/invoice_sender.rb` when `app/services/` was empty or newly created), the running server will raise `NameError: uninitialized constant`.
+
+**Fix:** Stop and restart `bin/dev`.
+
+Tests are unaffected — each `bin/rails test` run boots a fresh environment.
+
+---
+
+## Architecture rules
 
 ### Where logic lives
 
@@ -32,7 +61,6 @@ This is a portfolio project — code quality and architectural clarity matter as
 | Invoice state transitions | `app/services/` — one service per transition |
 | Calculations (totals, VAT) | `Invoice` model methods — pure, no DB writes |
 | HTTP orchestration | Controllers — thin, one instance var per action |
-| Email rendering | Mailers — delegate sending to services |
 | Data shape | Models — associations, validations, scopes only |
 
 ### Services pattern
@@ -43,7 +71,6 @@ Every service:
 - Callers check `result.success?` — never infer from model state
 
 ```ruby
-# app/services/invoice_sender.rb
 class InvoiceSender
   Result = Struct.new(:success, :invoice, keyword_init: true)
 
@@ -61,6 +88,7 @@ end
 - All queries scoped through `current_user.account` — never bare `Invoice.find`
 - Use `find_by!` — never `find_by` (silent nil is a bug waiting to happen)
 - No business logic — delegate to services
+- Strong parameters: use `params.expect(user: [:email_address, :password])` (Rails 8.1), not `permit`
 
 ```ruby
 # Good
@@ -76,12 +104,32 @@ end
 - Every `references`: `foreign_key: true, index: true`
 - Status enum: also add a DB check constraint, not just the Rails enum
 - Test constraints directly: `update_column` to bypass validations, confirm DB rejects
+- Money stored as integer cents (`unit_price_cents`), not decimal — floating point is unsafe for money
 
 ### Views and partials
 
 - Strict locals on every partial: `<%# locals: (invoice:) %>`
 - No instance variables inside partials — ever
 - Partials receive exactly what they need, nothing more
+- Use `data-testid` attributes for system test selectors, not CSS classes
+
+### Routes
+
+Follow canonical REST. If a behaviour doesn't fit the 7 standard actions, it becomes a new resource.
+
+```ruby
+# Status transitions are new resources, not custom member actions
+resources :invoice_sends, only: [:create]
+resources :invoice_payments, only: [:create]
+resources :invoice_voids, only: [:create]
+```
+
+Shallow nesting maximum one level:
+```ruby
+resources :invoices, shallow: true do
+  resources :line_items, only: [:new, :create, :edit, :update, :destroy]
+end
+```
 
 ---
 
@@ -92,31 +140,27 @@ Account
   - name: string, null: false
 
 User
-  - email: string, null: false, unique
+  - email_address: string, null: false, unique
   - password_digest: string, null: false
   - account_id: references Account, null: false
 
-Client
-  - account_id: references Account, null: false
+Client (belongs_to :account)
   - name: string, null: false
   - email: string
   - company_name: string
   - vat_number: string
 
-Invoice
-  - account_id: references Account, null: false
-  - client_id: references Client, null: false
+Invoice (belongs_to :account, belongs_to :client)
   - invoice_number: string, null: false, unique (INV-0001 format)
   - issued_on: date, null: false
   - due_on: date, null: false
   - status: enum (draft, sent, paid, void), null: false, default: draft
   - notes: text
 
-LineItem
-  - invoice_id: references Invoice, null: false
+LineItem (belongs_to :invoice)
   - description: string, null: false
   - quantity: decimal, null: false
-  - unit_price: decimal, null: false (cents or decimal euros — decide and be consistent)
+  - unit_price_cents: integer, null: false (euro cents — 5000 = €50.00)
   - vat_rate: decimal, null: false, default: 0
   - position: integer (for ordering)
 ```
@@ -144,37 +188,14 @@ Invalid transitions raise an error — they do not silently fail. Each transitio
 
 ---
 
-## Routes
+## Testing
 
-Follow canonical REST. If a behaviour doesn't fit the 7 standard actions, it becomes a new resource.
-
-```ruby
-# Status transitions are new resources, not custom member actions
-resources :invoice_sends, only: [:create]
-resources :invoice_payments, only: [:create]
-resources :invoice_voids, only: [:create]
-```
-
-Shallow nesting maximum one level:
-```ruby
-resources :invoices, shallow: true do
-  resources :line_items, only: [:new, :create, :edit, :update, :destroy]
-end
-```
-
----
-
-## Testing expectations
-
-Run tests after every meaningful change: `bin/rails test`
-
-Coverage expected:
-- `test/models/invoice_test.rb` — total calculations, VAT, invoice number generation, transition guards
-- `test/services/` — one file per service, valid/invalid input, edge cases
-- `test/system/` — full happy-path flows for creating and paying an invoice
-- Constraint tests: `update_column` bypasses validations — confirm DB rejects
-
-Use `data-testid` attributes in views for system test selectors, not CSS classes.
+- Run tests after every meaningful change: `bin/rails test`
+- `test/test_helpers/session_test_helper.rb` provides `sign_in_as(user)` and `sign_out` for controller/integration tests
+- User fixtures use `BCrypt::Password.create("password")` for password_digest
+- Test DB constraints directly with `update_column` to bypass validations
+- System tests use `data-testid` selectors, not CSS classes
+- Coverage expected: model tests (totals, VAT, invoice number, transitions), service tests (valid/invalid), system tests (happy path)
 
 ---
 
@@ -188,55 +209,24 @@ Use `data-testid` attributes in views for system test selectors, not CSS classes
 
 ---
 
-## Build plan — two evenings
+## Build state
 
-This section tracks the MVP build plan. Check off completed steps before starting a session so you know exactly where to pick up.
-
-### Evening 1 — Foundation
-
-| # | Task | Status |
-|---|------|--------|
-| 1 | `rails new` with PostgreSQL, Propshaft | ✅ Done |
-| 2 | Config: `structure.sql`, `timestamptz`, `frozen_string_literal` | ✅ Done |
-| 3 | PostgreSQL installed, database created | ✅ Done |
-| 4 | Rails 8 built-in authentication (User, Session, Current) | ✅ Done |
-| 5 | `Account` model + `has_many :users`; `account_id` on users | ✅ Done |
-| 6 | `RegistrationsController` — auto-creates Account on signup | ✅ Done |
-| 7 | `Client` model + full CRUD, account-scoped | ✅ Done |
-| 8 | `Invoice` + `LineItem` models and migrations | ⬜ Next |
-| 9 | Invoice CRUD with nested line items form | ⬜ |
-
-### Evening 2 — State machine, polish, deploy
-
-| # | Task | Status |
-|---|------|--------|
-| 10 | Status transition services (`InvoiceSender`, `InvoicePaymentRecorder`, `InvoiceVoider`) | ⬜ |
-| 11 | Transition routes as REST resources + controller actions | ⬜ |
-| 12 | Transition buttons in UI — show only valid next actions | ⬜ |
-| 13 | Invoices index grouped by status with totals | ⬜ |
-| 14 | Print-ready invoice view (`layouts/print.html.erb` + print CSS) | ⬜ |
-| 15 | `bin/setup`, `bin/dev`, `bin/ci` scripts | ⬜ |
-| 16 | Model tests — totals, VAT, invoice number, blocked transitions | ⬜ |
-| 17 | Service tests — valid/invalid transitions, edge cases | ⬜ |
-| 18 | Seed file — demo account with sample clients and invoices | ⬜ |
-| 19 | Deploy to Render — provision PostgreSQL, set ENV vars, run migrations | ⬜ |
-
-### Current state (start of Evening 2)
-
-What exists and works:
-- Registration creates an Account and User in a transaction, then logs in automatically
-- Login/logout via Rails 8 session auth with signed cookies
+### What exists and works
+- Registration creates Account + User in a transaction, auto-logs in
+- Rails 8 built-in auth (session cookies, passwords, Current.user)
 - Clients: full CRUD scoped through `Current.user.account`
-- Pico CSS loaded from CDN; `application.css` for overrides
-- Nav with sign-out button, logo links to root
+- `Invoice` + `LineItem` models, migrations, associations, SQL SUM calculations, auto invoice numbers
+- Invoice CRUD with nested line items form (Stimulus `nested_form` controller)
+- Status transition services (`InvoiceSender`, `InvoicePaymentRecorder`, `InvoiceVoider`) + REST resource controllers
+- Transition buttons in UI — only valid next actions shown
+- Invoices index grouped by status with group totals
+- `bin/ci`, `bin/setup`, `bin/dev` configured
+- Pico CSS from CDN; strict locals on partials
 
-What does NOT exist yet:
-- `Invoice` and `LineItem` models — not generated
-- Any invoice UI
-- Status transitions
-- Tests
-- Seed data
-- Deployment config
+### What's next
+1. Print-ready invoice view (`layouts/print.html.erb` + print CSS)
+2. Seed file — demo account with sample clients and invoices
+3. Deploy to Render
 
 ---
 
@@ -247,7 +237,7 @@ What does NOT exist yet:
 - Multi-user account management UI
 - Subscription billing
 - PDF generation (print CSS is sufficient)
-- Pagination (add `pagy` only if seed data makes it painful to develop)
+- Pagination
 - Overdue reminders
 
 If asked to implement any of the above, flag it and ask for confirmation first.

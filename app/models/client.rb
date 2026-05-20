@@ -2,6 +2,7 @@
 
 class Client < ApplicationRecord
   belongs_to :account
+  has_many :invoices, dependent: :destroy
 
   validates :name, presence: true
 

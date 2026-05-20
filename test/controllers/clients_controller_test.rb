@@ -1,38 +1,49 @@
 require "test_helper"
 
 class ClientsControllerTest < ActionDispatch::IntegrationTest
-  test "should get index" do
-    get clients_index_url
+  setup do
+    @user = users(:one)
+    @client = clients(:one)
+    sign_in_as(@user)
+  end
+
+  test "index" do
+    get clients_path
     assert_response :success
   end
 
-  test "should get show" do
-    get clients_show_url
+  test "show" do
+    get client_path(@client)
     assert_response :success
   end
 
-  test "should get new" do
-    get clients_new_url
+  test "new" do
+    get new_client_path
     assert_response :success
   end
 
-  test "should get create" do
-    get clients_create_url
+  test "create" do
+    assert_difference("Client.count") do
+      post clients_path, params: { client: { name: "New Client", email: "new@example.com" } }
+    end
+    assert_redirected_to client_path(Client.last)
+  end
+
+  test "edit" do
+    get edit_client_path(@client)
     assert_response :success
   end
 
-  test "should get edit" do
-    get clients_edit_url
-    assert_response :success
+  test "update" do
+    patch client_path(@client), params: { client: { name: "Updated Name" } }
+    assert_redirected_to client_path(@client)
+    assert_equal "Updated Name", @client.reload.name
   end
 
-  test "should get update" do
-    get clients_update_url
-    assert_response :success
-  end
-
-  test "should get destroy" do
-    get clients_destroy_url
-    assert_response :success
+  test "destroy" do
+    assert_difference("Client.count", -1) do
+      delete client_path(@client)
+    end
+    assert_redirected_to clients_path
   end
 end

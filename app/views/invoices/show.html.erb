@@ -1,0 +1,98 @@
+<article>
+  <header>
+    <h1><%= @invoice.invoice_number %></h1>
+    <p data-testid="invoice-status">Status: <strong><%= @invoice.status %></strong></p>
+
+    <%# Only show transition buttons for valid next actions. %>
+    <div role="group">
+      <% if @invoice.draft? %>
+        <%= button_to "Send invoice", invoice_invoice_sends_path(@invoice), method: :post %>
+      <% end %>
+
+      <% if @invoice.sent? %>
+        <%= button_to "Record payment", invoice_invoice_payments_path(@invoice), method: :post %>
+      <% end %>
+
+      <% unless @invoice.void? %>
+        <%= button_to "Void invoice", invoice_invoice_voids_path(@invoice), method: :post, form: { data: { turbo_confirm: "Void this invoice? This action cannot be undone." } } %>
+      <% end %>
+    </div>
+  </header>
+
+  <section>
+    <h2>Client</h2>
+    <p><strong><%= @invoice.client.name %></strong></p>
+    <% if @invoice.client.company_name.present? %>
+      <p><%= @invoice.client.company_name %></p>
+    <% end %>
+    <% if @invoice.client.email.present? %>
+      <p><%= @invoice.client.email %></p>
+    <% end %>
+    <% if @invoice.client.vat_number.present? %>
+      <p>VAT: <%= @invoice.client.vat_number %></p>
+    <% end %>
+  </section>
+
+  <section>
+    <h2>Details</h2>
+    <p>Issued: <%= @invoice.issued_on %></p>
+    <p>Due: <%= @invoice.due_on %></p>
+  </section>
+
+  <section>
+    <h2>Line Items</h2>
+    <% if @invoice.line_items.any? %>
+      <table>
+        <thead>
+          <tr>
+            <th>Description</th>
+            <th>Qty</th>
+            <th>Unit price</th>
+            <th>VAT</th>
+            <th>Total</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @invoice.line_items.each do |item| %>
+            <tr>
+              <td><%= item.description %></td>
+              <td><%= item.quantity %></td>
+              <td><%= number_to_currency(item.unit_price_cents / 100.0, unit: "€") %></td>
+              <td><%= item.vat_rate %>%</td>
+              <td><%= number_to_currency(item.total / 100.0, unit: "€") %></td>
+              <td>
+                <%= link_to "Edit", edit_line_item_path(item) %>
+                <%= button_to "Remove", line_item_path(item), method: :delete, form: { data: { turbo_confirm: "Remove this line item?" } } %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <p>No line items.</p>
+    <% end %>
+
+    <%= link_to "Add line item", new_invoice_line_item_path(@invoice) %>
+  </section>
+
+  <section>
+    <h2>Totals</h2>
+    <p>Subtotal: <%= number_to_currency(@invoice.subtotal / 100.0, unit: "€") %></p>
+    <p>VAT: <%= number_to_currency(@invoice.vat_total / 100.0, unit: "€") %></p>
+    <p><strong>Total: <%= number_to_currency(@invoice.total / 100.0, unit: "€") %></strong></p>
+  </section>
+
+  <% if @invoice.notes.present? %>
+    <section>
+      <h2>Notes</h2>
+      <p><%= @invoice.notes %></p>
+    </section>
+  <% end %>
+
+  <footer>
+    <%= link_to "Edit", edit_invoice_path(@invoice) %>
+    <%= button_to "Delete", invoice_path(@invoice), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } } %>
+    <%= link_to "Back to invoices", invoices_path %>
+  </footer>
+</article>
