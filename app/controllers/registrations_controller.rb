@@ -17,9 +17,8 @@ class RegistrationsController < ApplicationController
     @user = User.new(registration_params)
 
     # Build the account first, then assign it to the user.
-    # We use a transaction so that if either the account or user fails to save,
-    # neither is persisted. Financial apps should be especially careful about
-    # partial writes — an account without a user, or a user without an account,
+    # Use a transaction so that if either the account or user fails to save,
+    # neither is persisted. An account without a user, or a user without an account,
     # would be a data integrity problem.
     ActiveRecord::Base.transaction do
       account = Account.create!(name: default_account_name)

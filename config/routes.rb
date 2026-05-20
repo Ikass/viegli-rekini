@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   # Registration — creating a new account + user in one step
   resource :registration, only: %i[new create]
 
+  resources :clients
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
@@ -16,5 +18,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Root path — we'll point this at invoices index once that exists
-  root "sessions#new"
+  root "clients#index"
 end
