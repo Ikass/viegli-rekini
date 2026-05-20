@@ -1,0 +1,33 @@
+<%# locals: (client:) %>
+
+<%= form_with model: client do |form| %>
+  <% if client.errors.any? %>
+    <div role="alert">
+      <% client.errors.full_messages.each do |message| %>
+        <p><%= message %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name, required: true, autofocus: true %>
+  </div>
+
+  <div>
+    <%= form.label :company_name, "Company name" %>
+    <%= form.text_field :company_name %>
+  </div>
+
+  <div>
+    <%= form.label :email %>
+    <%= form.email_field :email %>
+  </div>
+
+  <div>
+    <%= form.label :vat_number, "VAT number" %>
+    <%= form.text_field :vat_number %>
+  </div>
+
+  <%= form.submit %>
+<% end %>

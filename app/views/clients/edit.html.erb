@@ -1,2 +1,7 @@
-<h1>Clients#edit</h1>
-<p>Find me in app/views/clients/edit.html.erb</p>
+<% content_for :title, "Edit #{@client.name}" %>
+
+<h1>Edit <%= @client.name %></h1>
+
+<%= render "form", client: @client %>
+
+<%= link_to "Cancel", @client %>

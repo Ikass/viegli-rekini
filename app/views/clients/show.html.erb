@@ -1,2 +1,23 @@
-<h1>Clients#show</h1>
-<p>Find me in app/views/clients/show.html.erb</p>
+<% content_for :title, @client.name %>
+
+<h1><%= @client.name %></h1>
+
+<dl>
+  <% if @client.company_name.present? %>
+    <dt>Company</dt>
+    <dd><%= @client.company_name %></dd>
+  <% end %>
+
+  <% if @client.email.present? %>
+    <dt>Email</dt>
+    <dd><%= @client.email %></dd>
+  <% end %>
+
+  <% if @client.vat_number.present? %>
+    <dt>VAT number</dt>
+    <dd><%= @client.vat_number %></dd>
+  <% end %>
+</dl>
+
+<%= link_to "Edit", edit_client_path(@client), role: "button", class: "outline" %>
+<%= button_to "Delete", @client, method: :delete, data: { turbo_confirm: "Delete #{@client.name}? This cannot be undone." } %>
