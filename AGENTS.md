@@ -188,6 +188,58 @@ Use `data-testid` attributes in views for system test selectors, not CSS classes
 
 ---
 
+## Build plan — two evenings
+
+This section tracks the MVP build plan. Check off completed steps before starting a session so you know exactly where to pick up.
+
+### Evening 1 — Foundation
+
+| # | Task | Status |
+|---|------|--------|
+| 1 | `rails new` with PostgreSQL, Propshaft | ✅ Done |
+| 2 | Config: `structure.sql`, `timestamptz`, `frozen_string_literal` | ✅ Done |
+| 3 | PostgreSQL installed, database created | ✅ Done |
+| 4 | Rails 8 built-in authentication (User, Session, Current) | ✅ Done |
+| 5 | `Account` model + `has_many :users`; `account_id` on users | ✅ Done |
+| 6 | `RegistrationsController` — auto-creates Account on signup | ✅ Done |
+| 7 | `Client` model + full CRUD, account-scoped | ✅ Done |
+| 8 | `Invoice` + `LineItem` models and migrations | ⬜ Next |
+| 9 | Invoice CRUD with nested line items form | ⬜ |
+
+### Evening 2 — State machine, polish, deploy
+
+| # | Task | Status |
+|---|------|--------|
+| 10 | Status transition services (`InvoiceSender`, `InvoicePaymentRecorder`, `InvoiceVoider`) | ⬜ |
+| 11 | Transition routes as REST resources + controller actions | ⬜ |
+| 12 | Transition buttons in UI — show only valid next actions | ⬜ |
+| 13 | Invoices index grouped by status with totals | ⬜ |
+| 14 | Print-ready invoice view (`layouts/print.html.erb` + print CSS) | ⬜ |
+| 15 | `bin/setup`, `bin/dev`, `bin/ci` scripts | ⬜ |
+| 16 | Model tests — totals, VAT, invoice number, blocked transitions | ⬜ |
+| 17 | Service tests — valid/invalid transitions, edge cases | ⬜ |
+| 18 | Seed file — demo account with sample clients and invoices | ⬜ |
+| 19 | Deploy to Render — provision PostgreSQL, set ENV vars, run migrations | ⬜ |
+
+### Current state (start of Evening 2)
+
+What exists and works:
+- Registration creates an Account and User in a transaction, then logs in automatically
+- Login/logout via Rails 8 session auth with signed cookies
+- Clients: full CRUD scoped through `Current.user.account`
+- Pico CSS loaded from CDN; `application.css` for overrides
+- Nav with sign-out button, logo links to root
+
+What does NOT exist yet:
+- `Invoice` and `LineItem` models — not generated
+- Any invoice UI
+- Status transitions
+- Tests
+- Seed data
+- Deployment config
+
+---
+
 ## What's out of scope — do not build these
 
 - Email delivery
