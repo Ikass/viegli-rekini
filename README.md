@@ -8,6 +8,8 @@ I'm building this for two reasons: (1) it's a real product I want to exist, and 
 
 **Live demo:** _[Render URL — added after first deploy]_
 
+> **Render free plan limitations:** The free PostgreSQL database expires 30 days after creation (14-day grace period to upgrade). Free web services spin down after 15 minutes of inactivity — the first request after spin-down takes about a minute to respond while the instance boots back up.
+
 ---
 
 ## What it does (v0.1)
