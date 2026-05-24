@@ -1,4 +1,4 @@
-# Invoicio — Simple Invoicing for Latvian Small Businesses
+# E-Rekini — Simple Invoicing for Latvian Small Businesses
 
 **Status: MVP v0.1 — work in progress**
 
@@ -6,10 +6,17 @@ This is the first working version of what will eventually become [viegli-rēķin
 
 I'm building this for two reasons: (1) it's a real product I want to exist, and (2) it's my primary Rails learning project. I'm documenting my architectural decisions here as notes to my future self — the reasoning behind each choice, not just what was chosen.
 
-**Live demo:** _[Render URL — added after first deploy]_
+---
+
+## Live demo
+
+[https://e-rekini-mvp.onrender.com/](https://e-rekini-mvp.onrender.com/)
+
+Demo credentials:
+Email: demo@example.com
+Password: password
 
 > **Render free plan limitations:** The free PostgreSQL database expires 30 days after creation (14-day grace period to upgrade). Free web services spin down after 15 minutes of inactivity — the first request after spin-down takes about a minute to respond while the instance boots back up.
-
 ---
 
 ## What it does (v0.1)
