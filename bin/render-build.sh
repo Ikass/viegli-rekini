@@ -10,3 +10,5 @@ bin/rails assets:clean
 # Migrations run here because pre-deploy commands require a paid instance.
 # On a paid plan, move db:migrate to the pre-deploy command instead.
 bin/rails db:migrate
+
+bin/rails db:seed
