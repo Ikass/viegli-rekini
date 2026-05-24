@@ -21,12 +21,14 @@ Password: password
 
 ## What it does (v0.1)
 
-- Manage clients (name, company, VAT number)
-- Create invoices with multiple line items
+- Manage clients with full address and VAT number fields
+- Manage reusable products with default prices and VAT rates
+- Create invoices with multiple line items and a product picker
 - Automatic calculations — subtotal, VAT, total
 - Sequential invoice numbers (INV-0001, INV-0002, …)
 - Invoice lifecycle: `draft → sent → paid`, with `void` as an escape hatch
 - Print-ready invoice layout (HTML + print CSS — no PDF gem)
+- Account settings for company details, address, and bank information
 - Single-user for now; data model is ready for multi-tenancy
 
 ---
@@ -49,7 +51,7 @@ Password: password
 
 ### Why PostgreSQL, not SQLite
 
-SQLite is fine for most things, and I use it in other projects. But for financial data, PostgreSQL is the correct choice for a few reasons:
+For financial data, PostgreSQL is the correct choice for a few reasons:
 
 - **`timestamptz` column type** — PostgreSQL stores timestamps with timezone info. SQLite doesn't. For invoices with due dates, getting timezone handling wrong is a real bug.
 - **Check constraints** — PostgreSQL can enforce that `status` is always one of a known set of values at the database level, not just in Ruby. More on this under "database constraints" below.
@@ -59,13 +61,13 @@ SQLite is fine for most things, and I use it in other projects. But for financia
 
 Rails can represent your database schema in two formats. `schema.rb` is simpler but lossy — it can't represent database-specific features like check constraints, custom functions, or partial indexes. `structure.sql` is a direct SQL dump of your schema, so it preserves everything exactly.
 
-I set `config.active_record.schema_format = :sql` in `config/application.rb`. This costs nothing and means my schema file always reflects the real database state.
+Set `config.active_record.schema_format = :sql` in `config/application.rb`. This means the schema file always reflects the real database state.
 
 **Reference:** Sustainable Web Development with Ruby on Rails, Ch. 14
 
 ### Database constraints vs. Rails validations — both, for different reasons
 
-This was a key insight from reading about Rails architecture. They serve different purposes:
+They serve different purposes:
 
 - **Validations** (`validates :name, presence: true`) — these run in Ruby before saving. They produce user-friendly error messages. But they can be bypassed: `invoice.update_column(:status, "nonsense")` skips validations entirely.
 - **Database constraints** (`null: false`, `foreign_key: true`, check constraints) — these live in the database and cannot be bypassed. They're the last line of defence for data integrity.
@@ -92,7 +94,7 @@ The reason for this separation: models that contain business logic become fragil
 
 ### Status transitions as REST resources, not custom controller actions
 
-This one took me a while to understand. When you need a non-standard action (like "send this invoice"), the tempting approach is to add a custom controller action:
+When you need a non-standard action (like "send this invoice"), the tempting approach is to add a custom controller action:
 
 ```ruby
 # Tempting but wrong
@@ -108,7 +110,7 @@ POST /invoice_payments
 POST /invoice_voids
 ```
 
-Why? Because Rails' seven standard actions (`index`, `show`, `new`, `create`, `edit`, `update`, `destroy`) are universally understood. Every Rails developer knows what a `create` action does. Custom action names (`send`, `mark_paid`) are unique to your app and require explanation.
+Because Rails' seven standard actions (`index`, `show`, `new`, `create`, `edit`, `update`, `destroy`) are universally understood. Every Rails developer knows what a `create` action does. Custom action names (`send`, `mark_paid`) are unique to your app and require explanation.
 
 It also forces cleaner thinking: "sending an invoice" is a thing that happens, not a property of the invoice.
 
@@ -148,21 +150,30 @@ Why cents? Floating point arithmetic is not reliable for money. `0.1 + 0.2` in a
 Account
   └── has_many :users
   └── has_many :clients
+  └── has_many :products
   └── has_many :invoices
+  └── Fields: name, company_name, vat_number, company_reg,
+              address, city, postal_code, country,
+              bank_name, bank_account, bank_swift
 
 User
   └── belongs_to :account
 
 Client (belongs_to :account)
   └── has_many :invoices
+  └── Fields: name, company_name, email, vat_number,
+              address, city, postal_code, country
+
+Product (belongs_to :account)
+  └── Fields: name, description, unit_price_cents, vat_rate
 
 Invoice (belongs_to :account, belongs_to :client)
   └── has_many :line_items
   └── status: draft | sent | paid | void
-  └── Calculated: subtotal, vat_total, total (not stored — derived from line items)
+  └── Calculated: subtotal, vat_total, total (not stored)
 
 LineItem (belongs_to :invoice)
-  └── description, quantity, unit_price_cents, vat_rate
+  └── description, quantity, unit_price_cents, vat_rate, position
 ```
 
 ---
@@ -184,13 +195,13 @@ Invalid transitions are rejected at the service layer. You cannot go from `draft
 **Prerequisites:** Ruby 3.3+, PostgreSQL running locally.
 
 ```bash
-git clone https://github.com/reinisvaivars/invoicio
-cd invoicio
+git clone https://github.com/Ikass/e-rekini-mvp
+cd e-rekini-mvp
 bin/setup
 bin/dev
 ```
 
-`bin/setup` installs gems, creates and migrates the database, and seeds a demo account with sample clients and invoices.
+`bin/setup` installs gems, creates and migrates the database, and seeds a demo account with sample clients, products, and invoices.
 
 Log in at `http://localhost:3000` with `demo@example.com` / `password`.
 
