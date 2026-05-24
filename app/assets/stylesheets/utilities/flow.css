@@ -1,0 +1,21 @@
+/* ============================================================
+   UTILITY — flow.css
+   Andy Bell's favourite 3 lines of CSS. Adds space between
+   elements in a flow context (article, prose, etc.)
+   https://andy-bell.co.uk/my-favourite-3-lines-of-css/
+
+   Usage: <article class="flow">
+   Custom spacing: <article class="flow" style="--flow-space: var(--space-l)">
+   Override per element: <h2 style="--flow-space: var(--space-2xl)">
+   ============================================================ */
+
+.flow > * + * {
+  margin-block-start: var(--flow-space, var(--space-m));
+}
+
+/* Common per-element overrides — uncomment as needed */
+/*
+.flow h2 { --flow-space: var(--space-xl); }
+.flow h3 { --flow-space: var(--space-l); }
+.flow pre { --flow-space: var(--space-l); }
+*/

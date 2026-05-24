@@ -19,5 +19,5 @@
   <% end %>
 </dl>
 
-<%= link_to "Edit", edit_client_path(@client), role: "button", class: "outline" %>
-<%= button_to "Delete", @client, method: :delete, data: { turbo_confirm: "Delete #{@client.name}? This cannot be undone." } %>
+<%= link_to "Edit", edit_client_path(@client), class: "button" %>
+<%= button_to "Delete", @client, method: :delete, class: "button", data: { variant: "danger", turbo_confirm: "Delete #{@client.name}? This cannot be undone." } %>

@@ -29,5 +29,25 @@
     <%= form.text_field :vat_number %>
   </div>
 
+  <fieldset>
+    <legend>Address</legend>
+    <div>
+      <%= form.label :address %>
+      <%= form.text_field :address %>
+    </div>
+    <div>
+      <%= form.label :city %>
+      <%= form.text_field :city %>
+    </div>
+    <div>
+      <%= form.label :postal_code %>
+      <%= form.text_field :postal_code %>
+    </div>
+    <div>
+      <%= form.label :country %>
+      <%= form.text_field :country %>
+    </div>
+  </fieldset>
+
   <%= form.submit %>
 <% end %>

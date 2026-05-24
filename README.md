@@ -29,7 +29,7 @@ I'm building this for two reasons: (1) it's a real product I want to exist, and 
 | Framework | Rails 8 | Learning Rails properly; using latest stable |
 | Database | PostgreSQL | Right choice for financial data |
 | Auth | Rails 8 built-in | New in Rails 8 — no Devise needed for simple cases |
-| CSS | Pico CSS (v0.1) | Semantic, classless CSS — fast to get something decent looking. Will migrate to custom vanilla CSS in v0.2 |
+| CSS | Custom vanilla (CUBE CSS) | CUBE CSS methodology with Every Layout primitives, OKLCH color tokens, logical properties |
 | Frontend | Hotwire (Turbo) | Rails default — SPA-feel without writing JS |
 | Testing | Minitest | Rails default; system tests + model/service unit tests |
 | Deployment | Render | Free tier PostgreSQL; `git push` deploys |

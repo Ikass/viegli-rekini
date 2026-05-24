@@ -14,14 +14,15 @@
     <%= form.collection_select :client_id, Current.user.account.clients, :id, :name, { prompt: "Select a client" }, required: true %>
   </div>
 
-  <div>
-    <%= form.label :issued_on, "Issued on" %>
-    <%= form.date_field :issued_on, required: true %>
-  </div>
-
-  <div>
-    <%= form.label :due_on, "Due on" %>
-    <%= form.date_field :due_on, required: true %>
+  <div class="fields-inline">
+    <div>
+      <%= form.label :issued_on, "Issued on" %>
+      <%= form.date_field :issued_on, required: true %>
+    </div>
+    <div>
+      <%= form.label :due_on, "Due on" %>
+      <%= form.date_field :due_on, required: true %>
+    </div>
   </div>
 
   <div>
@@ -43,7 +44,7 @@
     <% end %>
   </template>
 
-  <button type="button" data-action="nested-form#add">Add line item</button>
+  <button type="button" data-action="nested-form#add" class="button">Add line item</button>
 
-  <%= form.submit %>
+  <%= form.submit class: "button", data: { variant: "primary" } %>
 <% end %>

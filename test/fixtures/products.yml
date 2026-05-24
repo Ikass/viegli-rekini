@@ -1,0 +1,11 @@
+one:
+  account: one
+  name: Consulting Hour
+  default_price_cents: 15000
+  default_vat_rate: 21.0
+
+two:
+  account: two
+  name: Design Package
+  default_price_cents: 50000
+  default_vat_rate: 12.0

@@ -22,7 +22,17 @@ CREATE TABLE public.accounts (
     id bigint NOT NULL,
     name character varying NOT NULL,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    company_name character varying,
+    registration_number character varying,
+    vat_number character varying,
+    address character varying,
+    city character varying,
+    postal_code character varying,
+    country character varying DEFAULT 'Latvia'::character varying,
+    bank_name character varying,
+    bank_account character varying,
+    bank_swift character varying
 );
 
 
@@ -69,7 +79,11 @@ CREATE TABLE public.clients (
     company_name character varying,
     vat_number character varying,
     created_at timestamp(6) without time zone NOT NULL,
-    updated_at timestamp(6) without time zone NOT NULL
+    updated_at timestamp(6) without time zone NOT NULL,
+    address character varying,
+    city character varying,
+    postal_code character varying,
+    country character varying DEFAULT 'Latvia'::character varying
 );
 
 
@@ -164,6 +178,41 @@ CREATE SEQUENCE public.line_items_id_seq
 --
 
 ALTER SEQUENCE public.line_items_id_seq OWNED BY public.line_items.id;
+
+
+--
+-- Name: products; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.products (
+    id bigint NOT NULL,
+    account_id bigint NOT NULL,
+    name character varying NOT NULL,
+    description text,
+    default_price_cents integer DEFAULT 0 NOT NULL,
+    default_vat_rate numeric(5,2) DEFAULT 21.0 NOT NULL,
+    created_at timestamp(6) without time zone NOT NULL,
+    updated_at timestamp(6) without time zone NOT NULL
+);
+
+
+--
+-- Name: products_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.products_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: products_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.products_id_seq OWNED BY public.products.id;
 
 
 --
@@ -270,6 +319,13 @@ ALTER TABLE ONLY public.line_items ALTER COLUMN id SET DEFAULT nextval('public.l
 
 
 --
+-- Name: products id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.products ALTER COLUMN id SET DEFAULT nextval('public.products_id_seq'::regclass);
+
+
+--
 -- Name: sessions id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -321,6 +377,14 @@ ALTER TABLE ONLY public.invoices
 
 ALTER TABLE ONLY public.line_items
     ADD CONSTRAINT line_items_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: products products_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_pkey PRIMARY KEY (id);
 
 
 --
@@ -383,6 +447,13 @@ CREATE INDEX index_line_items_on_invoice_id ON public.line_items USING btree (in
 
 
 --
+-- Name: index_products_on_account_id; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX index_products_on_account_id ON public.products USING btree (account_id);
+
+
+--
 -- Name: index_sessions_on_user_id; Type: INDEX; Schema: public; Owner: -
 --
 
@@ -417,6 +488,14 @@ ALTER TABLE ONLY public.line_items
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT fk_rails_61ac11da2b FOREIGN KEY (account_id) REFERENCES public.accounts(id);
+
+
+--
+-- Name: products fk_rails_6dc06b37ef; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT fk_rails_6dc06b37ef FOREIGN KEY (account_id) REFERENCES public.accounts(id);
 
 
 --
@@ -458,6 +537,9 @@ ALTER TABLE ONLY public.clients
 SET search_path TO "$user", public;
 
 INSERT INTO "schema_migrations" (version) VALUES
+('20260522091023'),
+('20260522091022'),
+('20260522091021'),
 ('20260520170645'),
 ('20260520170644'),
 ('20260520133912'),

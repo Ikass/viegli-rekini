@@ -1,0 +1,65 @@
+/* ============================================================
+   TOKENS — spacing.css
+   Fluid space scale generated via Utopia (utopia.fyi).
+
+   Inputs used:
+     Min viewport: 375px   Max viewport: 1400px
+     Min size: 16px        Max size: 20px
+     Scale: Minor Third (1.200)
+
+   To regenerate: https://utopia.fyi/space/calculator
+   The named tokens (--space-s, --space-m etc.) are what you
+   use everywhere. The step variables below them are the raw
+   fluid values each named token maps to.
+
+   Naming follows Utopia convention:
+     3xs, 2xs, xs, s, m, l, xl, 2xl, 3xl
+   Plus paired values for larger jumps:
+     s-m, m-l, l-xl etc.
+
+   Layout tokens (container widths, gutter) live here too.
+   ============================================================ */
+
+/* ── Fluid Space Scale ───────────────────────────────────── */
+
+:root {
+  --space-3xs: clamp(0.25rem, 0.23rem + 0.11vw, 0.31rem);
+  --space-2xs: clamp(0.50rem, 0.46rem + 0.21vw, 0.63rem);
+  --space-xs:  clamp(0.75rem, 0.68rem + 0.32vw, 0.94rem);
+  --space-s:   clamp(1.00rem, 0.91rem + 0.43vw, 1.25rem);
+  --space-m:   clamp(1.50rem, 1.37rem + 0.65vw, 1.88rem);
+  --space-l:   clamp(2.00rem, 1.83rem + 0.86vw, 2.50rem);
+  --space-xl:  clamp(3.00rem, 2.74rem + 1.29vw, 3.75rem);
+  --space-2xl: clamp(4.00rem, 3.65rem + 1.73vw, 5.00rem);
+  --space-3xl: clamp(6.00rem, 5.48rem + 2.59vw, 7.50rem);
+
+  /* Paired values — useful for section padding, large gaps */
+  --space-3xs-2xs: clamp(0.25rem, 0.15rem + 0.54vw, 0.63rem);
+  --space-2xs-xs:  clamp(0.50rem, 0.37rem + 0.65vw, 0.94rem);
+  --space-xs-s:    clamp(0.75rem, 0.59rem + 0.86vw, 1.25rem);
+  --space-s-m:     clamp(1.00rem, 0.74rem + 1.29vw, 1.88rem);
+  --space-m-l:     clamp(1.50rem, 1.14rem + 1.73vw, 2.50rem);
+  --space-l-xl:    clamp(2.00rem, 1.48rem + 2.59vw, 3.75rem);
+  --space-xl-2xl:  clamp(3.00rem, 2.31rem + 3.45vw, 5.00rem);
+  --space-2xl-3xl: clamp(4.00rem, 2.96rem + 5.19vw, 7.50rem);
+}
+
+/* ── Semantic Spacing Aliases ────────────────────────────── */
+/* Named by role, not size. Adjust these per project.       */
+
+:root {
+  --gutter:           var(--space-s-m);   /* default gap between columns */
+  --section-padding:  var(--space-xl-2xl); /* top/bottom padding on sections */
+  --component-gap:    var(--space-m);     /* gap between components in a stack */
+}
+
+/* ── Layout / Container Widths ───────────────────────────── */
+
+:root {
+  --container-xs:  30rem;   /* ~480px — narrow cards, modals */
+  --container-sm:  40rem;   /* ~640px — prose */
+  --container-md:  56rem;   /* ~896px — medium layouts */
+  --container-lg:  72rem;   /* ~1152px — wide layouts */
+  --container-xl:  84rem;   /* ~1344px — full-width sections */
+  --container:     var(--container-lg); /* default */
+}

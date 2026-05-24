@@ -1,0 +1,104 @@
+/* ============================================================
+   BLOCK — card.css
+   A contained surface block. Semantic <article> with optional
+   <header> and <footer>. Body content uses .flow for rhythm.
+
+   Usage:
+     <article class="card">
+       <header>
+         <h2>Title</h2>
+         <p>Subtitle or meta</p>
+       </header>
+       <div class="flow">
+         <p>Body content...</p>
+       </div>
+       <footer>
+         <a href="..." class="button" data-variant="primary">Action</a>
+       </footer>
+     </article>
+
+   Variants:
+     <article class="card" data-variant="flat">      no shadow, border only
+     <article class="card" data-variant="raised">    stronger shadow
+     <article class="card" data-variant="ghost">     transparent, border only
+   ============================================================ */
+
+.card {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+
+/* ── Header ──────────────────────────────────────────────── */
+
+.card > header {
+  padding: var(--space-m) var(--space-m) 0;
+}
+
+.card > header > * + * {
+  margin-block-start: var(--space-2xs);
+}
+
+.card > header h1,
+.card > header h2,
+.card > header h3,
+.card > header h4 {
+  font-size: var(--step-1);
+  line-height: var(--leading-snug);
+}
+
+/* ── Body ────────────────────────────────────────────────── */
+
+.card > div,
+.card > section,
+.card > main {
+  padding: var(--space-m);
+  flex: 1;  /* push footer to bottom */
+}
+
+/* ── Footer ──────────────────────────────────────────────── */
+
+.card > footer {
+  padding: var(--space-s) var(--space-m);
+  border-block-start: 1px solid var(--color-border);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-s);
+  background-color: var(--color-surface-base);
+}
+
+/* ── Variants ────────────────────────────────────────────── */
+
+.card[data-variant="flat"] {
+  box-shadow: none;
+}
+
+.card[data-variant="raised"] {
+  box-shadow: var(--shadow-raised);
+}
+
+.card[data-variant="ghost"] {
+  background-color: transparent;
+  box-shadow: none;
+}
+
+/* ── Interactive card (entire card is a link target) ─────── */
+
+.card[data-interactive] {
+  cursor: pointer;
+  transition: box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.card[data-interactive]:hover {
+  box-shadow: var(--shadow-raised);
+  transform: translateY(-2px);
+}
+
+.card[data-interactive]:focus-within {
+  box-shadow: var(--shadow-focus);
+}

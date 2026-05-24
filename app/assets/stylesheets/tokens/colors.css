@@ -1,0 +1,163 @@
+/* ============================================================
+   TOKENS — colors.css
+   Two-layer system: raw palette → semantic aliases.
+   Always use semantic aliases in components, never raw palette
+   directly (except to define other tokens).
+
+   Colour space: OKLCH — perceptually uniform, predictable
+   lightness steps. oklch(lightness chroma hue)
+     lightness: 0–1   (0 = black, 1 = white)
+     chroma:    0–0.4 (0 = grey, higher = more vivid)
+     hue:       0–360 (degrees on the colour wheel)
+
+   Dark mode: driven by prefers-color-scheme at the :root level.
+   Section theming: data-theme="dark|light|primary" overrides
+   locally, independent of system preference.
+   ============================================================ */
+
+/* ── Raw Palette ─────────────────────────────────────────── */
+/* Replace these with your project's brand colours.          */
+/* Neutrals use near-zero chroma so they stay hue-neutral.  */
+
+:root {
+  /* Neutrals */
+  --palette-neutral-0:  oklch(0.98 0.002 264);  /* near white */
+  --palette-neutral-1:  oklch(0.93 0.005 264);
+  --palette-neutral-2:  oklch(0.85 0.008 264);
+  --palette-neutral-3:  oklch(0.70 0.010 264);
+  --palette-neutral-4:  oklch(0.55 0.010 264);
+  --palette-neutral-5:  oklch(0.40 0.008 264);
+  --palette-neutral-6:  oklch(0.25 0.006 264);
+  --palette-neutral-7:  oklch(0.15 0.004 264);
+  --palette-neutral-8:  oklch(0.08 0.002 264);  /* near black */
+
+  /* Brand — swap hue/chroma for your project */
+  --palette-brand-light:  oklch(0.85 0.12 240);
+  --palette-brand:        oklch(0.55 0.18 240);
+  --palette-brand-dark:   oklch(0.35 0.16 240);
+
+  /* Accent — complementary or contrasting hue */
+  --palette-accent-light: oklch(0.88 0.12 60);
+  --palette-accent:       oklch(0.72 0.18 60);
+  --palette-accent-dark:  oklch(0.50 0.16 60);
+
+  /* Semantic states */
+  --palette-success: oklch(0.60 0.18 145);
+  --palette-warning: oklch(0.75 0.18 80);
+  --palette-error:   oklch(0.55 0.22 25);
+  --palette-info:    oklch(0.60 0.15 230);
+}
+
+/* ── Semantic Aliases — Light Mode (default) ─────────────── */
+
+:root {
+  /* Surfaces */
+  --color-surface-base:    var(--palette-neutral-0);
+  --color-surface-raised:  var(--palette-neutral-1);
+  --color-surface-overlay: var(--palette-neutral-2);
+  --color-surface-inset:   var(--palette-neutral-1);
+
+  /* Text */
+  --color-text:        var(--palette-neutral-8);
+  --color-text-muted:  var(--palette-neutral-5);
+  --color-text-subtle: var(--palette-neutral-4);
+  --color-text-invert: var(--palette-neutral-0);
+
+  /* Brand */
+  --color-brand:       var(--palette-brand);
+  --color-brand-hover: var(--palette-brand-dark);
+  --color-brand-text:  var(--palette-neutral-0);  /* text on brand bg */
+
+  /* Accent */
+  --color-accent:       var(--palette-accent);
+  --color-accent-hover: var(--palette-accent-dark);
+
+  /* Borders */
+  --color-border:       var(--palette-neutral-2);
+  --color-border-focus: var(--palette-brand);
+
+  /* Semantic states */
+  --color-success: var(--palette-success);
+  --color-warning: var(--palette-warning);
+  --color-error:   var(--palette-error);
+  --color-info:    var(--palette-info);
+
+  /* Focus ring — visible across both modes */
+  --color-focus-ring: var(--palette-brand);
+}
+
+/* ── Dark Mode — system preference ──────────────────────── */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Surfaces — invert the scale */
+    --color-surface-base:    var(--palette-neutral-8);
+    --color-surface-raised:  var(--palette-neutral-7);
+    --color-surface-overlay: var(--palette-neutral-6);
+    --color-surface-inset:   var(--palette-neutral-7);
+
+    /* Text */
+    --color-text:        var(--palette-neutral-0);
+    --color-text-muted:  var(--palette-neutral-3);
+    --color-text-subtle: var(--palette-neutral-4);
+    --color-text-invert: var(--palette-neutral-8);
+
+    /* Brand — slightly lighter for dark backgrounds */
+    --color-brand:       var(--palette-brand-light);
+    --color-brand-hover: var(--palette-brand);
+    --color-brand-text:  var(--palette-neutral-8);
+
+    /* Accent */
+    --color-accent:       var(--palette-accent-light);
+    --color-accent-hover: var(--palette-accent);
+
+    /* Borders */
+    --color-border:       var(--palette-neutral-6);
+    --color-border-focus: var(--palette-brand-light);
+  }
+}
+
+/* ── Section-level data-theme overrides ──────────────────── */
+/* Apply to any element: <section data-theme="dark">         */
+/* These override both light and dark system preferences.    */
+
+[data-theme="light"] {
+  --color-surface-base:    var(--palette-neutral-0);
+  --color-surface-raised:  var(--palette-neutral-1);
+  --color-surface-overlay: var(--palette-neutral-2);
+
+  --color-text:        var(--palette-neutral-8);
+  --color-text-muted:  var(--palette-neutral-5);
+  --color-text-subtle: var(--palette-neutral-4);
+  --color-text-invert: var(--palette-neutral-0);
+
+  --color-brand:       var(--palette-brand);
+  --color-brand-hover: var(--palette-brand-dark);
+  --color-border:      var(--palette-neutral-2);
+}
+
+[data-theme="dark"] {
+  --color-surface-base:    var(--palette-neutral-8);
+  --color-surface-raised:  var(--palette-neutral-7);
+  --color-surface-overlay: var(--palette-neutral-6);
+
+  --color-text:        var(--palette-neutral-0);
+  --color-text-muted:  var(--palette-neutral-3);
+  --color-text-subtle: var(--palette-neutral-4);
+  --color-text-invert: var(--palette-neutral-8);
+
+  --color-brand:       var(--palette-brand-light);
+  --color-brand-hover: var(--palette-brand);
+  --color-border:      var(--palette-neutral-6);
+}
+
+[data-theme="brand"] {
+  --color-surface-base:    var(--palette-brand);
+  --color-surface-raised:  var(--palette-brand-dark);
+
+  --color-text:        var(--palette-neutral-0);
+  --color-text-muted:  oklch(from var(--palette-brand) calc(l + 0.3) c h);
+  --color-text-invert: var(--palette-neutral-8);
+
+  --color-border:      var(--palette-brand-dark);
+}

@@ -1,0 +1,143 @@
+/* ============================================================
+   BLOCK — nav.css
+   Main site navigation. Designed for a <header> containing
+   a <nav> with two <ul> elements:
+     - First <ul>: logo / app name (left)
+     - Second <ul>: navigation links (right)
+
+   Markup:
+     <header class="container">
+       <nav>
+         <ul>
+           <li><strong><a href="/">App Name</a></strong></li>
+         </ul>
+         <ul>
+           <li><a href="/invoices">Invoices</a></li>
+           <li>...<li>
+           <li>
+             <form class="button_to" ...>
+               <button type="submit">Sign out</button>
+             </form>
+           </li>
+         </ul>
+       </nav>
+     </header>
+   ============================================================ */
+
+/* ── Header ──────────────────────────────────────────────── */
+
+header:has(nav) {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: var(--color-surface-raised);
+    border-block-end: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+}
+
+/* ── Nav ─────────────────────────────────────────────────── */
+
+header nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-m);
+    padding-block: var(--space-s);
+}
+
+/* ── Both lists ──────────────────────────────────────────── */
+
+header nav ul {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-xs);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+/* ── All nav links ───────────────────────────────────────── */
+
+header nav a {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2xs) var(--space-s);
+    border-radius: 6px;
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition:
+        color 0.15s ease,
+        background-color 0.15s ease;
+    white-space: nowrap;
+}
+
+header nav a:hover {
+    color: var(--color-text);
+    background-color: var(--color-surface-overlay);
+}
+
+header nav a:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+}
+
+/* Active link — add aria-current="page" in your ERB */
+header nav a[aria-current="page"] {
+    color: var(--color-brand);
+    background-color: oklch(from var(--color-brand) l c h / 0.08);
+}
+
+/* ── Logo / app name — first list ────────────────────────── */
+
+header nav ul:first-child a {
+    font-size: var(--step-0);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text);
+    padding-inline-start: 0;
+    letter-spacing: var(--tracking-tight);
+}
+
+header nav ul:first-child a:hover {
+    background-color: transparent;
+    color: var(--color-brand);
+}
+
+/* ── Sign out — Rails button_to form ────────────────────── */
+/* Rails wraps button_to in a <form class="button_to">.      */
+/* We strip all form layout styles added by blocks/forms.css */
+
+header nav form.button_to {
+    display: contents; /* collapses the form element visually  */
+    /* override the flex column from blocks/forms.css */
+    flex-direction: unset;
+    gap: unset;
+}
+
+header nav form.button_to button {
+    display: inline-flex;
+    align-items: center;
+    padding: var(--space-2xs) var(--space-s);
+    border-radius: 6px;
+    font-size: var(--step--1);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition:
+        color 0.15s ease,
+        background-color 0.15s ease;
+    white-space: nowrap;
+}
+
+header nav form.button_to button:hover {
+    color: var(--color-error);
+    background-color: oklch(from var(--color-error) l c h / 0.08);
+}
+
+header nav form.button_to button:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: 2px;
+}

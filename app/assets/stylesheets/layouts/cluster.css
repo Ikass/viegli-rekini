@@ -1,0 +1,25 @@
+/* ============================================================
+   LAYOUT — cluster.css
+   Horizontal grouping that wraps. Every Layout "Cluster".
+   https://every-layout.dev/layouts/cluster/
+
+   Usage: <div class="cluster">
+   Custom gap: <div class="cluster" style="--cluster-gap: var(--space-s)">
+   Alignment: <div class="cluster" data-align="center">
+   ============================================================ */
+
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--cluster-gap, var(--gutter));
+  align-items: var(--cluster-align, center);
+}
+
+.cluster[data-align="start"]  { align-items: flex-start; }
+.cluster[data-align="end"]    { align-items: flex-end; }
+.cluster[data-align="center"] { align-items: center; }
+
+.cluster[data-justify="start"]        { justify-content: flex-start; }
+.cluster[data-justify="end"]          { justify-content: flex-end; }
+.cluster[data-justify="center"]       { justify-content: center; }
+.cluster[data-justify="space-between"]{ justify-content: space-between; }

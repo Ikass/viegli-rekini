@@ -1,6 +1,6 @@
 <h1>Invoices</h1>
 
-<%= link_to "New invoice", new_invoice_path %>
+<%= link_to "New invoice", new_invoice_path, class: "button", data: { variant: "primary" } %>
 
 <% if @invoices.any? %>
   <%# Group invoices by status in lifecycle order: draft → sent → paid → void. %>
@@ -10,31 +10,36 @@
 
     <section>
       <h2><%= status.to_s.titleize %> (<%= group.size %>)</h2>
-
-      <table>
-        <thead>
-          <tr>
-            <th>Number</th>
-            <th>Client</th>
-            <th>Issued</th>
-            <th>Due</th>
-            <th>Total</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% group.each do |invoice| %>
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
             <tr>
-              <td><%= link_to invoice.invoice_number, invoice_path(invoice) %></td>
-              <td><%= invoice.client.name %></td>
-              <td><%= invoice.issued_on %></td>
-              <td><%= invoice.due_on %></td>
-              <td><%= number_to_currency(invoice.total / 100.0, unit: "€") %></td>
-              <td><%= invoice.status %></td>
+              <th>Number</th>
+              <th>Client</th>
+              <th>Issued</th>
+              <th>Due</th>
+              <th class="col-numeric">Total</th>
+              <th>Status</th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <% group.each do |invoice| %>
+              <tr>
+                <td><%= link_to invoice.invoice_number, invoice_path(invoice) %></td>
+                <td><%= invoice.client.name %></td>
+                <td><%= invoice.issued_on %></td>
+                <td><%= invoice.due_on %></td>
+                <td class="col-numeric"><%= number_to_currency(invoice.total / 100.0, unit: "€") %></td>
+                <td>
+                  <span class="badge" data-status="<%= invoice.status %>">
+                    <%= invoice.status.humanize %>
+                  </span>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
 
       <p>
         <strong>Group total:</strong>
@@ -43,5 +48,5 @@
     </section>
   <% end %>
 <% else %>
-  <p>No invoices yet. <%= link_to "Create your first invoice", new_invoice_path %>.</p>
+  <p>No invoices yet. <%= link_to "Create your first invoice", new_invoice_path, class: "button" %>.</p>
 <% end %>

@@ -1,0 +1,45 @@
+/* ============================================================
+   LAYOUT — grid.css
+   Auto-filling responsive grid. Every Layout "Grid" primitive.
+   https://every-layout.dev/layouts/grid/
+
+   No media queries. Columns are added/removed automatically
+   as the container grows. Minimum column width is configurable.
+
+   Usage:
+     <div class="grid">
+     <div class="grid" style="--grid-min: 20rem">
+
+   For a fixed column count at any viewport:
+     <div class="grid" data-columns="3">
+   ============================================================ */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(min(var(--grid-min, 16rem), 100%), 1fr)
+  );
+  gap: var(--grid-gap, var(--gutter));
+}
+
+/* Fixed column counts — use sparingly, prefer auto-fill */
+.grid[data-columns="2"] { --grid-min: 0; grid-template-columns: repeat(2, 1fr); }
+.grid[data-columns="3"] { --grid-min: 0; grid-template-columns: repeat(3, 1fr); }
+.grid[data-columns="4"] { --grid-min: 0; grid-template-columns: repeat(4, 1fr); }
+
+/* Make fixed grids responsive at small viewports */
+@media (width < 40rem) {
+  .grid[data-columns="2"],
+  .grid[data-columns="3"],
+  .grid[data-columns="4"] {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (40rem <= width < 56rem) {
+  .grid[data-columns="3"],
+  .grid[data-columns="4"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

@@ -24,7 +24,7 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "create with valid params" do
-    assert_difference(["Invoice.count", "LineItem.count"]) do
+    assert_difference([ "Invoice.count", "LineItem.count" ]) do
       post invoices_path, params: { invoice: {
         client_id: @client.id,
         issued_on: Date.current,

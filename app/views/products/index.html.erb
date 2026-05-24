@@ -1,0 +1,33 @@
+<% content_for :title, "Products" %>
+
+<div class="cluster" data-justify="space-between">
+  <h1>Products</h1>
+  <%= link_to "New product", new_product_path, class: "button", data: { variant: "primary" } %>
+</div>
+
+<% if @products.any? %>
+  <div class="table-wrapper">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th class="col-numeric">Price</th>
+          <th class="col-numeric">VAT rate</th>
+          <th class="col-actions"></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @products.each do |product| %>
+          <tr>
+            <td><%= link_to product.name, product %></td>
+            <td class="col-numeric"><%= number_to_currency(product.default_price_cents / 100.0, unit: "€") %></td>
+            <td class="col-numeric"><%= product.default_vat_rate %>%</td>
+            <td class="col-actions"><%= link_to "Edit", edit_product_path(product), class: "button", data: { size: "sm" } %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <p>No products yet. <%= link_to "Add your first product", new_product_path, class: "button" %>.</p>
+<% end %>

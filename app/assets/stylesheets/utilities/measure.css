@@ -1,0 +1,13 @@
+/* ============================================================
+   UTILITY — measure.css
+   Constrains line length for readability.
+
+   Usage:
+     <p class="measure">         default (~65ch)
+     <p class="measure-wide">    wider  (~80ch)
+     <p class="measure-narrow">  narrow (~45ch)
+   ============================================================ */
+
+.measure        { max-width: var(--measure); }
+.measure-wide   { max-width: var(--measure-wide); }
+.measure-narrow { max-width: var(--measure-narrow); }

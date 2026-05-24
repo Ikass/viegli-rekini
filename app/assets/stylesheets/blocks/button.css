@@ -1,0 +1,134 @@
+/* ============================================================
+   BLOCK — button.css
+   Single .button class with data-variant for visual style
+   and data-size for scale.
+
+   Usage:
+     <button class="button">Default</button>
+     <button class="button" data-variant="primary">Primary</button>
+     <button class="button" data-variant="secondary">Secondary</button>
+     <button class="button" data-variant="ghost">Ghost</button>
+     <button class="button" data-variant="danger">Danger</button>
+     <a href="..." class="button" data-variant="primary">Link button</a>
+
+   Sizes:
+     <button class="button" data-size="sm">Small</button>
+     <button class="button" data-size="lg">Large</button>
+   ============================================================ */
+
+.button {
+  /* Layout */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+
+  /* Sizing */
+  padding: var(--space-xs) var(--space-m);
+  min-inline-size: 8ch;
+
+  /* Typography */
+  font-family: var(--font-base);
+  font-size: var(--step-0);
+  font-weight: var(--font-weight-medium);
+  line-height: var(--leading-tight);
+  text-decoration: none;
+  white-space: nowrap;
+
+  /* Default appearance — neutral outlined */
+  color: var(--color-text);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+
+  /* Transition */
+  transition: background-color 0.15s ease,
+              border-color 0.15s ease,
+              color 0.15s ease,
+              box-shadow 0.15s ease;
+}
+
+.button:hover {
+  background-color: var(--color-surface-raised);
+  border-color: var(--color-text-muted);
+}
+
+.button:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus);
+}
+
+.button:active {
+  transform: translateY(1px);
+}
+
+.button:disabled,
+.button[aria-disabled="true"] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ── Variants ────────────────────────────────────────────── */
+
+.button[data-variant="primary"] {
+  color: var(--color-brand-text);
+  background-color: var(--color-brand);
+  border-color: var(--color-brand);
+}
+
+.button[data-variant="primary"]:hover {
+  background-color: var(--color-brand-hover);
+  border-color: var(--color-brand-hover);
+}
+
+.button[data-variant="secondary"] {
+  color: var(--color-brand);
+  background-color: transparent;
+  border-color: var(--color-brand);
+}
+
+.button[data-variant="secondary"]:hover {
+  background-color: oklch(from var(--color-brand) l c h / 0.08);
+}
+
+.button[data-variant="ghost"] {
+  color: var(--color-text);
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.button[data-variant="ghost"]:hover {
+  background-color: var(--color-surface-raised);
+  border-color: transparent;
+}
+
+.button[data-variant="danger"] {
+  color: #fff;
+  background-color: var(--color-error);
+  border-color: var(--color-error);
+}
+
+.button[data-variant="danger"]:hover {
+  background-color: oklch(from var(--color-error) calc(l - 0.08) c h);
+  border-color: oklch(from var(--color-error) calc(l - 0.08) c h);
+}
+
+/* ── Sizes ───────────────────────────────────────────────── */
+
+.button[data-size="sm"] {
+  font-size: var(--step--1);
+  padding: var(--space-2xs) var(--space-s);
+}
+
+.button[data-size="lg"] {
+  font-size: var(--step-1);
+  padding: var(--space-s) var(--space-l);
+}
+
+/* ── Full width ──────────────────────────────────────────── */
+
+.button[data-width="full"] {
+  width: 100%;
+}

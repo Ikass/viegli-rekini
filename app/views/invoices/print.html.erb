@@ -1,0 +1,133 @@
+<% account = Current.user.account %>
+<% client = @invoice.client %>
+
+<div class="invoice-header">
+  <div>
+    <h1>Invoice <%= @invoice.invoice_number %></h1>
+  </div>
+  <div class="status">
+    <span class="badge" data-status="<%= @invoice.status %>"><%= @invoice.status.humanize %></span>
+  </div>
+</div>
+
+<div class="addresses">
+  <div>
+    <h2>From</h2>
+    <p class="company-name"><%= account.company_name.presence || account.name %></p>
+    <% if account.registration_number.present? %>
+      <p>Reg. No: <%= account.registration_number %></p>
+    <% end %>
+    <% if account.vat_number.present? %>
+      <p>VAT: <%= account.vat_number %></p>
+    <% end %>
+    <% if account.address.present? %>
+      <p><%= account.address %></p>
+    <% end %>
+    <% if account.city.present? || account.postal_code.present? %>
+      <p><%= [account.postal_code, account.city].compact.join(" ") %></p>
+    <% end %>
+    <% if account.country.present? %>
+      <p><%= account.country %></p>
+    <% end %>
+  </div>
+
+  <div>
+    <h2>To</h2>
+    <p class="company-name"><%= client.name %></p>
+    <% if client.company_name.present? %>
+      <p><%= client.company_name %></p>
+    <% end %>
+    <% if client.email.present? %>
+      <p><%= client.email %></p>
+    <% end %>
+    <% if client.vat_number.present? %>
+      <p>VAT: <%= client.vat_number %></p>
+    <% end %>
+    <% if client.address.present? %>
+      <p><%= client.address %></p>
+    <% end %>
+    <% if client.city.present? || client.postal_code.present? %>
+      <p><%= [client.postal_code, client.city].compact.join(" ") %></p>
+    <% end %>
+    <% if client.country.present? %>
+      <p><%= client.country %></p>
+    <% end %>
+  </div>
+</div>
+
+<dl class="invoice-meta">
+  <div>
+    <dt>Invoice Number</dt>
+    <dd><%= @invoice.invoice_number %></dd>
+  </div>
+  <div>
+    <dt>Issued</dt>
+    <dd><%= @invoice.issued_on %></dd>
+  </div>
+  <div>
+    <dt>Due</dt>
+    <dd><%= @invoice.due_on %></dd>
+  </div>
+</dl>
+
+<table>
+  <thead>
+    <tr>
+      <th class="col-desc">Description</th>
+      <th class="col-qty numeric">Qty</th>
+      <th class="col-price numeric">Unit price</th>
+      <th class="col-vat numeric">VAT</th>
+      <th class="col-total numeric">Total</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @invoice.line_items.each do |item| %>
+      <tr>
+        <td class="desc-cell"><%= item.description %></td>
+        <td class="numeric"><%= item.quantity %></td>
+        <td class="numeric"><%= number_to_currency(item.unit_price_cents / 100.0, unit: "€") %></td>
+        <td class="numeric"><%= item.vat_rate %>%</td>
+        <td class="numeric"><%= number_to_currency(item.total / 100.0, unit: "€") %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div class="totals">
+  <table>
+    <tr>
+      <td>Subtotal</td>
+      <td class="numeric"><%= number_to_currency(@invoice.subtotal / 100.0, unit: "€") %></td>
+    </tr>
+    <tr>
+      <td>VAT</td>
+      <td class="numeric"><%= number_to_currency(@invoice.vat_total / 100.0, unit: "€") %></td>
+    </tr>
+    <tr class="total-row">
+      <td>Total</td>
+      <td class="numeric"><%= number_to_currency(@invoice.total / 100.0, unit: "€") %></td>
+    </tr>
+  </table>
+</div>
+
+<% if @invoice.notes.present? %>
+  <div class="notes">
+    <h2>Notes</h2>
+    <p><%= @invoice.notes %></p>
+  </div>
+<% end %>
+
+<% if account.bank_name.present? || account.bank_account.present? %>
+  <div class="bank-details">
+    <h2>Payment details</h2>
+    <% if account.bank_name.present? %>
+      <p><strong>Bank:</strong> <%= account.bank_name %></p>
+    <% end %>
+    <% if account.bank_account.present? %>
+      <p><strong>IBAN:</strong> <%= account.bank_account %></p>
+    <% end %>
+    <% if account.bank_swift.present? %>
+      <p><strong>SWIFT/BIC:</strong> <%= account.bank_swift %></p>
+    <% end %>
+  </div>
+<% end %>

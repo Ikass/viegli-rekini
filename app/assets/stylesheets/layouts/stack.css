@@ -1,0 +1,20 @@
+/* ============================================================
+   LAYOUT — stack.css
+   Vertical rhythm via gap. Every Layout "Stack" primitive.
+   https://every-layout.dev/layouts/stack/
+
+   Usage: <div class="stack">
+   Custom gap: <div class="stack" style="--stack-gap: var(--space-l)">
+   ============================================================ */
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: var(--stack-gap, var(--component-gap));
+}
+
+/* Optionally push a child to the bottom of the stack */
+.stack > .push-end {
+  margin-block-start: auto;
+}

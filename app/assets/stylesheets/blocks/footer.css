@@ -1,0 +1,72 @@
+/* ============================================================
+   BLOCK — footer.css
+   Minimal app footer. Sits at the bottom of the page via
+   the sticky footer grid on body (base/global.css).
+   ============================================================ */
+
+footer {
+  border-block-start: 1px solid var(--color-border);
+  background-color: var(--color-surface-raised);
+  padding-block: var(--space-m);
+}
+
+footer .container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+}
+
+/* ── App info — left side ────────────────────────────────── */
+
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.footer-brand strong {
+  font-size: var(--step--1);
+  color: var(--color-text);
+}
+
+.footer-brand span {
+  font-size: var(--step--2);
+  color: var(--color-text-muted);
+}
+
+/* ── Meta — right side ───────────────────────────────────── */
+
+.footer-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-s);
+  font-size: var(--step--2);
+  color: var(--color-text-subtle);
+}
+
+.footer-meta .env {
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: 4px;
+  font-weight: var(--font-weight-bold);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  font-size: var(--step--2);
+  background-color: var(--color-surface-overlay);
+  border: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+}
+
+/* Highlight non-production environments */
+.footer-meta .env[data-env="development"] {
+  color: oklch(from var(--palette-warning) calc(l - 0.35) c h);
+  background-color: oklch(from var(--palette-warning) calc(l + 0.20) calc(c * 0.3) h);
+  border-color: oklch(from var(--palette-warning) calc(l - 0.05) calc(c * 0.5) h);
+}
+
+.footer-meta .env[data-env="test"] {
+  color: oklch(from var(--palette-info) calc(l - 0.20) c h);
+  background-color: oklch(from var(--palette-info) calc(l + 0.30) calc(c * 0.2) h);
+  border-color: oklch(from var(--palette-info) calc(l + 0.10) calc(c * 0.4) h);
+}

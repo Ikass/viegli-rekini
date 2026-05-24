@@ -1,35 +1,37 @@
 <% content_for :title, "Clients" %>
 
-<div class="actions">
+<div class="cluster" data-justify="space-between">
   <h1>Clients</h1>
-  <%= link_to "New client", new_client_path, role: "button" %>
+  <%= link_to "New client", new_client_path, class: "button", data: { variant: "primary" } %>
 </div>
 
 <% if @clients.any? %>
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Company</th>
-        <th>Email</th>
-        <th>VAT number</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @clients.each do |client| %>
+  <div class="table-wrapper">
+    <table class="table">
+      <thead>
         <tr>
-          <td><%= link_to client.name, client %></td>
-          <td><%= client.company_name %></td>
-          <td><%= client.email %></td>
-          <td><%= client.vat_number %></td>
-          <td>
-            <%= link_to "Edit", edit_client_path(client) %>
-          </td>
+          <th>Name</th>
+          <th>Company</th>
+          <th>Email</th>
+          <th>VAT number</th>
+          <th class="col-actions"></th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <% @clients.each do |client| %>
+          <tr>
+            <td><%= link_to client.name, client %></td>
+            <td><%= client.company_name %></td>
+            <td><%= client.email %></td>
+            <td><%= client.vat_number %></td>
+            <td class="col-actions">
+              <%= link_to "Edit", edit_client_path(client), class: "button", data: { size: "sm" } %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 <% else %>
-  <p>No clients yet. <%= link_to "Add your first client", new_client_path %>.</p>
+  <p>No clients yet. <%= link_to "Add your first client", new_client_path, class: "button" %>.</p>
 <% end %>

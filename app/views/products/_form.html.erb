@@ -1,0 +1,33 @@
+<%# locals: (product:) %>
+
+<%= form_with model: product do |form| %>
+  <% if product.errors.any? %>
+    <div role="alert">
+      <% product.errors.full_messages.each do |message| %>
+        <p><%= message %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :name %>
+    <%= form.text_field :name, required: true, autofocus: true %>
+  </div>
+
+  <div>
+    <%= form.label :default_price, "Price (€)" %>
+    <%= form.number_field :default_price, step: "0.01", min: "0" %>
+  </div>
+
+  <div>
+    <%= form.label :default_vat_rate, "VAT rate (%)" %>
+    <%= form.number_field :default_vat_rate, step: "0.01", min: "0" %>
+  </div>
+
+  <div>
+    <%= form.label :description %>
+    <%= form.text_area :description, rows: 3 %>
+  </div>
+
+  <%= form.submit class: "button", data: { variant: "primary" } %>
+<% end %>

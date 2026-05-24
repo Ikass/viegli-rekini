@@ -1,0 +1,32 @@
+/* ============================================================
+   TOKENS — shadows.css
+   Elevation-based shadow scale. Named by role, not number.
+   Uses OKLCH-aware colour so shadows feel natural in dark mode.
+   ============================================================ */
+
+:root {
+  /* Raw shadow colour — adjust hue to match your brand */
+  --shadow-color: oklch(0.20 0.02 264);
+
+  /* Scale */
+  --shadow-xs:  0 1px 2px oklch(from var(--shadow-color) l c h / 0.10);
+  --shadow-sm:  0 1px 3px oklch(from var(--shadow-color) l c h / 0.12),
+                0 1px 2px oklch(from var(--shadow-color) l c h / 0.08);
+  --shadow-md:  0 4px 6px oklch(from var(--shadow-color) l c h / 0.10),
+                0 2px 4px oklch(from var(--shadow-color) l c h / 0.08);
+  --shadow-lg:  0 10px 15px oklch(from var(--shadow-color) l c h / 0.10),
+                0 4px 6px oklch(from var(--shadow-color) l c h / 0.06);
+  --shadow-xl:  0 20px 25px oklch(from var(--shadow-color) l c h / 0.10),
+                0 10px 10px oklch(from var(--shadow-color) l c h / 0.05);
+
+  /* Semantic aliases */
+  --shadow-card:    var(--shadow-sm);
+  --shadow-raised:  var(--shadow-md);
+  --shadow-overlay: var(--shadow-xl);
+
+  /* Inner shadow — inputs, inset elements */
+  --shadow-inset: inset 0 1px 3px oklch(from var(--shadow-color) l c h / 0.12);
+
+  /* Focus ring — used on interactive elements */
+  --shadow-focus: 0 0 0 3px oklch(from var(--color-brand) l c h / 0.50);
+}

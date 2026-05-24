@@ -1,0 +1,131 @@
+/* ============================================================
+   BLOCK — flash.css
+   Rails flash message styles. Driven by data-type attribute
+   matching Rails' default flash keys plus common extras.
+
+   Markup (in application layout):
+     <% flash.each do |type, message| %>
+       <div class="flash" data-type="<%= type %>">
+         <%= message %>
+       </div>
+     <% end %>
+
+   Rails default keys:
+     data-type="notice"   → green  (success)
+     data-type="alert"    → yellow (warning)
+
+   Extended keys (set manually in controllers):
+     data-type="success"  → green
+     data-type="error"    → red
+     data-type="info"     → blue
+   ============================================================ */
+
+.flash {
+  padding: var(--space-s) var(--space-m);
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-size: var(--step--1);
+  line-height: var(--leading-snug);
+
+  /* Default — neutral, for any unmapped flash keys */
+  color: var(--color-text);
+  background-color: var(--color-surface-raised);
+  border-color: var(--color-border);
+}
+
+/* ── Notice — positive, confirmation ─────────────────────── */
+
+.flash[data-type="notice"],
+.flash[data-type="success"] {
+  color: oklch(from var(--palette-success) calc(l - 0.30) c h);
+  background-color: oklch(from var(--palette-success) calc(l + 0.30) calc(c * 0.3) h);
+  border-color: oklch(from var(--palette-success) calc(l + 0.10) calc(c * 0.5) h);
+}
+
+/* ── Alert — warning, requires attention ─────────────────── */
+
+.flash[data-type="alert"] {
+  color: oklch(from var(--palette-warning) calc(l - 0.40) c h);
+  background-color: oklch(from var(--palette-warning) calc(l + 0.20) calc(c * 0.3) h);
+  border-color: oklch(from var(--palette-warning) calc(l - 0.05) calc(c * 0.5) h);
+}
+
+/* ── Error — failure, destructive action result ──────────── */
+
+.flash[data-type="error"] {
+  color: oklch(from var(--palette-error) calc(l - 0.10) c h);
+  background-color: oklch(from var(--palette-error) calc(l + 0.35) calc(c * 0.2) h);
+  border-color: oklch(from var(--palette-error) calc(l + 0.15) calc(c * 0.4) h);
+}
+
+/* ── Info — neutral information ──────────────────────────── */
+
+.flash[data-type="info"] {
+  color: oklch(from var(--palette-info) calc(l - 0.20) c h);
+  background-color: oklch(from var(--palette-info) calc(l + 0.30) calc(c * 0.2) h);
+  border-color: oklch(from var(--palette-info) calc(l + 0.10) calc(c * 0.4) h);
+}
+
+/* ── Dark mode adjustments ───────────────────────────────── */
+/* Backgrounds become darker, text lighter — same hues        */
+
+@media (prefers-color-scheme: dark) {
+  .flash[data-type="notice"],
+  .flash[data-type="success"] {
+    color: oklch(from var(--palette-success) calc(l + 0.25) calc(c * 0.7) h);
+    background-color: oklch(from var(--palette-success) calc(l - 0.25) calc(c * 0.4) h);
+    border-color: oklch(from var(--palette-success) calc(l - 0.10) calc(c * 0.5) h);
+  }
+
+  .flash[data-type="alert"] {
+    color: oklch(from var(--palette-warning) calc(l + 0.10) c h);
+    background-color: oklch(from var(--palette-warning) calc(l - 0.35) calc(c * 0.4) h);
+    border-color: oklch(from var(--palette-warning) calc(l - 0.20) calc(c * 0.5) h);
+  }
+
+  .flash[data-type="error"] {
+    color: oklch(from var(--palette-error) calc(l + 0.30) calc(c * 0.7) h);
+    background-color: oklch(from var(--palette-error) calc(l - 0.20) calc(c * 0.3) h);
+    border-color: oklch(from var(--palette-error) calc(l - 0.05) calc(c * 0.4) h);
+  }
+
+  .flash[data-type="info"] {
+    color: oklch(from var(--palette-info) calc(l + 0.25) calc(c * 0.7) h);
+    background-color: oklch(from var(--palette-info) calc(l - 0.25) calc(c * 0.3) h);
+    border-color: oklch(from var(--palette-info) calc(l - 0.10) calc(c * 0.4) h);
+  }
+}
+
+/* ── data-theme section overrides ────────────────────────── */
+
+[data-theme="dark"] .flash[data-type="notice"],
+[data-theme="dark"] .flash[data-type="success"] {
+  color: oklch(from var(--palette-success) calc(l + 0.25) calc(c * 0.7) h);
+  background-color: oklch(from var(--palette-success) calc(l - 0.25) calc(c * 0.4) h);
+  border-color: oklch(from var(--palette-success) calc(l - 0.10) calc(c * 0.5) h);
+}
+
+[data-theme="dark"] .flash[data-type="alert"] {
+  color: oklch(from var(--palette-warning) calc(l + 0.10) c h);
+  background-color: oklch(from var(--palette-warning) calc(l - 0.35) calc(c * 0.4) h);
+  border-color: oklch(from var(--palette-warning) calc(l - 0.20) calc(c * 0.5) h);
+}
+
+[data-theme="dark"] .flash[data-type="error"] {
+  color: oklch(from var(--palette-error) calc(l + 0.30) calc(c * 0.7) h);
+  background-color: oklch(from var(--palette-error) calc(l - 0.20) calc(c * 0.3) h);
+  border-color: oklch(from var(--palette-error) calc(l - 0.05) calc(c * 0.4) h);
+}
+
+[data-theme="dark"] .flash[data-type="info"] {
+  color: oklch(from var(--palette-info) calc(l + 0.25) calc(c * 0.7) h);
+  background-color: oklch(from var(--palette-info) calc(l - 0.25) calc(c * 0.3) h);
+  border-color: oklch(from var(--palette-info) calc(l - 0.10) calc(c * 0.4) h);
+}
+
+/* ── Multiple flash messages ─────────────────────────────── */
+/* Wrap in a container in your layout for consistent spacing  */
+
+.flash + .flash {
+  margin-block-start: var(--space-xs);
+}

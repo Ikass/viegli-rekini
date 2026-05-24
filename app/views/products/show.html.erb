@@ -1,0 +1,21 @@
+<% content_for :title, @product.name %>
+
+<article>
+  <header>
+    <h1><%= @product.name %></h1>
+  </header>
+
+  <p><strong>Price:</strong> <%= number_to_currency(@product.default_price_cents / 100.0, unit: "€") %></p>
+  <p><strong>VAT rate:</strong> <%= @product.default_vat_rate %>%</p>
+
+  <% if @product.description.present? %>
+    <p><strong>Description:</strong></p>
+    <p><%= @product.description %></p>
+  <% end %>
+
+  <footer class="cluster">
+    <%= link_to "Edit", edit_product_path(@product), class: "button" %>
+    <%= button_to "Delete", product_path(@product), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Are you sure?" } } %>
+    <%= link_to "Back to products", products_path, class: "button", data: { variant: "ghost" } %>
+  </footer>
+</article>

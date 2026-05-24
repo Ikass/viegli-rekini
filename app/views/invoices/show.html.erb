@@ -1,20 +1,20 @@
 <article>
   <header>
     <h1><%= @invoice.invoice_number %></h1>
-    <p data-testid="invoice-status">Status: <strong><%= @invoice.status %></strong></p>
+    <p data-testid="invoice-status">Status: <span class="badge" data-status="<%= @invoice.status %>"><%= @invoice.status.humanize %></span></p>
 
     <%# Only show transition buttons for valid next actions. %>
-    <div role="group">
+    <div class="cluster">
       <% if @invoice.draft? %>
-        <%= button_to "Send invoice", invoice_invoice_sends_path(@invoice), method: :post %>
+        <%= button_to "Send invoice", invoice_invoice_sends_path(@invoice), method: :post, class: "button", data: { variant: "primary" } %>
       <% end %>
 
       <% if @invoice.sent? %>
-        <%= button_to "Record payment", invoice_invoice_payments_path(@invoice), method: :post %>
+        <%= button_to "Record payment", invoice_invoice_payments_path(@invoice), method: :post, class: "button", data: { variant: "primary" } %>
       <% end %>
 
       <% unless @invoice.void? %>
-        <%= button_to "Void invoice", invoice_invoice_voids_path(@invoice), method: :post, form: { data: { turbo_confirm: "Void this invoice? This action cannot be undone." } } %>
+        <%= button_to "Void invoice", invoice_invoice_voids_path(@invoice), method: :post, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Void this invoice? This action cannot be undone." } } %>
       <% end %>
     </div>
   </header>
@@ -42,38 +42,40 @@
   <section>
     <h2>Line Items</h2>
     <% if @invoice.line_items.any? %>
-      <table>
-        <thead>
-          <tr>
-            <th>Description</th>
-            <th>Qty</th>
-            <th>Unit price</th>
-            <th>VAT</th>
-            <th>Total</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <% @invoice.line_items.each do |item| %>
+      <div class="table-wrapper">
+        <table class="table">
+          <thead>
             <tr>
-              <td><%= item.description %></td>
-              <td><%= item.quantity %></td>
-              <td><%= number_to_currency(item.unit_price_cents / 100.0, unit: "€") %></td>
-              <td><%= item.vat_rate %>%</td>
-              <td><%= number_to_currency(item.total / 100.0, unit: "€") %></td>
-              <td>
-                <%= link_to "Edit", edit_line_item_path(item) %>
-                <%= button_to "Remove", line_item_path(item), method: :delete, form: { data: { turbo_confirm: "Remove this line item?" } } %>
-              </td>
+              <th>Description</th>
+              <th class="col-numeric">Qty</th>
+              <th class="col-numeric">Unit price</th>
+              <th class="col-numeric">VAT</th>
+              <th class="col-numeric">Total</th>
+              <th class="col-actions"></th>
             </tr>
-          <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            <% @invoice.line_items.each do |item| %>
+              <tr>
+                <td><%= item.description %></td>
+                <td class="col-numeric"><%= item.quantity %></td>
+                <td class="col-numeric"><%= number_to_currency(item.unit_price_cents / 100.0, unit: "€") %></td>
+                <td class="col-numeric"><%= item.vat_rate %>%</td>
+                <td class="col-numeric"><%= number_to_currency(item.total / 100.0, unit: "€") %></td>
+                <td class="col-actions cluster" style="--cluster-gap: var(--space-2xs)">
+                  <%= link_to "Edit", edit_line_item_path(item), class: "button", data: { size: "sm" } %>
+                  <%= button_to "Remove", line_item_path(item), method: :delete, class: "button", data: { variant: "danger", size: "sm" }, form: { data: { turbo_confirm: "Remove this line item?" } } %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
     <% else %>
       <p>No line items.</p>
     <% end %>
 
-    <%= link_to "Add line item", new_invoice_line_item_path(@invoice) %>
+    <%= link_to "Add line item", new_invoice_line_item_path(@invoice), class: "button" %>
   </section>
 
   <section>
@@ -90,9 +92,10 @@
     </section>
   <% end %>
 
-  <footer>
-    <%= link_to "Edit", edit_invoice_path(@invoice) %>
-    <%= button_to "Delete", invoice_path(@invoice), method: :delete, form: { data: { turbo_confirm: "Are you sure?" } } %>
-    <%= link_to "Back to invoices", invoices_path %>
+  <footer class="cluster">
+    <%= link_to "Print", print_invoice_path(@invoice), target: "_blank", class: "button" %>
+    <%= link_to "Edit", edit_invoice_path(@invoice), class: "button" %>
+    <%= button_to "Delete", invoice_path(@invoice), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Are you sure?" } } %>
+    <%= link_to "Back to invoices", invoices_path, class: "button", data: { variant: "ghost" } %>
   </footer>
 </article>

@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Print — <%= @invoice.invoice_number %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+
+    <style>
+      /* ── Page setup ────────────────────────────────────────── */
+
+      @page {
+        size: A4;
+        margin: 15mm 20mm;
+
+        /* Suppress browser-added headers/footers (URL, page number) */
+        @top-left   { content: none; }
+        @top-right  { content: none; }
+        @bottom-left  { content: none; }
+        @bottom-right { content: none; }
+      }
+
+      /* ── Base ──────────────────────────────────────────────── */
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      :root {
+        /* Neutral print palette — near-black to near-white */
+        --print-ink:        oklch(0.12 0.005 264);  /* body text */
+        --print-ink-muted:  oklch(0.40 0.008 264);  /* secondary text */
+        --print-ink-subtle: oklch(0.60 0.006 264);  /* labels, captions */
+        --print-border:     oklch(0.80 0.005 264);  /* light rules */
+        --print-border-dark:oklch(0.25 0.006 264);  /* heavy rules */
+        --print-surface:    oklch(0.98 0.002 264);  /* page background */
+        --print-card:       oklch(1.00 0 0);         /* pure white */
+
+        /* Typography — pt units for print precision */
+        --print-size-xs:   8pt;
+        --print-size-sm:   9pt;
+        --print-size-base: 10pt;
+        --print-size-md:   11pt;
+        --print-size-lg:   14pt;
+        --print-size-xl:   18pt;
+
+        /* Spacing — pt units */
+        --print-gap-xs:  4pt;
+        --print-gap-sm:  8pt;
+        --print-gap-md:  16pt;
+        --print-gap-lg:  24pt;
+        --print-gap-xl:  32pt;
+      }
+
+      body {
+        font-family: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+        font-size: var(--print-size-base);
+        line-height: 1.5;
+        color: var(--print-ink);
+        margin: 0;
+        padding: 0;
+        background-color: var(--print-surface);
+
+        /* Ensure colours print accurately */
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      h1, h2, h3, h4 {
+        margin: 0;
+        font-weight: bold;
+        color: var(--print-ink);
+      }
+
+      h1 { font-size: var(--print-size-xl); }
+
+      h2 {
+        font-size: var(--print-size-sm);
+        color: var(--print-ink-subtle);
+        text-transform: uppercase;
+        letter-spacing: 0.5pt;
+        border-block-end: 1pt solid var(--print-border);
+        padding-block-end: var(--print-gap-xs);
+        margin-block-end: var(--print-gap-sm);
+      }
+
+      p {
+        margin: 0 0 var(--print-gap-xs);
+      }
+
+      strong {
+        color: var(--print-ink);
+      }
+
+      dl, dd {
+        margin: 0;
+        padding: 0;
+      }
+
+      /* ── Screen-only card wrapper ───────────────────────────── */
+      /* On screen the invoice floats as a white card on a grey   */
+      /* background, mimicking A4 paper. On print it disappears.  */
+
+      .print-page {
+        background-color: var(--print-card);
+        max-width: 210mm;
+        margin-inline: auto;
+        margin-block: var(--print-gap-lg);
+        padding: var(--print-gap-xl);
+        border: 1pt solid var(--print-border);
+        border-radius: 4px;
+        box-shadow: 0 4px 24px oklch(0.20 0.005 264 / 0.12);
+      }
+
+      @media print {
+        body {
+          background: none;
+        }
+
+        .print-page {
+          max-width: none;
+          margin: 0;
+          padding: 0;
+          border: none;
+          border-radius: 0;
+          box-shadow: none;
+        }
+
+        .no-print {
+          display: none !important;
+        }
+      }
+
+      /* ── Invoice header ─────────────────────────────────────── */
+
+      .invoice-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-block-end: var(--print-gap-lg);
+        padding-block-end: var(--print-gap-md);
+        border-block-end: 2pt solid var(--print-border-dark);
+      }
+
+      .invoice-header .status {
+        font-size: var(--print-size-sm);
+        color: var(--print-ink-muted);
+        text-align: right;
+        line-height: 1.4;
+      }
+
+      .invoice-header .status strong {
+        display: block;
+        text-transform: uppercase;
+        letter-spacing: 0.5pt;
+        font-size: var(--print-size-xs);
+      }
+
+      /* ── Address block ──────────────────────────────────────── */
+
+      .addresses {
+        display: flex;
+        gap: var(--print-gap-lg);
+        margin-block-end: var(--print-gap-lg);
+      }
+
+      .addresses > div {
+        flex: 1;
+      }
+
+      .company-name {
+        font-weight: bold;
+        font-size: var(--print-size-md);
+        margin-block-end: var(--print-gap-xs);
+      }
+
+      /* ── Invoice meta ───────────────────────────────────────── */
+
+      .invoice-meta {
+        display: flex;
+        gap: var(--print-gap-lg);
+        margin-block-end: var(--print-gap-lg);
+        font-size: var(--print-size-sm);
+        background-color: oklch(0.95 0.003 264);
+        padding: var(--print-gap-sm) var(--print-gap-md);
+        border-radius: 3px;
+      }
+
+      .invoice-meta dt {
+        color: var(--print-ink-subtle);
+        font-weight: bold;
+        font-size: var(--print-size-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.4pt;
+        margin-block-end: 2pt;
+      }
+
+      .invoice-meta dd {
+        font-size: var(--print-size-base);
+        color: var(--print-ink);
+      }
+
+      /* ── Line items table ───────────────────────────────────── */
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-block-end: var(--print-gap-lg);
+      }
+
+      thead th {
+        text-align: left;
+        font-size: var(--print-size-xs);
+        text-transform: uppercase;
+        letter-spacing: 0.5pt;
+        color: var(--print-ink-subtle);
+        border-block-end: 1pt solid var(--print-border-dark);
+        padding: var(--print-gap-sm) var(--print-gap-xs);
+      }
+
+      tbody td {
+        padding: var(--print-gap-sm) var(--print-gap-xs);
+        border-block-end: 1pt solid var(--print-border);
+        vertical-align: top;
+        font-size: var(--print-size-base);
+      }
+
+      tbody tr:last-child td {
+        border-block-end: 1pt solid var(--print-border-dark);
+      }
+
+      /* Avoid page breaks mid-row */
+      tbody tr {
+        break-inside: avoid;
+      }
+
+      .col-desc  { width: 40%; }
+      .col-qty   { width: 10%; }
+      .col-price { width: 16%; }
+      .col-vat   { width: 10%; }
+      .col-total { width: 16%; }
+
+      .numeric {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .desc-cell {
+        word-break: break-word;
+      }
+
+      /* ── Totals ─────────────────────────────────────────────── */
+
+      .totals {
+        margin-inline-start: auto;
+        width: 240pt;
+      }
+
+      .totals table {
+        margin-block-end: 0;
+      }
+
+      .totals td {
+        padding: var(--print-gap-xs);
+        border: none;
+        font-size: var(--print-size-base);
+      }
+
+      .totals .label {
+        color: var(--print-ink-muted);
+      }
+
+      .totals .total-row td {
+        font-weight: bold;
+        font-size: var(--print-size-md);
+        border-block-start: 2pt solid var(--print-border-dark);
+        padding-block-start: var(--print-gap-sm);
+        color: var(--print-ink);
+      }
+
+      /* ── Notes ──────────────────────────────────────────────── */
+
+      .notes {
+        margin-block-start: var(--print-gap-lg);
+        padding-block-start: var(--print-gap-md);
+        border-block-start: 1pt solid var(--print-border);
+        font-size: var(--print-size-sm);
+        color: var(--print-ink-muted);
+      }
+
+      .notes h2 {
+        margin-block-end: var(--print-gap-xs);
+      }
+
+      /* ── Bank details ───────────────────────────────────────── */
+
+      .bank-details {
+        margin-block-start: var(--print-gap-lg);
+        padding-block-start: var(--print-gap-md);
+        border-block-start: 1pt solid var(--print-border);
+        font-size: var(--print-size-sm);
+      }
+
+      .bank-details p {
+        margin-block-end: 2pt;
+      }
+
+      /* ── Page break hints ───────────────────────────────────── */
+
+      .addresses,
+      .invoice-meta,
+      .totals,
+      .notes,
+      .bank-details {
+        break-inside: avoid;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="print-page">
+      <%= yield %>
+    </div>
+  </body>
+</html>

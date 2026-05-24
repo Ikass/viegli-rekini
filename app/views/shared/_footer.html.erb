@@ -1,0 +1,14 @@
+<footer>
+  <div class="container">
+    <div class="footer-brand">
+      <strong><%= ERekiniMvp::Application::APP_NAME %></strong>
+      <span>Simple invoicing for small businesses</span>
+    </div>
+
+    <div class="footer-meta">
+      <span>&copy; <%= Date.current.year %></span>
+      <span>v<%= ERekiniMvp::Application::VERSION %></span>
+      <span class="env" data-env="<%= Rails.env %>"><%= Rails.env %></span>
+    </div>
+  </div>
+</footer>

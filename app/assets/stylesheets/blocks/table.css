@@ -1,0 +1,135 @@
+/* ============================================================
+   BLOCK — table.css
+   Generic table styles for index/listing pages.
+
+   Usage:
+     <table class="table">
+       <thead>...</thead>
+       <tbody>...</tbody>
+     </table>
+
+   Variants:
+     <table class="table" data-variant="striped">
+     <table class="table" data-variant="bordered">
+
+   Responsive wrapper (prevents overflow on small screens):
+     <div class="table-wrapper">
+       <table class="table">...</table>
+     </div>
+   ============================================================ */
+
+/* ── Wrapper ─────────────────────────────────────────────── */
+
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+}
+
+/* ── Base table ──────────────────────────────────────────── */
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--step--1);
+  text-align: left;
+}
+
+/* When inside wrapper, let border-radius show */
+.table-wrapper .table {
+  border: none;
+  border-radius: 0;
+}
+
+/* ── Head ────────────────────────────────────────────────── */
+
+.table thead {
+  background-color: var(--color-surface-raised);
+  border-block-end: 1px solid var(--color-border);
+}
+
+.table thead th {
+  padding: var(--space-xs) var(--space-s);
+  font-size: var(--step--2);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  white-space: nowrap;
+  border-block-end: none;
+}
+
+/* ── Body ────────────────────────────────────────────────── */
+
+.table tbody tr {
+  border-block-end: 1px solid var(--color-border);
+  transition: background-color 0.10s ease;
+}
+
+.table tbody tr:last-child {
+  border-block-end: none;
+}
+
+.table tbody tr:hover {
+  background-color: var(--color-surface-raised);
+}
+
+.table tbody td {
+  padding: var(--space-xs) var(--space-s);
+  color: var(--color-text);
+  vertical-align: middle;
+  border-block-end: none;
+}
+
+/* ── Foot ────────────────────────────────────────────────── */
+
+.table tfoot {
+  border-block-start: 1px solid var(--color-border);
+  background-color: var(--color-surface-raised);
+}
+
+.table tfoot td {
+  padding: var(--space-xs) var(--space-s);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text);
+}
+
+/* ── Numeric column ──────────────────────────────────────── */
+
+.table .col-numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Actions column — buttons/links on the right ─────────── */
+
+.table .col-actions {
+  text-align: right;
+  white-space: nowrap;
+  width: 1%;           /* shrink to content */
+}
+
+/* ── Variants ────────────────────────────────────────────── */
+
+.table[data-variant="striped"] tbody tr:nth-child(even) {
+  background-color: var(--color-surface-raised);
+}
+
+.table[data-variant="striped"] tbody tr:nth-child(even):hover {
+  background-color: var(--color-surface-overlay);
+}
+
+.table[data-variant="bordered"] td,
+.table[data-variant="bordered"] th {
+  border: 1px solid var(--color-border);
+}
+
+/* ── Empty state ─────────────────────────────────────────── */
+
+.table tbody .table-empty {
+  text-align: center;
+  color: var(--color-text-muted);
+  padding: var(--space-2xl);
+  font-size: var(--step-0);
+}

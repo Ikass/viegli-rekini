@@ -17,7 +17,7 @@ class CreateInvoices < ActiveRecord::Migration[8.1]
 
     # Invoice numbers must be unique per account — two tenants can both have INV-0001,
     # but one tenant cannot have duplicates.
-    add_index :invoices, [:account_id, :invoice_number], unique: true
+    add_index :invoices, [ :account_id, :invoice_number ], unique: true
 
     # Database-level guard so status is always a known enum value, even if
     # Rails validations are bypassed (e.g. update_column).

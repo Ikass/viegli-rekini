@@ -17,7 +17,7 @@ Portfolio project — code quality and architectural clarity matter as much as f
 - **Rails 8.1.2** — modern idioms; `params.expect()` for strong parameters
 - **PostgreSQL** — `structure.sql` configured (`config.active_record.schema_format = :sql`)
 - **Hotwire** — Turbo + Stimulus
-- **Pico CSS** from CDN + `application.css` for overrides
+- **Custom vanilla CSS** (CUBE CSS) — OKLCH color tokens, Every Layout primitives, logical properties
 - **Minitest** — model, service, and system tests
 - **Render** — deployment target
 
@@ -32,11 +32,11 @@ Portfolio project — code quality and architectural clarity matter as much as f
 | Start dev server | `bin/dev` (or `bin/setup` without `--skip-server`) |
 | Single test file | `bin/rails test test/models/invoice_test.rb` |
 | All model/service tests | `bin/rails test` |
-| System tests | `bin/rails test:system` (currently commented out in `config/ci.rb`) |
+| System tests | `bin/rails test:system` |
 | Security scan | `bin/brakeman --quiet --no-pager` |
 | Style check | `bin/rubocop` |
 
-`bin/ci` runs: setup → rubocop → bundler-audit → importmap audit → brakeman → `bin/rails test` → seed replant. System tests are optional and currently disabled in CI.
+`bin/ci` runs: setup → rubocop → bundler-audit → importmap audit → brakeman → `bin/rails test` → seed replant → system tests.
 
 ---
 
@@ -149,6 +149,7 @@ Client (belongs_to :account)
   - email: string
   - company_name: string
   - vat_number: string
+  - address, city, postal_code, country: string
 
 Invoice (belongs_to :account, belongs_to :client)
   - invoice_number: string, null: false, unique (INV-0001 format)
@@ -163,6 +164,12 @@ LineItem (belongs_to :invoice)
   - unit_price_cents: integer, null: false (euro cents — 5000 = €50.00)
   - vat_rate: decimal, null: false, default: 0
   - position: integer (for ordering)
+
+Product (belongs_to :account)
+  - name: string, null: false
+  - description: text
+  - unit_price_cents: integer, null: false (euro cents)
+  - vat_rate: decimal, null: false, default: 21.0
 ```
 
 **Calculated on Invoice (no DB columns):**
@@ -220,12 +227,19 @@ Invalid transitions raise an error — they do not silently fail. Each transitio
 - Status transition services (`InvoiceSender`, `InvoicePaymentRecorder`, `InvoiceVoider`) + REST resource controllers
 - Transition buttons in UI — only valid next actions shown
 - Invoices index grouped by status with group totals
+- `Product` model with full CRUD — virtual `default_price` attribute, cents-based storage
+- Account settings page — company details, address, bank info (single edit/update page)
+- Client address fields — `address`, `city`, `postal_code`, `country`
 - `bin/ci`, `bin/setup`, `bin/dev` configured
-- Pico CSS from CDN; strict locals on partials
+- Custom CUBE CSS design system (OKLCH tokens, Every Layout primitives, forms, tables, badges, buttons)
+- Print-ready invoice view (`layouts/print.html.erb` + embedded print CSS)
+- Product picker (Stimulus controller + JSON endpoint) — auto-fills line item fields from product
+- Seed file — demo account with sample clients, products, and invoices across all statuses
+- System tests — invoice lifecycle + client CRUD (via `bin/rails test:system`)
 
 ### What's next
 1. Print-ready invoice view (`layouts/print.html.erb` + print CSS)
-2. Seed file — demo account with sample clients and invoices
+2. Seed file — demo account with sample clients, products, and invoices across all statuses
 3. Deploy to Render
 
 ---

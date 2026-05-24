@@ -1,0 +1,110 @@
+/* ============================================================
+   BLOCK — forms.css
+   Composed form layout: field groups, hints, errors, actions.
+
+   Works two ways:
+     1. Plain <form><p>...</p></form> — Rails default output
+     2. <div class="field"> — explicit hook for custom markup
+
+   No BEM. Semantic selectors + composition classes only.
+   ============================================================ */
+
+/* ── Field group — label + input + hint + error ──────────── */
+/* Targets both Rails' generated <p> wrappers and .field divs */
+
+form p,
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+/* ── Hint text ───────────────────────────────────────────── */
+
+.hint,
+form p .hint,
+[aria-describedby] + .hint {
+  font-size: var(--step--2);
+  color: var(--color-text-muted);
+  line-height: var(--leading-snug);
+}
+
+/* ── Error message ───────────────────────────────────────── */
+
+.error,
+.field-error,
+form p .error {
+  font-size: var(--step--2);
+  color: var(--color-error);
+  line-height: var(--leading-snug);
+}
+
+/* Error state on the input itself */
+.field[data-invalid] input,
+.field[data-invalid] textarea,
+.field[data-invalid] select {
+  border-color: var(--color-error);
+  box-shadow: 0 0 0 3px oklch(from var(--color-error) l c h / 0.20);
+}
+
+/* ── Required indicator ──────────────────────────────────── */
+
+label abbr[title="required"] {
+  color: var(--color-error);
+  text-decoration: none;
+  margin-inline-start: var(--space-3xs);
+}
+
+/* ── Form layout ─────────────────────────────────────────── */
+
+/* Stack all fields with consistent vertical rhythm */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+}
+
+/* Inline fields side by side — useful for name, short inputs */
+.fields-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+}
+
+.fields-inline > * {
+  flex: 1;
+  min-inline-size: 12rem;
+}
+
+/* Two column grid — useful for larger forms */
+.fields-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  gap: var(--space-s) var(--space-m);
+}
+
+/* ── Form actions — button row ───────────────────────────── */
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-s);
+  margin-block-start: var(--space-s);
+  padding-block-start: var(--space-m);
+  border-block-start: 1px solid var(--color-border);
+}
+
+/* ── Checkbox / radio groups ─────────────────────────────── */
+
+.check-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.check-group[data-direction="row"] {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: var(--space-m);
+}

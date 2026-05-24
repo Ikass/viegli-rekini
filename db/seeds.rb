@@ -1,9 +1,109 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# frozen_string_literal: true
+
+return if Rails.env.test?
+
+demo_email = "demo@example.com"
+demo_password = "password"
+
+user = User.find_by(email_address: demo_email)
+
+if user
+  puts "Demo account already exists — skipping seed."
+  return
+end
+
+ActiveRecord::Base.transaction do
+  account = Account.create!(
+    name: "Demo Uzņēmums",
+    company_name: "SIA Demo Uzņēmums",
+    registration_number: "LV40001234567",
+    vat_number: "LV40001234567",
+    address: "Brīvības iela 100",
+    city: "Rīga",
+    postal_code: "LV-1001",
+    country: "Latvija",
+    bank_name: "Swedbank",
+    bank_account: "LV12HABA0001234567890",
+    bank_swift: "HABALV22"
+  )
+
+  User.create!(
+    email_address: demo_email,
+    password: demo_password,
+    password_confirmation: demo_password,
+    account: account
+  )
+
+  clients = [
+    { name: "Jānis Bērziņš", company_name: "Bērziņa Konsultācijas", email: "janis@berzins.lv", vat_number: "LV98765432101", address: "Kr. Barona iela 25", city: "Rīga", postal_code: "LV-1011", country: "Latvija" },
+    { name: "Ilze Ozoliņa", company_name: "Ozoliņa Dizains", email: "ilze@ozolina.lv", vat_number: "LV12345678901", address: "Lāčplēša iela 70", city: "Rīga", postal_code: "LV-1002", country: "Latvija" },
+    { name: "Mārtiņš Liepiņš", email: "martins@liepins.lv", address: "Rīgas iela 15", city: "Cēsis", postal_code: "LV-4101", country: "Latvija" },
+    { name: "SIA Zaļā Enerģija", company_name: "SIA Zaļā Enerģija", email: "info@zalaenergija.lv", vat_number: "LV56789012345", address: "Ventspils iela 3", city: "Ventspils", postal_code: "LV-3601", country: "Latvija" }
+  ].map { |attrs| account.clients.create!(attrs) }
+
+  products = [
+    { name: "Konsultāciju stunda", description: "Biznesa konsultācija 1 stunda", default_price_cents: 12000, default_vat_rate: 21 },
+    { name: "Mājas lapas izstrāde", description: "Vienas lapas tīmekļa vietne", default_price_cents: 50000, default_vat_rate: 21 },
+    { name: "Gada grāmatvedības pārskats", description: "Gada pārskata sagatavošana", default_price_cents: 35000, default_vat_rate: 21 },
+    { name: "IT atbalsts mēnesī", description: "IT sistēmu uzturēšana un atbalsts", default_price_cents: 8000, default_vat_rate: 21 },
+    { name: "Apgrozījuma aprēķins", description: "Mēneša apgrozījuma atskaite", default_price_cents: 4500, default_vat_rate: 0 },
+    { name: "Dizaina koncepts", description: "Vizuālās identitātes izstrāde", default_price_cents: 25000, default_vat_rate: 21 }
+  ].map { |attrs| account.products.create!(attrs) }
+
+  today = Date.current
+
+  invoice_data = [
+    { status: :draft, client: clients[0], days_ago: 2, due_days: 12, notes: "Melnraksts — vēl jāpārskata.", items: [
+      { product: products[0], quantity: 3 },
+      { product: products[4], quantity: 1 }
+    ] },
+    { status: :sent, client: clients[1], days_ago: 10, due_days: 4, notes: "Atgādinājums nosūtīts 2026-05-20.", items: [
+      { product: products[1], quantity: 1 },
+      { product: products[5], quantity: 2 },
+      { product: products[0], quantity: 1 }
+    ] },
+    { status: :sent, client: clients[2], days_ago: 5, due_days: 9, items: [
+      { product: products[2], quantity: 1 },
+      { product: products[3], quantity: 3 }
+    ] },
+    { status: :paid, client: clients[0], days_ago: 30, due_days: -16, items: [
+      { product: products[4], quantity: 2 },
+      { product: products[0], quantity: 2 }
+    ] },
+    { status: :paid, client: clients[3], days_ago: 45, due_days: -31, notes: "Apmaksāts ar pārskaitījumu.", items: [
+      { product: products[3], quantity: 6 },
+      { product: products[1], quantity: 1 }
+    ] },
+    { status: :void, client: clients[1], days_ago: 20, due_days: -6, notes: "Anulēts pēc klienta pieprasījuma.", items: [
+      { product: products[5], quantity: 1 }
+    ] }
+  ]
+
+  invoice_data.each do |data|
+    invoice = account.invoices.create!(
+      client: data[:client],
+      issued_on: today - data[:days_ago],
+      due_on: today + data[:due_days],
+      status: data[:status],
+      notes: data[:notes]
+    )
+
+    data[:items].each_with_index do |item_data, idx|
+      product = item_data[:product]
+      invoice.line_items.create!(
+        description: product.description || product.name,
+        quantity: item_data[:quantity],
+        unit_price_cents: product.default_price_cents,
+        vat_rate: product.default_vat_rate,
+        position: idx
+      )
+    end
+  end
+
+  total_invoices = account.invoices.count
+  total_clients = account.clients.count
+  total_products = account.products.count
+
+  puts "Seed complete: #{total_clients} clients, #{total_products} products, #{total_invoices} invoices created."
+  puts "Sign in with #{demo_email} / #{demo_password}"
+end

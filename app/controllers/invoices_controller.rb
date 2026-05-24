@@ -1,13 +1,17 @@
 # frozen_string_literal: true
 
 class InvoicesController < ApplicationController
-  before_action :set_invoice, only: %i[show edit update destroy]
+  before_action :set_invoice, only: %i[show edit update destroy print]
 
   def index
     @invoices = Current.user.account.invoices.order(created_at: :desc)
   end
 
   def show
+  end
+
+  def print
+    render layout: "print"
   end
 
   def new

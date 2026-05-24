@@ -2,4 +2,4 @@
 
 <%= render "form", line_item: @line_item, url: line_item_path(@line_item) %>
 
-<%= link_to "Back to invoice", invoice_path(@line_item.invoice) %>
+<%= link_to "Back to invoice", invoice_path(@line_item.invoice), class: "button" %>

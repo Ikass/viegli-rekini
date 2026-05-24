@@ -1,0 +1,69 @@
+<% content_for :title, "Settings" %>
+
+<h1>Settings</h1>
+
+<%= form_with model: @account, url: account_path do |form| %>
+  <% if @account.errors.any? %>
+    <div role="alert">
+      <% @account.errors.full_messages.each do |message| %>
+        <p><%= message %></p>
+      <% end %>
+    </div>
+  <% end %>
+
+  <fieldset>
+    <legend>Company details</legend>
+    <div>
+      <%= form.label :company_name %>
+      <%= form.text_field :company_name %>
+    </div>
+    <div>
+      <%= form.label :registration_number %>
+      <%= form.text_field :registration_number %>
+    </div>
+    <div>
+      <%= form.label :vat_number, "VAT number" %>
+      <%= form.text_field :vat_number %>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Address</legend>
+    <div>
+      <%= form.label :address %>
+      <%= form.text_field :address %>
+    </div>
+    <div>
+      <%= form.label :city %>
+      <%= form.text_field :city %>
+    </div>
+    <div>
+      <%= form.label :postal_code %>
+      <%= form.text_field :postal_code %>
+    </div>
+    <div>
+      <%= form.label :country %>
+      <%= form.text_field :country %>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>Bank details</legend>
+    <div>
+      <%= form.label :bank_name %>
+      <%= form.text_field :bank_name %>
+    </div>
+    <div>
+      <%= form.label :bank_account, "IBAN" %>
+      <%= form.text_field :bank_account %>
+    </div>
+    <div>
+      <%= form.label :bank_swift, "SWIFT/BIC" %>
+      <%= form.text_field :bank_swift %>
+    </div>
+  </fieldset>
+
+  <%= form.submit "Save settings", class: "button", data: { variant: "primary" } %>
+<% end %>
+
+<%= link_to "Back", root_path, class: "button" %>

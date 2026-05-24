@@ -4,10 +4,15 @@ Rails.application.routes.draw do
 
   # Registration — creating a new account + user in one step
   resource :registration, only: %i[new create]
+  resource :account, only: %i[edit update]
+  resources :products
 
   resources :clients
 
   resources :invoices, shallow: true do
+    member do
+      get :print
+    end
     resources :line_items, only: %i[new create edit update destroy]
 
     # Status transitions — modelled as REST resources, not custom member actions.

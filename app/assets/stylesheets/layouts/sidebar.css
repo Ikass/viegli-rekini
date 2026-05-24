@@ -1,0 +1,46 @@
+/* ============================================================
+   LAYOUT — sidebar.css
+   Side-by-side layout where one element is a fixed-width sidebar
+   and the other takes the remaining space. Every Layout "Sidebar".
+   https://every-layout.dev/layouts/sidebar/
+
+   The sidebar and content stack vertically when the content
+   element would be narrower than --sidebar-content-min.
+
+   Usage:
+     <div class="sidebar-layout">
+       <aside>sidebar</aside>
+       <main>content</main>
+     </div>
+
+   Sidebar on the right:
+     <div class="sidebar-layout" data-direction="rtl">
+
+   Custom sidebar width:
+     <div class="sidebar-layout" style="--sidebar-width: 20rem">
+   ============================================================ */
+
+.sidebar-layout {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sidebar-gap, var(--gutter));
+  align-items: var(--sidebar-align, flex-start);
+}
+
+/* First child is the sidebar by default */
+.sidebar-layout > :first-child {
+  flex-basis: var(--sidebar-width, 20rem);
+  flex-grow: 1;
+}
+
+/* Second child takes remaining space */
+.sidebar-layout > :last-child {
+  flex-basis: 0;
+  flex-grow: 999;
+  min-inline-size: var(--sidebar-content-min, 50%);
+}
+
+/* Swap sidebar to the right */
+.sidebar-layout[data-direction="rtl"] {
+  flex-direction: row-reverse;
+}
