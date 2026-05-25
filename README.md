@@ -2,6 +2,8 @@
 
 **Status: MVP v0.1 — work in progress**
 
+> **Full implementation plan → [PLAN.md](PLAN.md)** — includes regulatory background, data model, phased feature roadmap, and technical decisions.
+
 This is the first working version of what will eventually become [viegli-rēķini.lv](https://viegli-rekini.lv) — a simple, no-nonsense invoicing tool for Latvian freelancers and small businesses.
 
 I'm building this for two reasons: (1) it's a real product I want to exist, and (2) it's my primary Rails learning project. I'm documenting my architectural decisions here as notes to my future self — the reasoning behind each choice, not just what was chosen.
