@@ -6,7 +6,7 @@ Coding agent context for the Invoicio e-invoicing Rails app. Read this before ma
 
 ## What this app is
 
-A focused Rails 8 invoicing application. Single-user for now, but the data model is built for multi-tenancy. PostgreSQL. Deployed to Render.
+A focused Rails 8 invoicing application. Single-user for now, but the data model is built for multi-tenancy. SQLite3.
 
 Portfolio project — code quality and architectural clarity matter as much as feature completeness.
 
@@ -15,11 +15,11 @@ Portfolio project — code quality and architectural clarity matter as much as f
 ## Stack
 
 - **Rails 8.1.2** — modern idioms; `params.expect()` for strong parameters
-- **PostgreSQL** — `structure.sql` configured (`config.active_record.schema_format = :sql`)
+- **SQLite3**
 - **Hotwire** — Turbo + Stimulus
 - **Custom vanilla CSS** (CUBE CSS) — OKLCH color tokens, Every Layout primitives, logical properties
 - **Minitest** — model, service, and system tests
-- **Render** — deployment target
+- **Hetzner + Kamal 2** — deployment target
 
 ---
 
@@ -240,7 +240,6 @@ Invalid transitions raise an error — they do not silently fail. Each transitio
 ### What's next
 1. Print-ready invoice view (`layouts/print.html.erb` + print CSS)
 2. Seed file — demo account with sample clients, products, and invoices across all statuses
-3. Deploy to Render
 
 ---
 

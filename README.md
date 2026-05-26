@@ -10,17 +10,6 @@ I'm building this for two reasons: (1) it's a real product I want to exist, and 
 
 ---
 
-## Live demo
-
-[https://e-rekini-mvp.onrender.com/](https://e-rekini-mvp.onrender.com/)
-
-Demo credentials:
-Email: demo@example.com
-Password: password
-
-> **Render free plan limitations:** The free PostgreSQL database expires 30 days after creation (14-day grace period to upgrade). Free web services spin down after 15 minutes of inactivity — the first request after spin-down takes about a minute to respond while the instance boots back up.
----
-
 ## What it does (v0.1)
 
 - Manage clients with full address and VAT number fields
@@ -40,24 +29,25 @@ Password: password
 | Layer | Choice | Why |
 |-------|--------|-----|
 | Framework | Rails 8 | Learning Rails properly; using latest stable |
-| Database | PostgreSQL | Right choice for financial data |
+| Database | SQLite3 | Right choice for this stage — simple, zero-config, backed up via Litestream |
 | Auth | Rails 8 built-in | New in Rails 8 — no Devise needed for simple cases |
 | CSS | Custom vanilla (CUBE CSS) | CUBE CSS methodology with Every Layout primitives, OKLCH color tokens, logical properties |
 | Frontend | Hotwire (Turbo) | Rails default — SPA-feel without writing JS |
 | Testing | Minitest | Rails default; system tests + model/service unit tests |
-| Deployment | Render | Free tier PostgreSQL; `git push` deploys |
+| Deployment | Hetzner + Kamal 2 | Docker-based deploy; Litestream → Cloudflare R2 backups |
 
 ---
 
 ## Architecture decisions and why
 
-### Why PostgreSQL, not SQLite
+### Why SQLite3
 
-For financial data, PostgreSQL is the correct choice for a few reasons:
+SQLite3 is the database for this project. For a single-user invoicing app at MVP stage, it's the pragmatic choice:
 
-- **`timestamptz` column type** — PostgreSQL stores timestamps with timezone info. SQLite doesn't. For invoices with due dates, getting timezone handling wrong is a real bug.
-- **Check constraints** — PostgreSQL can enforce that `status` is always one of a known set of values at the database level, not just in Ruby. More on this under "database constraints" below.
-- **Production parity** — the app will eventually run on a proper PostgreSQL server. Better to develop against the real thing.
+- **Zero configuration** — no server process to manage, no credentials, no connection pooling. The database is a single file.
+- **Litestream backups** — continuous replication to Cloudflare R2. In the event of server failure, the database can be restored to the exact point of failure.
+- **Production-tested** — SQLite3 handles concurrency well for low-write workloads. Rails 8's `RETURNING` clause support and WAL mode make it a solid production database for this use case.
+- **Scale when needed** — if the app outgrows SQLite3, the data can be migrated to PostgreSQL. But that day is not today.
 
 ### Why `structure.sql` instead of `schema.rb`
 
@@ -194,7 +184,7 @@ Invalid transitions are rejected at the service layer. You cannot go from `draft
 
 ## Development setup
 
-**Prerequisites:** Ruby 3.3+, PostgreSQL running locally.
+**Prerequisites:** Ruby 3.3+, SQLite3 (included with Rails).
 
 ```bash
 git clone https://github.com/Ikass/e-rekini-mvp
