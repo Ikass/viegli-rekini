@@ -29,9 +29,6 @@ module ERekiniMvp
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
-    # Use structure.sql instead of schema.rb so database-specific features
-    # (check constraints, custom indexes) are preserved exactly.
-    # schema.rb is lossy — it can't represent everything PostgreSQL supports.
-    config.active_record.schema_format = :sql
+    config.active_record.schema_format = :ruby
   end
 end

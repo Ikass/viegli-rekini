@@ -34,21 +34,19 @@ class Invoice < ApplicationRecord
   def generate_invoice_number
     return if invoice_number.present?
 
-    # Generate the next sequential number for this account.
-    # Use a transaction-level lock (FOR UPDATE) to prevent duplicate numbers
-    # if two invoices are created concurrently.
-    last_number = account.invoices
-      .lock("FOR UPDATE")
-      .pluck(:invoice_number)
-      .compact
-      .max_by { |n| n.to_s[/\d+/].to_i }
+    ApplicationRecord.transaction do
+      last_number = account.invoices
+        .pluck(:invoice_number)
+        .compact
+        .max_by { |n| n.to_s[/\d+/].to_i }
 
-    next_sequence = if last_number
-      last_number[/\d+/].to_i + 1
-    else
-      1
+      next_sequence = if last_number
+        last_number[/\d+/].to_i + 1
+      else
+        1
+      end
+
+      self.invoice_number = "INV-#{next_sequence.to_s.rjust(4, "0")}"
     end
-
-    self.invoice_number = "INV-#{next_sequence.to_s.rjust(4, "0")}"
   end
 end
