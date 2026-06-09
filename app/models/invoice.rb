@@ -34,11 +34,11 @@ class Invoice < ApplicationRecord
   def generate_invoice_number
     return if invoice_number.present?
 
-    ApplicationRecord.transaction do
+    account.with_lock do
       last_number = account.invoices
         .pluck(:invoice_number)
         .compact
-        .max_by { |n| n.to_s[/\d+/].to_i }
+        .max_by { |n| n[/\d+/].to_i }
 
       next_sequence = if last_number
         last_number[/\d+/].to_i + 1
@@ -46,7 +46,7 @@ class Invoice < ApplicationRecord
         1
       end
 
-      self.invoice_number = "INV-#{next_sequence.to_s.rjust(4, "0")}"
+      self.invoice_number = "#{account.invoice_prefix}-#{next_sequence.to_s.rjust(account.invoice_number_padding, "0")}"
     end
   end
 end

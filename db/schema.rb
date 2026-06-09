@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_22_091023) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_09_151457) do
   create_table "accounts", force: :cascade do |t|
     t.string "address"
     t.string "bank_account"
@@ -20,7 +20,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_22_091023) do
     t.string "company_name"
     t.string "country", default: "Latvia"
     t.datetime "created_at", null: false
+    t.integer "invoice_number_padding", default: 4, null: false
+    t.string "invoice_prefix", default: "INV", null: false
     t.string "name", null: false
+    t.text "payment_terms"
     t.string "postal_code"
     t.string "registration_number"
     t.datetime "updated_at", null: false
@@ -33,13 +36,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_22_091023) do
     t.string "city"
     t.string "company_name"
     t.string "country", default: "Latvia"
+    t.string "country_code"
     t.datetime "created_at", null: false
+    t.integer "delivery_channel", default: 0, null: false
+    t.string "e_adrese_id"
     t.string "email"
+    t.string "iban"
+    t.boolean "is_budget_institution", default: false, null: false
     t.string "name", null: false
     t.string "postal_code"
     t.datetime "updated_at", null: false
     t.string "vat_number"
     t.index ["account_id"], name: "index_clients_on_account_id"
+    t.check_constraint "delivery_channel IN (0, 1)", name: "clients_delivery_channel_check"
   end
 
   create_table "invoices", force: :cascade do |t|

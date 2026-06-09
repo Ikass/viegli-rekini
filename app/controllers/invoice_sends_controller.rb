@@ -8,7 +8,7 @@ class InvoiceSendsController < ApplicationController
     if result.success?
       redirect_to invoice_path(invoice), notice: "Invoice sent."
     else
-      redirect_to invoice_path(invoice), alert: "Invoice cannot be sent from #{invoice.status} status."
+      redirect_to invoice_path(invoice), alert: result.error
     end
   end
 end

@@ -24,7 +24,10 @@ ActiveRecord::Base.transaction do
     country: "Latvija",
     bank_name: "Swedbank",
     bank_account: "LV12HABA0001234567890",
-    bank_swift: "HABALV22"
+    bank_swift: "HABALV22",
+    invoice_prefix: "INV",
+    invoice_number_padding: 4,
+    payment_terms: "14 days net"
   )
 
   User.create!(
@@ -35,10 +38,10 @@ ActiveRecord::Base.transaction do
   )
 
   clients = [
-    { name: "Jānis Bērziņš", company_name: "Bērziņa Konsultācijas", email: "janis@berzins.lv", vat_number: "LV98765432101", address: "Kr. Barona iela 25", city: "Rīga", postal_code: "LV-1011", country: "Latvija" },
-    { name: "Ilze Ozoliņa", company_name: "Ozoliņa Dizains", email: "ilze@ozolina.lv", vat_number: "LV12345678901", address: "Lāčplēša iela 70", city: "Rīga", postal_code: "LV-1002", country: "Latvija" },
-    { name: "Mārtiņš Liepiņš", email: "martins@liepins.lv", address: "Rīgas iela 15", city: "Cēsis", postal_code: "LV-4101", country: "Latvija" },
-    { name: "SIA Zaļā Enerģija", company_name: "SIA Zaļā Enerģija", email: "info@zalaenergija.lv", vat_number: "LV56789012345", address: "Ventspils iela 3", city: "Ventspils", postal_code: "LV-3601", country: "Latvija" }
+    { name: "Jānis Bērziņš", company_name: "Bērziņa Konsultācijas", email: "janis@berzins.lv", vat_number: "LV98765432101", address: "Kr. Barona iela 25", city: "Rīga", postal_code: "LV-1011", country: "Latvija", country_code: "LV", delivery_channel: :email, iban: "LV12HABA0001234567890", e_adrese_id: "90000000001" },
+    { name: "Ilze Ozoliņa", company_name: "Ozoliņa Dizains", email: "ilze@ozolina.lv", vat_number: "LV12345678901", address: "Lāčplēša iela 70", city: "Rīga", postal_code: "LV-1002", country: "Latvija", country_code: "LV", delivery_channel: :email },
+    { name: "Mārtiņš Liepiņš", email: "martins@liepins.lv", address: "Rīgas iela 15", city: "Cēsis", postal_code: "LV-4101", country: "Latvija", country_code: "LV", delivery_channel: :email },
+    { name: "SIA Zaļā Enerģija", company_name: "SIA Zaļā Enerģija", email: "info@zalaenergija.lv", vat_number: "LV56789012345", address: "Ventspils iela 3", city: "Ventspils", postal_code: "LV-3601", country: "Latvija", country_code: "LV", delivery_channel: :email }
   ].map { |attrs| account.clients.create!(attrs) }
 
   products = [

@@ -4,6 +4,16 @@ class InvoicesTest < ApplicationSystemTestCase
   setup do
     @user = users(:one)
     @account = @user.account
+    @account.update!(
+      company_name: "SIA Test",
+      registration_number: "LV40001234567",
+      address: "Brīvības iela 100",
+      city: "Rīga",
+      postal_code: "LV-1001",
+      country: "Latvija",
+      bank_name: "Swedbank",
+      bank_account: "LV12HABA0001234567890"
+    )
     sign_in_as(@user)
   end
 

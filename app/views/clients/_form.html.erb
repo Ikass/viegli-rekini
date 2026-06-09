@@ -29,6 +29,11 @@
     <%= form.text_field :vat_number %>
   </div>
 
+  <div>
+    <%= form.label :iban, "IBAN" %>
+    <%= form.text_field :iban %>
+  </div>
+
   <fieldset>
     <legend>Address</legend>
     <div>
@@ -46,6 +51,28 @@
     <div>
       <%= form.label :country %>
       <%= form.text_field :country %>
+    </div>
+    <div>
+      <%= form.label :country_code, "Country code (ISO)" %>
+      <%= form.text_field :country_code, class: "input--small", placeholder: "LV" %>
+    </div>
+  </fieldset>
+
+  <fieldset>
+    <legend>e-Invoice delivery</legend>
+    <div>
+      <%= form.label :delivery_channel, "Delivery channel" %>
+      <%= form.select :delivery_channel, Client.delivery_channels.map { |k, _| [k.humanize, k] } %>
+    </div>
+    <div>
+      <label>
+        <%= form.check_box :is_budget_institution %>
+        Budget institution
+      </label>
+    </div>
+    <div>
+      <%= form.label :e_adrese_id, "E-adrese ID" %>
+      <%= form.text_field :e_adrese_id %>
     </div>
   </fieldset>
 

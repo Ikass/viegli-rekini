@@ -17,6 +17,29 @@
     <dt>VAT number</dt>
     <dd><%= @client.vat_number %></dd>
   <% end %>
+
+  <% if @client.country_code.present? %>
+    <dt>Country code</dt>
+    <dd><%= @client.country_code %></dd>
+  <% end %>
+
+  <% if @client.iban.present? %>
+    <dt>IBAN</dt>
+    <dd><%= @client.iban %></dd>
+  <% end %>
+
+  <dt>Delivery channel</dt>
+  <dd><%= @client.delivery_channel.humanize %></dd>
+
+  <% if @client.is_budget_institution? %>
+    <dt>Budget institution</dt>
+    <dd>Yes</dd>
+  <% end %>
+
+  <% if @client.e_adrese_id.present? %>
+    <dt>E-adrese ID</dt>
+    <dd><%= @client.e_adrese_id %></dd>
+  <% end %>
 </dl>
 
 <%= link_to "Edit", edit_client_path(@client), class: "button" %>

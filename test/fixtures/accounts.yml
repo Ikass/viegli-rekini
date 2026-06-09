@@ -2,6 +2,10 @@
 
 one:
   name: MyString
+  invoice_prefix: INV
+  invoice_number_padding: 4
 
 two:
   name: MyString
+  invoice_prefix: INV
+  invoice_number_padding: 4

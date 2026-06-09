@@ -18,4 +18,14 @@ class AccountsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_path
     assert_equal "ACME Inc.", @user.account.reload.company_name
   end
+
+  test "update with seller profile fields" do
+    patch account_path, params: { account: { invoice_prefix: "R", payment_terms: "30 days net", invoice_number_padding: 5 } }
+    assert_redirected_to root_path
+    @user.account.reload.tap do |account|
+      assert_equal "R", account.invoice_prefix
+      assert_equal "30 days net", account.payment_terms
+      assert_equal 5, account.invoice_number_padding
+    end
+  end
 end

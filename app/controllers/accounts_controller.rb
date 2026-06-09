@@ -18,6 +18,6 @@ class AccountsController < ApplicationController
   private
 
   def account_params
-    params.expect(account: [ :company_name, :registration_number, :vat_number, :address, :city, :postal_code, :country, :bank_name, :bank_account, :bank_swift ])
+    params.expect(account: [ :company_name, :registration_number, :vat_number, :address, :city, :postal_code, :country, :bank_name, :bank_account, :bank_swift, :payment_terms, :invoice_prefix, :invoice_number_padding ])
   end
 end

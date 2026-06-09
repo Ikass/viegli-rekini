@@ -6,6 +6,8 @@ one:
   email: MyString
   company_name: MyString
   vat_number: MyString
+  country_code: LV
+  delivery_channel: 0
 
 two:
   account: two
@@ -13,3 +15,5 @@ two:
   email: MyString
   company_name: MyString
   vat_number: MyString
+  country_code: LV
+  delivery_channel: 0
