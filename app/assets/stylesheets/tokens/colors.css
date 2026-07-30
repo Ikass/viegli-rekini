@@ -11,69 +11,78 @@
      hue:       0–360 (degrees on the colour wheel)
 
    Dark mode: driven by prefers-color-scheme at the :root level.
-   Section theming: data-theme="dark|light|primary" overrides
+   Section theming: data-theme="dark|light|brand" overrides
    locally, independent of system preference.
    ============================================================ */
 
 /* ── Raw Palette ─────────────────────────────────────────── */
-/* Replace these with your project's brand colours.          */
-/* Neutrals use near-zero chroma so they stay hue-neutral.  */
+/* Colour families that need tiers (light/base/dark) for      */
+/* hover states, active states, and status components.        */
+/* Surfaces and text live directly in the semantic aliases.   */
 
 :root {
-  /* Neutrals */
-  --palette-neutral-0:  oklch(0.98 0.002 264);  /* near white */
-  --palette-neutral-1:  oklch(0.93 0.005 264);
-  --palette-neutral-2:  oklch(0.85 0.008 264);
-  --palette-neutral-3:  oklch(0.70 0.010 264);
-  --palette-neutral-4:  oklch(0.55 0.010 264);
-  --palette-neutral-5:  oklch(0.40 0.008 264);
-  --palette-neutral-6:  oklch(0.25 0.006 264);
-  --palette-neutral-7:  oklch(0.15 0.004 264);
-  --palette-neutral-8:  oklch(0.08 0.002 264);  /* near black */
+  /* Body text — warm dark brown, softer than pure black */
+  --palette-text: oklch(0.264 0.026 84);  /* #2B2416 */
 
-  /* Brand — swap hue/chroma for your project */
-  --palette-brand-light:  oklch(0.85 0.12 240);
-  --palette-brand:        oklch(0.55 0.18 240);
-  --palette-brand-dark:   oklch(0.35 0.16 240);
+  /* Brand — coral (#C1531B) */
+  --palette-brand-light:  oklch(0.688 0.149 45);
+  --palette-brand:        oklch(0.576 0.155 43);
+  --palette-brand-dark:   oklch(0.450 0.140 42);
 
-  /* Accent — complementary or contrasting hue */
-  --palette-accent-light: oklch(0.88 0.12 60);
-  --palette-accent:       oklch(0.72 0.18 60);
-  --palette-accent-dark:  oklch(0.50 0.16 60);
+  /* Accent — teal (#1D5C66), used for links and secondary actions */
+  --palette-accent-light: oklch(0.774 0.091 208);
+  --palette-accent:       oklch(0.440 0.064 210);
+  --palette-accent-dark:  oklch(0.350 0.055 208);
 
-  /* Semantic states */
-  --palette-success: oklch(0.60 0.18 145);
-  --palette-warning: oklch(0.75 0.18 80);
-  --palette-error:   oklch(0.55 0.22 25);
-  --palette-info:    oklch(0.60 0.15 230);
+  /* Semantic states — three-tier like brand/accent */
+  --palette-success-light: oklch(0.90 0.035 155);
+  --palette-success:       oklch(0.529 0.106 155); /* green (#2E7D4F) */
+  --palette-success-dark:  oklch(0.30 0.10 155);
+
+  --palette-warning-light: oklch(0.92 0.040 76);
+  --palette-warning:       oklch(0.557 0.104 76);  /* amber (#966A1F) */
+  --palette-warning-dark:  oklch(0.35 0.10 76);
+
+  --palette-error-light:   oklch(0.91 0.040 9);
+  --palette-error:         oklch(0.502 0.155 9);   /* crimson (#A83252) */
+  --palette-error-dark:    oklch(0.35 0.14 9);
+
+  --palette-info-light:    oklch(0.89 0.025 213);
+  --palette-info:          oklch(0.453 0.038 213); /* slate-blue (#3D5C63) */
+  --palette-info-dark:     oklch(0.30 0.06 213);
 }
 
 /* ── Semantic Aliases — Light Mode (default) ─────────────── */
 
 :root {
-  /* Surfaces */
-  --color-surface-base:    var(--palette-neutral-0);
-  --color-surface-raised:  var(--palette-neutral-1);
-  --color-surface-overlay: var(--palette-neutral-2);
-  --color-surface-inset:   var(--palette-neutral-1);
+  /* Surfaces — warm-cast, stepped by lightness */
+  --color-surface-base:    oklch(0.985 0.016 92);  /* warm cream */
+  --color-surface-raised:  oklch(0.995 0.008 90);  /* near-white cards */
+  --color-surface-overlay: oklch(0.999 0.004 90);  /* modals/dropdowns — brightest */
+  --color-surface-inset:   oklch(0.935 0.018 90);  /* sunken inputs */
+  --color-surface-chrome:  oklch(0.93 0.010 88);   /* sidebar/topbar — structural frame */
 
   /* Text */
-  --color-text:        var(--palette-neutral-8);
-  --color-text-muted:  var(--palette-neutral-5);
-  --color-text-subtle: var(--palette-neutral-4);
-  --color-text-invert: var(--palette-neutral-0);
+  --color-text:        var(--palette-text);
+  --color-text-muted:  oklch(0.400 0.007 82);
+  --color-text-subtle: oklch(0.550 0.008 84);
+  --color-text-invert: oklch(0.985 0.016 92);
+
+  /* Links */
+  --color-link:       var(--color-accent);
+  --color-link-hover: var(--color-accent-hover);
 
   /* Brand */
   --color-brand:       var(--palette-brand);
   --color-brand-hover: var(--palette-brand-dark);
-  --color-brand-text:  var(--palette-neutral-0);  /* text on brand bg */
+  --color-brand-text:  oklch(0.985 0.016 92);
 
   /* Accent */
   --color-accent:       var(--palette-accent);
   --color-accent-hover: var(--palette-accent-dark);
 
   /* Borders */
-  --color-border:       var(--palette-neutral-2);
+  --color-border:       oklch(0.919 0.037 92);  /* warm cream border (#EDE4C9) */
   --color-border-focus: var(--palette-brand);
 
   /* Semantic states */
@@ -82,38 +91,79 @@
   --color-error:   var(--palette-error);
   --color-info:    var(--palette-info);
 
+  /* Status component tokens — soft bg + bold text + tinted border */
+  --color-success-bg:     var(--palette-success-light);
+  --color-success-text:   var(--palette-success-dark);
+  --color-success-border: oklch(0.65 0.06 155);
+
+  --color-warning-bg:     var(--palette-warning-light);
+  --color-warning-text:   var(--palette-warning-dark);
+  --color-warning-border: oklch(0.68 0.07 76);
+
+  --color-error-bg:       var(--palette-error-light);
+  --color-error-text:     var(--palette-error-dark);
+  --color-error-border:   oklch(0.68 0.08 9);
+
+  --color-info-bg:        var(--palette-info-light);
+  --color-info-text:      var(--palette-info-dark);
+  --color-info-border:    oklch(0.65 0.04 213);
+
   /* Focus ring — visible across both modes */
   --color-focus-ring: var(--palette-brand);
 }
 
 /* ── Dark Mode — system preference ──────────────────────── */
+/* Teal-black scheme matching the approved dark mode spec.  */
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Surfaces — invert the scale */
-    --color-surface-base:    var(--palette-neutral-8);
-    --color-surface-raised:  var(--palette-neutral-7);
-    --color-surface-overlay: var(--palette-neutral-6);
-    --color-surface-inset:   var(--palette-neutral-7);
+    /* Surfaces — deep teal-black */
+    --color-surface-base:    oklch(0.180 0.025 209);
+    --color-surface-raised:  oklch(0.220 0.028 209);
+  --color-surface-overlay: oklch(0.260 0.033 209);
+  --color-surface-chrome:  oklch(0.14 0.018 209);
+    --color-surface-inset:   oklch(0.150 0.020 209);
+    --color-surface-chrome:  oklch(0.14 0.018 209);
 
-    /* Text */
-    --color-text:        var(--palette-neutral-0);
-    --color-text-muted:  var(--palette-neutral-3);
-    --color-text-subtle: var(--palette-neutral-4);
-    --color-text-invert: var(--palette-neutral-8);
+    /* Text — near-white with warm cast */
+    --color-text:        oklch(0.850 0.015 90);
+    --color-text-muted:  oklch(0.600 0.010 90);
+    --color-text-subtle: oklch(0.480 0.008 88);
+    --color-text-invert: oklch(0.100 0.004 76);
 
-    /* Brand — slightly lighter for dark backgrounds */
+    /* Links — lighter teal for legibility against dark background */
+    --color-link:       var(--palette-accent-light);
+    --color-link-hover: var(--palette-accent);
+
+    /* Brand — lighter coral for legibility against dark background */
     --color-brand:       var(--palette-brand-light);
     --color-brand-hover: var(--palette-brand);
-    --color-brand-text:  var(--palette-neutral-8);
+    --color-brand-text:  oklch(0.100 0.004 76);
 
-    /* Accent */
+    /* Accent — lighter teal */
     --color-accent:       var(--palette-accent-light);
     --color-accent-hover: var(--palette-accent);
 
     /* Borders */
-    --color-border:       var(--palette-neutral-6);
+    --color-border:       oklch(0.260 0.020 209);
     --color-border-focus: var(--palette-brand-light);
+
+    /* Status component tokens — legible against teal-black surface */
+    --color-success-bg:     oklch(0.26 0.04 155);
+    --color-success-text:   oklch(0.75 0.12 155);
+    --color-success-border: oklch(0.40 0.05 155);
+
+    --color-warning-bg:     oklch(0.26 0.04 76);
+    --color-warning-text:   oklch(0.78 0.12 76);
+    --color-warning-border: oklch(0.42 0.06 76);
+
+    --color-error-bg:       oklch(0.26 0.04 9);
+    --color-error-text:     oklch(0.75 0.15 9);
+    --color-error-border:   oklch(0.42 0.06 9);
+
+    --color-info-bg:        oklch(0.26 0.03 213);
+    --color-info-text:      oklch(0.72 0.08 213);
+    --color-info-border:    oklch(0.40 0.04 213);
   }
 }
 
@@ -122,42 +172,83 @@
 /* These override both light and dark system preferences.    */
 
 [data-theme="light"] {
-  --color-surface-base:    var(--palette-neutral-0);
-  --color-surface-raised:  var(--palette-neutral-1);
-  --color-surface-overlay: var(--palette-neutral-2);
+  --color-surface-base:    oklch(0.985 0.016 92);
+  --color-surface-raised:  oklch(0.995 0.008 90);
+  --color-surface-overlay: oklch(0.999 0.004 90);
+  --color-surface-chrome:  oklch(0.93 0.010 88);
 
-  --color-text:        var(--palette-neutral-8);
-  --color-text-muted:  var(--palette-neutral-5);
-  --color-text-subtle: var(--palette-neutral-4);
-  --color-text-invert: var(--palette-neutral-0);
+  --color-text:        var(--palette-text);
+  --color-text-muted:  oklch(0.400 0.007 82);
+  --color-text-subtle: oklch(0.550 0.008 84);
+  --color-text-invert: oklch(0.985 0.016 92);
+
+  --color-link:       var(--palette-accent);
+  --color-link-hover: var(--palette-accent-dark);
 
   --color-brand:       var(--palette-brand);
   --color-brand-hover: var(--palette-brand-dark);
-  --color-border:      var(--palette-neutral-2);
+  --color-border:      oklch(0.919 0.037 92);
+  --color-border-focus: var(--palette-brand);
+
+  --color-success-bg:     var(--palette-success-light);
+  --color-success-text:   var(--palette-success-dark);
+  --color-success-border: oklch(0.65 0.06 155);
+
+  --color-warning-bg:     var(--palette-warning-light);
+  --color-warning-text:   var(--palette-warning-dark);
+  --color-warning-border: oklch(0.68 0.07 76);
+
+  --color-error-bg:       var(--palette-error-light);
+  --color-error-text:     var(--palette-error-dark);
+  --color-error-border:   oklch(0.68 0.08 9);
+
+  --color-info-bg:        var(--palette-info-light);
+  --color-info-text:      var(--palette-info-dark);
+  --color-info-border:    oklch(0.65 0.04 213);
 }
 
 [data-theme="dark"] {
-  --color-surface-base:    var(--palette-neutral-8);
-  --color-surface-raised:  var(--palette-neutral-7);
-  --color-surface-overlay: var(--palette-neutral-6);
+  --color-surface-base:    oklch(0.180 0.025 209);
+  --color-surface-raised:  oklch(0.220 0.028 209);
+  --color-surface-overlay: oklch(0.260 0.033 209);
 
-  --color-text:        var(--palette-neutral-0);
-  --color-text-muted:  var(--palette-neutral-3);
-  --color-text-subtle: var(--palette-neutral-4);
-  --color-text-invert: var(--palette-neutral-8);
+  --color-text:        oklch(0.850 0.015 90);
+  --color-text-muted:  oklch(0.600 0.010 90);
+  --color-text-subtle: oklch(0.480 0.008 88);
+  --color-text-invert: oklch(0.100 0.004 76);
+
+  --color-link:       var(--palette-accent-light);
+  --color-link-hover: var(--palette-accent);
 
   --color-brand:       var(--palette-brand-light);
   --color-brand-hover: var(--palette-brand);
-  --color-border:      var(--palette-neutral-6);
+  --color-border:      oklch(0.260 0.020 209);
+  --color-border-focus: var(--palette-brand-light);
+
+  --color-success-bg:     oklch(0.26 0.04 155);
+  --color-success-text:   oklch(0.75 0.12 155);
+  --color-success-border: oklch(0.40 0.05 155);
+
+  --color-warning-bg:     oklch(0.26 0.04 76);
+  --color-warning-text:   oklch(0.78 0.12 76);
+  --color-warning-border: oklch(0.42 0.06 76);
+
+  --color-error-bg:       oklch(0.26 0.04 9);
+  --color-error-text:     oklch(0.75 0.15 9);
+  --color-error-border:   oklch(0.42 0.06 9);
+
+  --color-info-bg:        oklch(0.26 0.03 213);
+  --color-info-text:      oklch(0.72 0.08 213);
+  --color-info-border:    oklch(0.40 0.04 213);
 }
 
 [data-theme="brand"] {
   --color-surface-base:    var(--palette-brand);
   --color-surface-raised:  var(--palette-brand-dark);
 
-  --color-text:        var(--palette-neutral-0);
+  --color-text:        oklch(0.985 0.016 92);
   --color-text-muted:  oklch(from var(--palette-brand) calc(l + 0.3) c h);
-  --color-text-invert: var(--palette-neutral-8);
+  --color-text-invert: oklch(0.100 0.004 76);
 
   --color-border:      var(--palette-brand-dark);
 }

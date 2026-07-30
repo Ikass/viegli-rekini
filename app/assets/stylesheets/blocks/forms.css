@@ -56,13 +56,9 @@ label abbr[title="required"] {
 }
 
 /* ── Form layout ─────────────────────────────────────────── */
-
-/* Stack all fields with consistent vertical rhythm */
-form {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-m);
-}
+/* Use .stack utility on forms that need vertical rhythm.   */
+/* Bare form element gets no layout — only button_to       */
+/* wrappers and forms with explicit classes apply.          */
 
 /* Inline fields side by side — useful for name, short inputs */
 .fields-inline {

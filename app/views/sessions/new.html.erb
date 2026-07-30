@@ -1,11 +1,49 @@
-<%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
-<%= tag.div(flash[:notice], style: "color:green") if flash[:notice] %>
+<div class="container" data-size="xs">
 
-<%= form_with url: session_path do |form| %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %><br>
-  <%= form.password_field :password, required: true, autocomplete: "current-password", placeholder: "Enter your password", maxlength: 72 %><br>
-  <%= form.submit "Sign in" %>
-<% end %>
-<br>
+  <header class="stack" style="--stack-gap: var(--space-2xs); text-align: center;">
+    <div class="auth-logo">
+      <span class="auth-logo-icon" aria-hidden="true">
+        <%= tabler_icon("file-invoice", data: { size: "sm" }) %>
+      </span>
+    </div>
+    <h1 style="font-size: var(--step-2); font-weight: var(--font-weight-bold);">E-Rēķini</h1>
+  </header>
 
-<%= link_to "Forgot password?", new_password_path %>
+  <article class="card" style="margin-block-start: var(--space-l);">
+    <header style="text-align: center; padding: var(--space-m) var(--space-m) 0;">
+      <h2 style="font-size: var(--step-3);">Welcome back</h2>
+      <p style="font-size: var(--step--1); color: var(--color-text-subtle);">Sign in to continue</p>
+    </header>
+
+    <%= form_with url: session_path, html: { class: "stack", style: "padding: var(--space-m);" } do |form| %>
+      <fieldset style="border: none; padding: 0; margin: 0;">
+        <div class="field">
+          <%= form.label :email_address, "Email" %>
+          <%= form.email_field :email_address, required: true, autofocus: true,
+              autocomplete: "username", placeholder: "name@company.com",
+              value: params[:email_address] %>
+        </div>
+
+        <div class="field" style="margin-block-start: var(--space-s);">
+          <%= form.label :password, "Password" %>
+          <%= form.password_field :password, required: true,
+              autocomplete: "current-password", placeholder: "••••••••••", maxlength: 72 %>
+        </div>
+      </fieldset>
+
+      <div style="text-align: right;">
+        <%= link_to "Forgot password?", new_password_path %>
+      </div>
+
+      <%= form.submit "Sign in", class: "button",
+          data: { variant: "primary", width: "full" } %>
+    <% end %>
+
+    <footer style="text-align: center; border-block-start: 1px solid var(--color-border); padding: var(--space-s) var(--space-m);">
+      <p style="font-size: var(--step--1); color: var(--color-text-muted);">
+        Don't have an account? <%= link_to "Sign up", new_registration_path %>
+      </p>
+    </footer>
+  </article>
+
+</div>

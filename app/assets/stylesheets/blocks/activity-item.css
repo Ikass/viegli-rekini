@@ -1,0 +1,50 @@
+/* ============================================================
+   BLOCK — activity-item.css
+   Dashboard recent-activity feed row. Client name + invoice
+   details on the left, status badge on the right.
+
+   Usage:
+     <div class="activity-item">
+       <div class="activity-item-info">
+         <strong>SIA Kokapstrāde</strong>
+         <span>#2026-041 · €420</span>
+       </div>
+       <span class="badge" data-status="paid">Samaksāts</span>
+     </div>
+   ============================================================ */
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-s);
+  padding-block: var(--space-s);
+  border-block-end: 1px solid var(--color-border);
+  text-decoration: none;
+  transition: background-color 0.10s ease;
+}
+
+.activity-item:hover {
+  background-color: var(--color-surface-raised);
+}
+
+.activity-item:last-child {
+  border-block-end: none;
+}
+
+.activity-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  min-width: 0;
+}
+
+.activity-item-info strong {
+  font-size: var(--step--1);
+  color: var(--color-text);
+}
+
+.activity-item-info span {
+  font-size: var(--step--2);
+  color: var(--color-text-muted);
+}

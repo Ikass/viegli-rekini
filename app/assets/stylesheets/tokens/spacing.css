@@ -61,5 +61,5 @@
   --container-md:  56rem;   /* ~896px — medium layouts */
   --container-lg:  72rem;   /* ~1152px — wide layouts */
   --container-xl:  84rem;   /* ~1344px — full-width sections */
-  --container:     var(--container-lg); /* default */
+  --container:     var(--container-xl); /* default — wider to accommodate sidebar */
 }

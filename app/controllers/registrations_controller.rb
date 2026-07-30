@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class RegistrationsController < ApplicationController
+  layout "auth"
   # Registration must be accessible without being logged in —
   # otherwise new users could never sign up.
   allow_unauthenticated_access only: %i[new create]

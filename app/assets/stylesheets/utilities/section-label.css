@@ -1,0 +1,25 @@
+/* ============================================================
+   UTILITY — section-label.css
+   Small-caps heading that labels a card section. Mimics the
+   legend styling pattern without the fieldset baggage.
+   Placed above a card to create a labelled form group.
+
+   Usage:
+     <section aria-labelledby="company-heading">
+       <h2 id="company-heading" class="section-label">Company details</h2>
+       <div class="card">...</div>
+     </section>
+   ============================================================ */
+
+.section-label {
+  font-size: var(--step--2);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--tracking-wide);
+  margin-block-end: 0;
+}
+
+.section-label + * {
+  margin-block-start: var(--space-xs);
+}

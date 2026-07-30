@@ -1,6 +1,9 @@
 <h1>Invoices</h1>
 
-<%= link_to "New invoice", new_invoice_path, class: "button", data: { variant: "primary" } %>
+<%= link_to new_invoice_path, class: "button", data: { variant: "primary" } do %>
+  <%= tabler_icon("plus") %>
+  New invoice
+<% end %>
 
 <% if @invoices.any? %>
   <%# Group invoices by status in lifecycle order: draft → sent → paid → void. %>
@@ -8,7 +11,7 @@
     <% group = @invoices.select { |i| i.status == status.to_s } %>
     <% next if group.empty? %>
 
-    <section>
+    <section class="flow">
       <h2><%= status.to_s.titleize %> (<%= group.size %>)</h2>
       <div class="table-wrapper">
         <table class="table">
@@ -48,5 +51,8 @@
     </section>
   <% end %>
 <% else %>
-  <p>No invoices yet. <%= link_to "Create your first invoice", new_invoice_path, class: "button" %>.</p>
+  <p>No invoices yet. <%= link_to new_invoice_path, class: "button" do %>
+  <%= tabler_icon("plus") %>
+  Create your first invoice
+<% end %>.</p>
 <% end %>

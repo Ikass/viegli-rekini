@@ -70,7 +70,7 @@
 /* ── Links ───────────────────────────────────────────────── */
 
 .prose a {
-  color: var(--color-brand);
+  color: var(--color-link);
   text-decoration: underline;
   text-underline-offset: 0.2em;
   text-decoration-thickness: 1px;
@@ -78,7 +78,7 @@
 }
 
 .prose a:hover {
-  color: var(--color-brand-hover);
+  color: var(--color-link-hover);
   text-decoration-thickness: 2px;
 }
 
@@ -93,6 +93,10 @@
 .prose li {
   margin-block-end: var(--space-xs);
   line-height: var(--leading-normal);
+}
+
+.prose li + li {
+  margin-block-start: var(--space-2xs);
 }
 
 .prose li > ul,

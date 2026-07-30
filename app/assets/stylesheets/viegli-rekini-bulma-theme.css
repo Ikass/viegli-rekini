@@ -1,0 +1,195 @@
+/* ==========================================================================
+   viegli-rēķini — Bulma 1.x theme override
+   Coral (primary) / Teal (link) / Warm cream (background)
+
+   Reference:
+   https://bulma.io/documentation/features/css-variables/
+   https://bulma.io/documentation/features/themes/
+   https://bulma.io/documentation/features/color-palettes/
+
+   Bulma auto-generates a full palette (light/dark/soft/bold/invert/
+   on-scheme + 21 lightness shades) for each of the 7 base colors below,
+   purely from the -h/-s/-l values you set. You should not need to hand-set
+   any of the derived variables (e.g. --bulma-primary-light) — Bulma
+   computes them from these three values.
+   ========================================================================== */
+
+:root {
+
+  /* --------------------------------------------------------------------
+     Page background / scheme
+     "scheme" controls the neutrals (page background, subtle borders,
+     etc.) and is a separate system from the 7 palette colors below.
+     -------------------------------------------------------------------- */
+  --bulma-scheme-h: 45deg;              /* warm yellow hue */
+  --bulma-scheme-s: 45%;                /* keep it muted, not neon-yellow */
+
+  /* Literal override for the actual page background color.
+     Bulma's scheme-derived "main" background defaults to near-white;
+     this replaces it directly with our pale cream. Confirm the exact
+     variable name against your installed Bulma version's compiled CSS
+     (it may be --bulma-scheme-main or --bulma-body-background-color
+     depending on point release) before relying on this in production. */
+  --bulma-scheme-main: #FEFAEE;
+
+  /* --------------------------------------------------------------------
+     text — base body text color
+     #2B2416 → hsl(40, 32%, 13%)
+     -------------------------------------------------------------------- */
+  --bulma-text-h: 40deg;
+  --bulma-text-s: 32%;
+  --bulma-text-l: 13%;
+
+  /* --------------------------------------------------------------------
+     link — secondary action color (outlined buttons, text links)
+     #1D5C66 → hsl(188, 56%, 26%)
+     -------------------------------------------------------------------- */
+  --bulma-link-h: 188deg;
+  --bulma-link-s: 56%;
+  --bulma-link-l: 26%;
+
+  /* --------------------------------------------------------------------
+     primary — the ONE solid-fill action color (main CTA buttons)
+     #C1531B → hsl(20, 75%, 43%)
+     -------------------------------------------------------------------- */
+  --bulma-primary-h: 20deg;
+  --bulma-primary-s: 75%;
+  --bulma-primary-l: 43%;
+
+  /* --------------------------------------------------------------------
+     info — "sent" status color (newly formalized; matches the slate-blue
+     already used for the Nosūtīts tag, so nothing visually changes)
+     #3D5C63 → hsl(191, 24%, 31%)
+     -------------------------------------------------------------------- */
+  --bulma-info-h: 191deg;
+  --bulma-info-s: 24%;
+  --bulma-info-l: 31%;
+
+  /* --------------------------------------------------------------------
+     success — "paid" status color
+     #2E7D4F → hsl(145, 46%, 34%)
+     -------------------------------------------------------------------- */
+  --bulma-success-h: 145deg;
+  --bulma-success-s: 46%;
+  --bulma-success-l: 34%;
+
+  /* --------------------------------------------------------------------
+     warning — "due soon" / reminder status color
+     #966A1F → hsl(38, 66%, 36%)
+     -------------------------------------------------------------------- */
+  --bulma-warning-h: 38deg;
+  --bulma-warning-s: 66%;
+  --bulma-warning-l: 36%;
+
+  /* --------------------------------------------------------------------
+     danger — "overdue" status color
+     (shifted crimson, distinct from primary's orange lean)
+     #A83252 → hsl(344, 54%, 43%)
+     -------------------------------------------------------------------- */
+  --bulma-danger-h: 344deg;
+  --bulma-danger-s: 54%;
+  --bulma-danger-l: 43%;
+
+}
+
+/* ==========================================================================
+   Dark mode — Variant B (cool teal, near-black)
+
+   Bulma's dark mode normally keeps the same hue/saturation as light mode
+   and only inverts lightness. We're deliberately diverging from that here:
+   Variant B uses its OWN scheme hue (teal, 188°) instead of a darkened
+   version of light mode's warm 45° yellow — this is the "Learnaxis
+   footer"-style dark teal-black, not a dimmed cream.
+
+   The 7 palette colors (text/link/primary/info/success/warning/danger)
+   keep their light-mode -h/-s values — only their -on-scheme variants
+   need new values below, since those must read well against a different
+   (much darker) background now.
+
+   Reference: https://bulma.io/documentation/features/dark-mode/
+   ========================================================================== */
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bulma-scheme-h: 188deg;
+    --bulma-scheme-s: 55%;
+
+    --bulma-scheme-main-l: 12%;
+    --bulma-scheme-main-bis-l: 14%;
+    --bulma-scheme-main-ter-l: 16%;
+    --bulma-background-l: 15%;
+    --bulma-border-weak-l: 22%;
+    --bulma-border-l: 26%;
+    --bulma-text-weak-l: 55%;
+    --bulma-text-l: 78%;
+    --bulma-text-strong-l: 93%;
+    --bulma-text-title-l: 100%;
+
+    /* Re-derive scheme-main since its -l just changed (Bulma's setup-theme() step) */
+    --bulma-scheme-main: hsl(var(--bulma-scheme-h) var(--bulma-scheme-s) var(--bulma-scheme-main-l));
+
+    /* Hand-picked on-scheme variants — lighter/brighter versions of each
+       color for legibility against the near-black background. Bulma
+       normally auto-generates these via a Sass function; since this file
+       is pure CSS variables, they're set manually here. */
+    --bulma-primary-on-scheme: #E47944;
+    --bulma-link-on-scheme:    #68C6D4;
+    --bulma-info-on-scheme:    #87BAC5;
+    --bulma-success-on-scheme: #6AC891;
+    --bulma-warning-on-scheme: #DEAF5E;
+    --bulma-danger-on-scheme:  #D5728C;
+  }
+}
+
+/* Manual toggle — identical to the media query above, so dark mode also
+   works when forced via <html data-theme="dark"> or a "theme-dark" class,
+   not just via OS/browser preference. */
+[data-theme=dark],
+.theme-dark {
+  --bulma-scheme-h: 188deg;
+  --bulma-scheme-s: 55%;
+
+  --bulma-scheme-main-l: 12%;
+  --bulma-scheme-main-bis-l: 14%;
+  --bulma-scheme-main-ter-l: 16%;
+  --bulma-background-l: 15%;
+  --bulma-border-weak-l: 22%;
+  --bulma-border-l: 26%;
+  --bulma-text-weak-l: 55%;
+  --bulma-text-l: 78%;
+  --bulma-text-strong-l: 93%;
+  --bulma-text-title-l: 100%;
+
+  --bulma-scheme-main: hsl(var(--bulma-scheme-h) var(--bulma-scheme-s) var(--bulma-scheme-main-l));
+
+  --bulma-primary-on-scheme: #E47944;
+  --bulma-link-on-scheme:    #68C6D4;
+  --bulma-info-on-scheme:    #87BAC5;
+  --bulma-success-on-scheme: #6AC891;
+  --bulma-warning-on-scheme: #DEAF5E;
+  --bulma-danger-on-scheme:  #D5728C;
+}
+
+/* --------------------------------------------------------------------
+   Notes:
+
+   1. Bulma computes -light/-dark/-soft/-bold/-invert/-on-scheme and all
+      21 lightness shades (--bulma-primary-05 .. -100) automatically from
+      the -h/-s/-l values above. You should not need to set those by hand.
+
+   2. Verify --bulma-scheme-main (or whichever background variable your
+      installed Bulma version actually exposes) against the compiled
+      bulma.css in node_modules/dist before shipping — the exact token
+      name has shifted slightly across 1.x point releases.
+
+   3. Run the computed primary/success/danger/warning/info colors against
+      white text through a contrast checker (e.g. WebAIM) once these are
+      live — the H/S/L values above were derived from the approved mockup
+      hexes, not independently re-verified against WCAG at this exact
+      lightness.
+
+   4. The dark-mode -on-scheme hex values were hand-picked, not computed
+      by Bulma's Sass function — re-check their contrast against the
+      dark scheme-main background (~hsl(188, 55%, 12%)) once this is
+      live, same caveat as note 3 above.
+   -------------------------------------------------------------------- */

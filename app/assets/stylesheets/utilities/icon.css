@@ -1,0 +1,23 @@
+/* ============================================================
+   UTILITY — icon.css
+   Inline SVG icon sizing. Tabler icons are 24×24 with
+   stroke="currentColor" — they inherit text colour and are
+   sized to match surrounding text via em units.
+   ============================================================ */
+
+.icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.25em;
+  height: 1.25em;
+  flex-shrink: 0;
+}
+
+.icon svg {
+  width: 100%;
+  height: 100%;
+}
+
+.icon[data-size="sm"] { width: 1em;   height: 1em; }
+.icon[data-size="lg"] { width: 1.5em; height: 1.5em; }

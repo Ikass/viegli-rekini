@@ -53,20 +53,20 @@ footer .container {
   text-transform: uppercase;
   letter-spacing: var(--tracking-wide);
   font-size: var(--step--2);
-  background-color: var(--color-surface-overlay);
+  background-color: var(--color-surface-inset);
   border: 1px solid var(--color-border);
   color: var(--color-text-muted);
 }
 
 /* Highlight non-production environments */
 .footer-meta .env[data-env="development"] {
-  color: oklch(from var(--palette-warning) calc(l - 0.35) c h);
-  background-color: oklch(from var(--palette-warning) calc(l + 0.20) calc(c * 0.3) h);
-  border-color: oklch(from var(--palette-warning) calc(l - 0.05) calc(c * 0.5) h);
+  color: var(--color-warning-text);
+  background-color: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
 }
 
 .footer-meta .env[data-env="test"] {
-  color: oklch(from var(--palette-info) calc(l - 0.20) c h);
-  background-color: oklch(from var(--palette-info) calc(l + 0.30) calc(c * 0.2) h);
-  border-color: oklch(from var(--palette-info) calc(l + 0.10) calc(c * 0.4) h);
+  color: var(--color-info-text);
+  background-color: var(--color-info-bg);
+  border-color: var(--color-info-border);
 }

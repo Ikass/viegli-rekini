@@ -1,6 +1,6 @@
 <%# locals: (line_item:, url:) %>
 
-<%= form_with model: line_item, url: url do |form| %>
+<%= form_with model: line_item, url: url, html: { class: "stack" } do |form| %>
   <% if line_item.errors.any? %>
     <div role="alert">
       <% line_item.errors.full_messages.each do |message| %>

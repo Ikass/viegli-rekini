@@ -1,6 +1,6 @@
 <%# locals: (invoice:) %>
 
-<%= form_with model: invoice, data: { controller: "nested-form" } do |form| %>
+<%= form_with model: invoice, html: { class: "stack" }, data: { controller: "nested-form" } do |form| %>
   <% if invoice.errors.any? %>
     <div role="alert">
       <% invoice.errors.full_messages.each do |message| %>
@@ -44,7 +44,10 @@
     <% end %>
   </template>
 
-  <button type="button" data-action="nested-form#add" class="button">Add line item</button>
+  <button type="button" data-action="nested-form#add" class="button">
+    <%= tabler_icon("plus") %>
+    Add line item
+  </button>
 
   <%= form.submit class: "button", data: { variant: "primary" } %>
 <% end %>

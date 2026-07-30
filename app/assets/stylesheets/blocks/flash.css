@@ -37,90 +37,33 @@
 
 .flash[data-type="notice"],
 .flash[data-type="success"] {
-  color: oklch(from var(--palette-success) calc(l - 0.30) c h);
-  background-color: oklch(from var(--palette-success) calc(l + 0.30) calc(c * 0.3) h);
-  border-color: oklch(from var(--palette-success) calc(l + 0.10) calc(c * 0.5) h);
+  color: var(--color-success-text);
+  background-color: var(--color-success-bg);
+  border-color: var(--color-success-border);
 }
 
 /* ── Alert — warning, requires attention ─────────────────── */
 
 .flash[data-type="alert"] {
-  color: oklch(from var(--palette-warning) calc(l - 0.40) c h);
-  background-color: oklch(from var(--palette-warning) calc(l + 0.20) calc(c * 0.3) h);
-  border-color: oklch(from var(--palette-warning) calc(l - 0.05) calc(c * 0.5) h);
+  color: var(--color-warning-text);
+  background-color: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
 }
 
 /* ── Error — failure, destructive action result ──────────── */
 
 .flash[data-type="error"] {
-  color: oklch(from var(--palette-error) calc(l - 0.10) c h);
-  background-color: oklch(from var(--palette-error) calc(l + 0.35) calc(c * 0.2) h);
-  border-color: oklch(from var(--palette-error) calc(l + 0.15) calc(c * 0.4) h);
+  color: var(--color-error-text);
+  background-color: var(--color-error-bg);
+  border-color: var(--color-error-border);
 }
 
 /* ── Info — neutral information ──────────────────────────── */
 
 .flash[data-type="info"] {
-  color: oklch(from var(--palette-info) calc(l - 0.20) c h);
-  background-color: oklch(from var(--palette-info) calc(l + 0.30) calc(c * 0.2) h);
-  border-color: oklch(from var(--palette-info) calc(l + 0.10) calc(c * 0.4) h);
-}
-
-/* ── Dark mode adjustments ───────────────────────────────── */
-/* Backgrounds become darker, text lighter — same hues        */
-
-@media (prefers-color-scheme: dark) {
-  .flash[data-type="notice"],
-  .flash[data-type="success"] {
-    color: oklch(from var(--palette-success) calc(l + 0.25) calc(c * 0.7) h);
-    background-color: oklch(from var(--palette-success) calc(l - 0.25) calc(c * 0.4) h);
-    border-color: oklch(from var(--palette-success) calc(l - 0.10) calc(c * 0.5) h);
-  }
-
-  .flash[data-type="alert"] {
-    color: oklch(from var(--palette-warning) calc(l + 0.10) c h);
-    background-color: oklch(from var(--palette-warning) calc(l - 0.35) calc(c * 0.4) h);
-    border-color: oklch(from var(--palette-warning) calc(l - 0.20) calc(c * 0.5) h);
-  }
-
-  .flash[data-type="error"] {
-    color: oklch(from var(--palette-error) calc(l + 0.30) calc(c * 0.7) h);
-    background-color: oklch(from var(--palette-error) calc(l - 0.20) calc(c * 0.3) h);
-    border-color: oklch(from var(--palette-error) calc(l - 0.05) calc(c * 0.4) h);
-  }
-
-  .flash[data-type="info"] {
-    color: oklch(from var(--palette-info) calc(l + 0.25) calc(c * 0.7) h);
-    background-color: oklch(from var(--palette-info) calc(l - 0.25) calc(c * 0.3) h);
-    border-color: oklch(from var(--palette-info) calc(l - 0.10) calc(c * 0.4) h);
-  }
-}
-
-/* ── data-theme section overrides ────────────────────────── */
-
-[data-theme="dark"] .flash[data-type="notice"],
-[data-theme="dark"] .flash[data-type="success"] {
-  color: oklch(from var(--palette-success) calc(l + 0.25) calc(c * 0.7) h);
-  background-color: oklch(from var(--palette-success) calc(l - 0.25) calc(c * 0.4) h);
-  border-color: oklch(from var(--palette-success) calc(l - 0.10) calc(c * 0.5) h);
-}
-
-[data-theme="dark"] .flash[data-type="alert"] {
-  color: oklch(from var(--palette-warning) calc(l + 0.10) c h);
-  background-color: oklch(from var(--palette-warning) calc(l - 0.35) calc(c * 0.4) h);
-  border-color: oklch(from var(--palette-warning) calc(l - 0.20) calc(c * 0.5) h);
-}
-
-[data-theme="dark"] .flash[data-type="error"] {
-  color: oklch(from var(--palette-error) calc(l + 0.30) calc(c * 0.7) h);
-  background-color: oklch(from var(--palette-error) calc(l - 0.20) calc(c * 0.3) h);
-  border-color: oklch(from var(--palette-error) calc(l - 0.05) calc(c * 0.4) h);
-}
-
-[data-theme="dark"] .flash[data-type="info"] {
-  color: oklch(from var(--palette-info) calc(l + 0.25) calc(c * 0.7) h);
-  background-color: oklch(from var(--palette-info) calc(l - 0.25) calc(c * 0.3) h);
-  border-color: oklch(from var(--palette-info) calc(l - 0.10) calc(c * 0.4) h);
+  color: var(--color-info-text);
+  background-color: var(--color-info-bg);
+  border-color: var(--color-info-border);
 }
 
 /* ── Multiple flash messages ─────────────────────────────── */

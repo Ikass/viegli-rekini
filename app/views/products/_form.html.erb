@@ -1,33 +1,48 @@
 <%# locals: (product:) %>
 
-<%= form_with model: product do |form| %>
+<%= form_with model: product, html: { class: "stack" } do |form| %>
   <% if product.errors.any? %>
     <div role="alert">
       <% product.errors.full_messages.each do |message| %>
-        <p><%= message %></p>
+        <p class="flash" data-type="error"><%= message %></p>
       <% end %>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name %>
-    <%= form.text_field :name, required: true, autofocus: true %>
-  </div>
+  <section aria-labelledby="product-details-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="product-details-heading" class="section-label">Product details</h2>
+    <div class="card">
+      <div>
+        <div class="fields-grid">
+          <div class="field">
+            <%= form.label :name %>
+            <%= form.text_field :name, required: true, autofocus: true %>
+          </div>
+          <div class="field">
+            <%= form.label :default_price, "Price (€)" %>
+            <%= form.number_field :default_price, step: "0.01", min: "0" %>
+          </div>
+          <div class="field">
+            <%= form.label :default_vat_rate, "VAT rate (%)" %>
+            <%= form.number_field :default_vat_rate, step: "0.01", min: "0" %>
+          </div>
+        </div>
+        <div class="field" style="margin-block-start: var(--space-s);">
+          <%= form.label :description %>
+          <%= form.text_area :description, rows: 3 %>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  <div>
-    <%= form.label :default_price, "Price (€)" %>
-    <%= form.number_field :default_price, step: "0.01", min: "0" %>
+  <div class="form-actions">
+    <%= form.button class: "button", data: { variant: "primary" } do %>
+      <%= tabler_icon("check") %>
+      Save product
+    <% end %>
+    <%= link_to (product.persisted? ? product_path(product) : products_path), class: "button" do %>
+      <%= tabler_icon("x") %>
+      Cancel
+    <% end %>
   </div>
-
-  <div>
-    <%= form.label :default_vat_rate, "VAT rate (%)" %>
-    <%= form.number_field :default_vat_rate, step: "0.01", min: "0" %>
-  </div>
-
-  <div>
-    <%= form.label :description %>
-    <%= form.text_area :description, rows: 3 %>
-  </div>
-
-  <%= form.submit class: "button", data: { variant: "primary" } %>
 <% end %>

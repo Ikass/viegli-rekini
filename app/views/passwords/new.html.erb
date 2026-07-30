@@ -1,8 +1,40 @@
-<h1>Forgot your password?</h1>
-
-<%= tag.div(flash[:alert], style: "color:red") if flash[:alert] %>
-
-<%= form_with url: passwords_path do |form| %>
-  <%= form.email_field :email_address, required: true, autofocus: true, autocomplete: "username", placeholder: "Enter your email address", value: params[:email_address] %><br>
-  <%= form.submit "Email reset instructions" %>
+<% if flash[:alert] %>
+  <p class="flash" data-type="error" role="alert"><%= flash[:alert] %></p>
 <% end %>
+
+<div class="container" data-size="xs">
+
+  <header class="stack" style="--stack-gap: var(--space-2xs); text-align: center;">
+    <div class="auth-logo">
+      <span class="auth-logo-icon" aria-hidden="true">
+        <%= tabler_icon("file-invoice", data: { size: "sm" }) %>
+      </span>
+    </div>
+    <h1 style="font-size: var(--step-2); font-weight: var(--font-weight-bold);">E-Rēķini</h1>
+  </header>
+
+  <article class="card" style="margin-block-start: var(--space-l);">
+    <header style="text-align: center; padding: var(--space-m) var(--space-m) 0;">
+      <h2 style="font-size: var(--step-3);">Forgot your password?</h2>
+    </header>
+
+    <%= form_with url: passwords_path, html: { class: "stack", style: "padding: var(--space-m);" } do |form| %>
+      <div class="field">
+        <%= form.label :email_address, "Email" %>
+        <%= form.email_field :email_address, required: true, autofocus: true,
+            autocomplete: "username", placeholder: "Enter your email address",
+            value: params[:email_address] %>
+      </div>
+
+      <%= form.submit "Email reset instructions", class: "button",
+          data: { variant: "primary", width: "full" }, style: "margin-block-start: var(--space-s);" %>
+    <% end %>
+
+    <footer style="text-align: center; border-block-start: 1px solid var(--color-border); padding: var(--space-s) var(--space-m);">
+      <p style="font-size: var(--step--1); color: var(--color-text-muted);">
+        <%= link_to "Back to sign in", new_session_path %>
+      </p>
+    </footer>
+  </article>
+
+</div>

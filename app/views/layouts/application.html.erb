@@ -18,33 +18,67 @@
   </head>
 
   <body>
-    <header class="container">
+    <header class="top-bar">
       <nav>
         <ul>
-        <li><strong><%= link_to "E-Rēķini", root_path %></strong></li>
+          <li class="top-bar-brand">
+            <strong><%= link_to root_path do %>
+              <%= tabler_icon("file-invoice", data: { size: "lg" }) %>
+              E-Rēķini
+            <% end %></strong>
+          </li>
+          <% if authenticated? %>
+            <li><%= link_to edit_account_path, class: "button", data: { variant: "ghost", size: "sm" } do %>
+              <%= tabler_icon("settings") %>
+              Account
+            <% end %></li>
+            <li><%= button_to session_path, method: :delete, class: "button", data: { variant: "ghost-danger", size: "sm" } do %>
+              <%= tabler_icon("logout") %>
+              Sign out
+            <% end %></li>
+          <% else %>
+            <li><%= link_to "Sign in", new_session_path, class: "button", data: { variant: "ghost", size: "sm" } %></li>
+          <% end %>
         </ul>
-        <% if authenticated? %>
-          <ul>
-            <li><%= link_to "Invoices", root_path %></li>
-            <li><%= link_to "Clients", clients_path %></li>
-            <li><%= link_to "Products", products_path %></li>
-            <li><%= link_to "Settings", edit_account_path %></li>
-            <li><%= button_to "Sign out", session_path, method: :delete %></li>
-          </ul>
-        <% end %>
       </nav>
     </header>
 
-    <main class="container">
-      <% if notice %>
-        <p class="flash" data-type="notice" role="status"><%= notice %></p>
+    <div class="app-layout">
+      <% if authenticated? %>
+        <aside class="sidebar">
+          <nav>
+            <ul>
+              <li><%= link_to root_path, aria: current_page?(root_path) ? { current: "page" } : {} do %>
+                  <%= tabler_icon("dashboard") %>
+                  Dashboard
+                <% end %></li>
+              <li><%= link_to invoices_path, aria: controller_name == "invoices" ? { current: "page" } : {} do %>
+                  <%= tabler_icon("file-invoice") %>
+                  Invoices
+                <% end %></li>
+              <li><%= link_to clients_path, aria: controller_name == "clients" ? { current: "page" } : {} do %>
+                  <%= tabler_icon("users") %>
+                  Clients
+                <% end %></li>
+              <li><%= link_to products_path, aria: controller_name == "products" ? { current: "page" } : {} do %>
+                  <%= tabler_icon("package") %>
+                  Products
+                <% end %></li>
+            </ul>
+          </nav>
+        </aside>
       <% end %>
-      <% if alert %>
-        <p class="flash" data-type="alert" role="alert"><%= alert %></p>
-      <% end %>
+      <main class="container flow">
+        <% if notice %>
+          <p class="flash" data-type="notice" role="status"><%= notice %></p>
+        <% end %>
+        <% if alert %>
+          <p class="flash" data-type="alert" role="alert"><%= alert %></p>
+        <% end %>
 
-      <%= yield %>
-    </main>
+        <%= yield %>
+      </main>
+    </div>
     <%= render "shared/footer" %>
   </body>
 </html>

@@ -2,7 +2,10 @@
 
 <div class="cluster" data-justify="space-between">
   <h1>Products</h1>
-  <%= link_to "New product", new_product_path, class: "button", data: { variant: "primary" } %>
+  <%= link_to new_product_path, class: "button", data: { variant: "primary" } do %>
+  <%= tabler_icon("plus") %>
+  New product
+<% end %>
 </div>
 
 <% if @products.any? %>
@@ -22,12 +25,18 @@
             <td><%= link_to product.name, product %></td>
             <td class="col-numeric"><%= number_to_currency(product.default_price_cents / 100.0, unit: "€") %></td>
             <td class="col-numeric"><%= product.default_vat_rate %>%</td>
-            <td class="col-actions"><%= link_to "Edit", edit_product_path(product), class: "button", data: { size: "sm" } %></td>
+            <td class="col-actions"><%= link_to edit_product_path(product), class: "button", data: { size: "sm" } do %>
+              <%= tabler_icon("edit") %>
+              Edit
+            <% end %></td>
           </tr>
         <% end %>
       </tbody>
     </table>
   </div>
 <% else %>
-  <p>No products yet. <%= link_to "Add your first product", new_product_path, class: "button" %>.</p>
+  <p>No products yet. <%= link_to new_product_path, class: "button" do %>
+  <%= tabler_icon("plus") %>
+  Add your first product
+<% end %>.</p>
 <% end %>

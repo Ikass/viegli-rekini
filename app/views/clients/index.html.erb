@@ -2,7 +2,10 @@
 
 <div class="cluster" data-justify="space-between">
   <h1>Clients</h1>
-  <%= link_to "New client", new_client_path, class: "button", data: { variant: "primary" } %>
+  <%= link_to new_client_path, class: "button", data: { variant: "primary" } do %>
+  <%= tabler_icon("plus") %>
+  New client
+<% end %>
 </div>
 
 <% if @clients.any? %>
@@ -25,7 +28,10 @@
             <td><%= client.email %></td>
             <td><%= client.vat_number %></td>
             <td class="col-actions">
-              <%= link_to "Edit", edit_client_path(client), class: "button", data: { size: "sm" } %>
+              <%= link_to edit_client_path(client), class: "button", data: { size: "sm" } do %>
+                <%= tabler_icon("edit") %>
+                Edit
+              <% end %>
             </td>
           </tr>
         <% end %>
@@ -33,5 +39,8 @@
     </table>
   </div>
 <% else %>
-  <p>No clients yet. <%= link_to "Add your first client", new_client_path, class: "button" %>.</p>
+  <p>No clients yet. <%= link_to new_client_path, class: "button" do %>
+  <%= tabler_icon("plus") %>
+  Add your first client
+<% end %>.</p>
 <% end %>

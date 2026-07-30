@@ -42,5 +42,18 @@
   <% end %>
 </dl>
 
-<%= link_to "Edit", edit_client_path(@client), class: "button" %>
-<%= button_to "Delete", @client, method: :delete, class: "button", data: { variant: "danger", turbo_confirm: "Delete #{@client.name}? This cannot be undone." } %>
+<div class="cluster">
+  <%= link_to edit_client_path(@client), class: "button" do %>
+    <%= tabler_icon("edit") %>
+    Edit
+  <% end %>
+  <%= button_to client_path(@client), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Delete #{@client.name}? This cannot be undone." } } do %>
+    <%= tabler_icon("trash") %>
+    Delete
+  <% end %>
+</div>
+
+<%= link_to clients_path, class: "button", data: { variant: "ghost" } do %>
+  <%= tabler_icon("arrow-left") %>
+  Back to clients
+<% end %>

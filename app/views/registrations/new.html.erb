@@ -1,30 +1,55 @@
-<h1>Create your account</h1>
+<div class="container" data-size="xs">
 
-<%= form_with model: @user, url: registration_path do |form| %>
-  <% if @user.errors.any? %>
-    <div role="alert">
-      <% @user.errors.full_messages.each do |message| %>
-        <p><%= message %></p>
-      <% end %>
+  <header class="stack" style="--stack-gap: var(--space-2xs); text-align: center;">
+    <div class="auth-logo">
+      <span class="auth-logo-icon" aria-hidden="true">
+        <%= tabler_icon("file-invoice", data: { size: "sm" }) %>
+      </span>
     </div>
-  <% end %>
+    <h1 style="font-size: var(--step-2); font-weight: var(--font-weight-bold);">E-Rēķini</h1>
+  </header>
 
-  <div>
-    <%= form.label :email_address, "Email" %>
-    <%= form.email_field :email_address, required: true, autofocus: true %>
-  </div>
+  <article class="card" style="margin-block-start: var(--space-l);">
+    <header style="text-align: center; padding: var(--space-m) var(--space-m) 0;">
+      <h2 style="font-size: var(--step-3);">Create your account</h2>
+    </header>
 
-  <div>
-    <%= form.label :password %>
-    <%= form.password_field :password, required: true %>
-  </div>
+    <%= form_with model: @user, url: registration_path,
+        html: { class: "stack", style: "padding: var(--space-m);" } do |form| %>
+      <% if @user.errors.any? %>
+        <div role="alert" style="margin-block-end: var(--space-s);">
+          <% @user.errors.full_messages.each do |message| %>
+            <p class="flash" data-type="error"><%= message %></p>
+          <% end %>
+        </div>
+      <% end %>
 
-  <div>
-    <%= form.label :password_confirmation, "Confirm password" %>
-    <%= form.password_field :password_confirmation, required: true %>
-  </div>
+      <fieldset style="border: none; padding: 0; margin: 0;">
+        <div class="field">
+          <%= form.label :email_address, "Email" %>
+          <%= form.email_field :email_address, required: true, autofocus: true %>
+        </div>
 
-  <%= form.submit "Create account" %>
-<% end %>
+        <div class="field" style="margin-block-start: var(--space-s);">
+          <%= form.label :password %>
+          <%= form.password_field :password, required: true %>
+        </div>
 
-<p>Already have an account? <%= link_to "Sign in", new_session_path %></p>
+        <div class="field" style="margin-block-start: var(--space-s);">
+          <%= form.label :password_confirmation, "Confirm password" %>
+          <%= form.password_field :password_confirmation, required: true %>
+        </div>
+      </fieldset>
+
+      <%= form.submit "Create account", class: "button",
+          data: { variant: "primary", width: "full" }, style: "margin-block-start: var(--space-m);" %>
+    <% end %>
+
+    <footer style="text-align: center; border-block-start: 1px solid var(--color-border); padding: var(--space-s) var(--space-m);">
+      <p style="font-size: var(--step--1); color: var(--color-text-muted);">
+        Already have an account? <%= link_to "Sign in", new_session_path %>
+      </p>
+    </footer>
+  </article>
+
+</div>

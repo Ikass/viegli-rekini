@@ -1,80 +1,106 @@
 <%# locals: (client:) %>
 
-<%= form_with model: client do |form| %>
+<%= form_with model: client, html: { class: "stack" } do |form| %>
   <% if client.errors.any? %>
     <div role="alert">
       <% client.errors.full_messages.each do |message| %>
-        <p><%= message %></p>
+        <p class="flash" data-type="error"><%= message %></p>
       <% end %>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name %>
-    <%= form.text_field :name, required: true, autofocus: true %>
+  <section aria-labelledby="client-info-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="client-info-heading" class="section-label">Client details</h2>
+    <div class="card">
+      <div>
+        <div class="fields-grid">
+          <div class="field">
+            <%= form.label :name %>
+            <%= form.text_field :name, required: true, autofocus: true %>
+          </div>
+          <div class="field">
+            <%= form.label :company_name, "Company name" %>
+            <%= form.text_field :company_name %>
+          </div>
+          <div class="field">
+            <%= form.label :email %>
+            <%= form.email_field :email %>
+          </div>
+          <div class="field">
+            <%= form.label :vat_number, "VAT number" %>
+            <%= form.text_field :vat_number %>
+          </div>
+          <div class="field">
+            <%= form.label :iban, "IBAN" %>
+            <%= form.text_field :iban %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="address-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="address-heading" class="section-label">Address</h2>
+    <div class="card">
+      <div>
+        <div class="fields-grid">
+          <div class="field">
+            <%= form.label :address %>
+            <%= form.text_field :address %>
+          </div>
+          <div class="field">
+            <%= form.label :city %>
+            <%= form.text_field :city %>
+          </div>
+          <div class="field">
+            <%= form.label :postal_code %>
+            <%= form.text_field :postal_code %>
+          </div>
+          <div class="field">
+            <%= form.label :country %>
+            <%= form.text_field :country %>
+          </div>
+          <div class="field">
+            <%= form.label :country_code, "Country code (ISO)" %>
+            <%= form.text_field :country_code, placeholder: "LV" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="delivery-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="delivery-heading" class="section-label">e-Invoice delivery</h2>
+    <div class="card">
+      <div>
+        <div class="fields-grid">
+          <div class="field">
+            <%= form.label :delivery_channel, "Delivery channel" %>
+            <%= form.select :delivery_channel, Client.delivery_channels.map { |k, _| [k.humanize, k] } %>
+          </div>
+          <div class="field">
+            <%= form.label :e_adrese_id, "E-adrese ID" %>
+            <%= form.text_field :e_adrese_id %>
+          </div>
+        </div>
+        <div class="field" style="margin-block-start: var(--space-s);">
+          <label>
+            <%= form.check_box :is_budget_institution %>
+            Budget institution
+          </label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="form-actions">
+    <%= form.button class: "button", data: { variant: "primary" } do %>
+      <%= tabler_icon("check") %>
+      Save client
+    <% end %>
+    <%= link_to client.persisted? ? client_path(client) : clients_path, class: "button" do %>
+      <%= tabler_icon("x") %>
+      Cancel
+    <% end %>
   </div>
-
-  <div>
-    <%= form.label :company_name, "Company name" %>
-    <%= form.text_field :company_name %>
-  </div>
-
-  <div>
-    <%= form.label :email %>
-    <%= form.email_field :email %>
-  </div>
-
-  <div>
-    <%= form.label :vat_number, "VAT number" %>
-    <%= form.text_field :vat_number %>
-  </div>
-
-  <div>
-    <%= form.label :iban, "IBAN" %>
-    <%= form.text_field :iban %>
-  </div>
-
-  <fieldset>
-    <legend>Address</legend>
-    <div>
-      <%= form.label :address %>
-      <%= form.text_field :address %>
-    </div>
-    <div>
-      <%= form.label :city %>
-      <%= form.text_field :city %>
-    </div>
-    <div>
-      <%= form.label :postal_code %>
-      <%= form.text_field :postal_code %>
-    </div>
-    <div>
-      <%= form.label :country %>
-      <%= form.text_field :country %>
-    </div>
-    <div>
-      <%= form.label :country_code, "Country code (ISO)" %>
-      <%= form.text_field :country_code, class: "input--small", placeholder: "LV" %>
-    </div>
-  </fieldset>
-
-  <fieldset>
-    <legend>e-Invoice delivery</legend>
-    <div>
-      <%= form.label :delivery_channel, "Delivery channel" %>
-      <%= form.select :delivery_channel, Client.delivery_channels.map { |k, _| [k.humanize, k] } %>
-    </div>
-    <div>
-      <label>
-        <%= form.check_box :is_budget_institution %>
-        Budget institution
-      </label>
-    </div>
-    <div>
-      <%= form.label :e_adrese_id, "E-adrese ID" %>
-      <%= form.text_field :e_adrese_id %>
-    </div>
-  </fieldset>
-
-  <%= form.submit %>
 <% end %>

@@ -25,7 +25,6 @@
 
   /* Sizing */
   padding: var(--space-xs) var(--space-m);
-  min-inline-size: 8ch;
 
   /* Typography */
   font-family: var(--font-base);
@@ -84,13 +83,13 @@
 }
 
 .button[data-variant="secondary"] {
-  color: var(--color-brand);
+  color: var(--color-accent);
   background-color: transparent;
-  border-color: var(--color-brand);
+  border-color: var(--color-accent);
 }
 
 .button[data-variant="secondary"]:hover {
-  background-color: oklch(from var(--color-brand) l c h / 0.08);
+  background-color: oklch(from var(--color-accent) l c h / 0.08);
 }
 
 .button[data-variant="ghost"] {
@@ -113,6 +112,18 @@
 .button[data-variant="danger"]:hover {
   background-color: oklch(from var(--color-error) calc(l - 0.08) c h);
   border-color: oklch(from var(--color-error) calc(l - 0.08) c h);
+}
+
+.button[data-variant="ghost-danger"] {
+  color: var(--color-text);
+  background-color: transparent;
+  border-color: transparent;
+}
+
+.button[data-variant="ghost-danger"]:hover {
+  color: var(--color-error);
+  background-color: var(--color-error-bg);
+  border-color: transparent;
 }
 
 /* ── Sizes ───────────────────────────────────────────────── */

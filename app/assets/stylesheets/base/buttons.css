@@ -1,10 +1,8 @@
 /* ============================================================
    BASE — buttons.css
-   Neutral <button> element defaults. No colour, no padding
-   treatment — just enough to reset browser defaults and make
-   bare buttons behave consistently.
-
-   Full visual treatment is opt-in via .button in blocks/.
+   Neutral <button> element defaults. Matches the .button block
+   so that a bare <button> and an <a class="button"> look the
+   same by default. Opt into variants via the .button class.
    ============================================================ */
 
 button {
@@ -22,21 +20,19 @@ button {
     white-space: nowrap;
 
     color: var(--color-text);
-    background-color: var(--color-surface-raised);
+    background-color: transparent;
     border: 1px solid var(--color-border);
     border-radius: 6px;
-    box-shadow: var(--shadow-xs);
     cursor: pointer;
 
     transition:
         background-color 0.15s ease,
         border-color 0.15s ease,
-        color 0.15s ease,
-        box-shadow 0.15s ease;
+        color 0.15s ease;
 }
 
 button:hover {
-    background-color: var(--color-surface-overlay);
+    background-color: var(--color-surface-raised);
     border-color: var(--color-text-muted);
 }
 

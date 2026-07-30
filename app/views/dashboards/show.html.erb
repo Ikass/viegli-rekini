@@ -1,0 +1,60 @@
+<h1>Dashboard</h1>
+
+<div class="grid" data-columns="3">
+  <article class="card">
+    <div class="kpi">
+      <span class="kpi-label">Outstanding</span>
+      <span class="kpi-value"><%= number_to_currency(@outstanding_total / 100.0, unit: "€") %></span>
+    </div>
+  </article>
+
+  <article class="card" data-variant="tinted" data-status="error">
+    <div class="kpi">
+      <span class="kpi-label">Overdue</span>
+      <span class="kpi-value"><%= number_to_currency(@overdue_total / 100.0, unit: "€") %></span>
+    </div>
+  </article>
+
+  <article class="card">
+    <div class="kpi">
+      <span class="kpi-label">Paid (this month)</span>
+      <span class="kpi-value"><%= number_to_currency(@paid_total / 100.0, unit: "€") %></span>
+    </div>
+  </article>
+</div>
+
+<%= link_to new_invoice_path, class: "button", data: { variant: "primary", width: "full" } do %>
+  <%= tabler_icon("plus") %>
+  New invoice
+<% end %>
+
+<% if @overdue_count > 0 %>
+  <%= link_to invoices_path, class: "alert-banner" do %>
+    <span class="alert-banner-icon">&#9200;</span>
+    <span class="alert-banner-text"><%= @overdue_count %> overdue invoices — <%= number_to_currency(@overdue_total / 100.0, unit: "€") %></span>
+    <span class="alert-banner-arrow">&rarr;</span>
+  <% end %>
+<% end %>
+
+<div style="text-align: center; margin-block: var(--space-l);">
+  <%= link_to "View all invoices", invoices_path %>
+</div>
+
+<% if @recent_invoices.any? %>
+  <section class="card">
+    <header>
+      <h3>Recent activity</h3>
+    </header>
+    <div>
+      <% @recent_invoices.each do |invoice| %>
+        <%= link_to invoice_path(invoice), class: "activity-item" do %>
+          <div class="activity-item-info">
+            <strong><%= invoice.client.name %></strong>
+            <span>#<%= invoice.invoice_number %> · <%= number_to_currency(invoice.total / 100.0, unit: "€") %></span>
+          </div>
+          <span class="badge" data-status="<%= invoice.status %>"><%= invoice.status.humanize %></span>
+        <% end %>
+      <% end %>
+    </div>
+  </section>
+<% end %>

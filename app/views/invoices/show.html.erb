@@ -1,4 +1,4 @@
-<article>
+<article class="stack">
   <header>
     <h1><%= @invoice.invoice_number %></h1>
     <p data-testid="invoice-status">Status: <span class="badge" data-status="<%= @invoice.status %>"><%= @invoice.status.humanize %></span></p>
@@ -6,40 +6,62 @@
     <%# Only show transition buttons for valid next actions. %>
     <div class="cluster">
       <% if @invoice.draft? %>
-        <%= button_to "Send invoice", invoice_invoice_sends_path(@invoice), method: :post, class: "button", data: { variant: "primary" } %>
+        <%= button_to invoice_invoice_sends_path(@invoice), method: :post, class: "button", data: { variant: "primary" } do %>
+          <%= tabler_icon("send") %>
+          Send invoice
+        <% end %>
       <% end %>
 
       <% if @invoice.sent? %>
-        <%= button_to "Record payment", invoice_invoice_payments_path(@invoice), method: :post, class: "button", data: { variant: "primary" } %>
+        <%= button_to invoice_invoice_payments_path(@invoice), method: :post, class: "button", data: { variant: "primary" } do %>
+          <%= tabler_icon("check") %>
+          Record payment
+        <% end %>
       <% end %>
 
       <% unless @invoice.void? %>
-        <%= button_to "Void invoice", invoice_invoice_voids_path(@invoice), method: :post, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Void this invoice? This action cannot be undone." } } %>
+        <%= button_to invoice_invoice_voids_path(@invoice), method: :post, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Void this invoice? This action cannot be undone." } } do %>
+          <%= tabler_icon("ban") %>
+          Void invoice
+        <% end %>
       <% end %>
     </div>
   </header>
 
   <section>
     <h2>Client</h2>
-    <p><strong><%= @invoice.client.name %></strong></p>
-    <% if @invoice.client.company_name.present? %>
-      <p><%= @invoice.client.company_name %></p>
-    <% end %>
-    <% if @invoice.client.email.present? %>
-      <p><%= @invoice.client.email %></p>
-    <% end %>
-    <% if @invoice.client.vat_number.present? %>
-      <p>VAT: <%= @invoice.client.vat_number %></p>
-    <% end %>
+    <dl>
+      <dt>Name</dt>
+      <dd><%= @invoice.client.name %></dd>
+
+      <% if @invoice.client.company_name.present? %>
+        <dt>Company</dt>
+        <dd><%= @invoice.client.company_name %></dd>
+      <% end %>
+
+      <% if @invoice.client.email.present? %>
+        <dt>Email</dt>
+        <dd><%= @invoice.client.email %></dd>
+      <% end %>
+
+      <% if @invoice.client.vat_number.present? %>
+        <dt>VAT number</dt>
+        <dd><%= @invoice.client.vat_number %></dd>
+      <% end %>
+    </dl>
   </section>
 
   <section>
     <h2>Details</h2>
-    <p>Issued: <%= @invoice.issued_on %></p>
-    <p>Due: <%= @invoice.due_on %></p>
+    <dl>
+      <dt>Issued</dt>
+      <dd><%= @invoice.issued_on %></dd>
+      <dt>Due</dt>
+      <dd><%= @invoice.due_on %></dd>
+    </dl>
   </section>
 
-  <section>
+  <section class="flow">
     <h2>Line Items</h2>
     <% if @invoice.line_items.any? %>
       <div class="table-wrapper">
@@ -63,8 +85,14 @@
                 <td class="col-numeric"><%= item.vat_rate %>%</td>
                 <td class="col-numeric"><%= number_to_currency(item.total / 100.0, unit: "€") %></td>
                 <td class="col-actions cluster" style="--cluster-gap: var(--space-2xs)">
-                  <%= link_to "Edit", edit_line_item_path(item), class: "button", data: { size: "sm" } %>
-                  <%= button_to "Remove", line_item_path(item), method: :delete, class: "button", data: { variant: "danger", size: "sm" }, form: { data: { turbo_confirm: "Remove this line item?" } } %>
+                  <%= link_to edit_line_item_path(item), class: "button", data: { size: "sm" } do %>
+                    <%= tabler_icon("edit") %>
+                    Edit
+                  <% end %>
+                  <%= button_to line_item_path(item), method: :delete, class: "button", data: { variant: "danger", size: "sm" }, form: { data: { turbo_confirm: "Remove this line item?" } } do %>
+                    <%= tabler_icon("trash") %>
+                    Remove
+                  <% end %>
                 </td>
               </tr>
             <% end %>
@@ -75,14 +103,22 @@
       <p>No line items.</p>
     <% end %>
 
-    <%= link_to "Add line item", new_invoice_line_item_path(@invoice), class: "button" %>
+    <%= link_to new_invoice_line_item_path(@invoice), class: "button" do %>
+      <%= tabler_icon("plus") %>
+      Add line item
+    <% end %>
   </section>
 
   <section>
     <h2>Totals</h2>
-    <p>Subtotal: <%= number_to_currency(@invoice.subtotal / 100.0, unit: "€") %></p>
-    <p>VAT: <%= number_to_currency(@invoice.vat_total / 100.0, unit: "€") %></p>
-    <p><strong>Total: <%= number_to_currency(@invoice.total / 100.0, unit: "€") %></strong></p>
+    <dl>
+      <dt>Subtotal</dt>
+      <dd><%= number_to_currency(@invoice.subtotal / 100.0, unit: "€") %></dd>
+      <dt>VAT</dt>
+      <dd><%= number_to_currency(@invoice.vat_total / 100.0, unit: "€") %></dd>
+      <dt>Total</dt>
+      <dd><strong><%= number_to_currency(@invoice.total / 100.0, unit: "€") %></strong></dd>
+    </dl>
   </section>
 
   <% if @invoice.notes.present? %>
@@ -93,9 +129,21 @@
   <% end %>
 
   <footer class="cluster">
-    <%= link_to "Print", print_invoice_path(@invoice), target: "_blank", class: "button" %>
-    <%= link_to "Edit", edit_invoice_path(@invoice), class: "button" %>
-    <%= button_to "Delete", invoice_path(@invoice), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Are you sure?" } } %>
-    <%= link_to "Back to invoices", invoices_path, class: "button", data: { variant: "ghost" } %>
+    <%= link_to print_invoice_path(@invoice), target: "_blank", class: "button" do %>
+      <%= tabler_icon("printer") %>
+      Print
+    <% end %>
+    <%= link_to edit_invoice_path(@invoice), class: "button" do %>
+      <%= tabler_icon("edit") %>
+      Edit
+    <% end %>
+    <%= button_to invoice_path(@invoice), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Are you sure?" } } do %>
+      <%= tabler_icon("trash") %>
+      Delete
+    <% end %>
+    <%= link_to invoices_path, class: "button", data: { variant: "ghost" } do %>
+      <%= tabler_icon("arrow-left") %>
+      Back to invoices
+    <% end %>
   </footer>
 </article>

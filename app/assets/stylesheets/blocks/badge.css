@@ -36,34 +36,33 @@
 
   /* Default — neutral */
   color: var(--color-text-muted);
-  background-color: var(--color-surface-overlay);
-  border: 1px solid var(--color-border);
+  background-color: var(--color-surface-inset);
 }
 
 /* ── Invoice statuses ────────────────────────────────────── */
 
 .badge[data-status="draft"] {
-  color: oklch(from var(--palette-neutral-5) calc(l - 0.05) c h);
-  background-color: var(--color-surface-overlay);
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-inset);
   border-color: var(--color-border);
 }
 
 .badge[data-status="sent"] {
-  color: oklch(from var(--palette-info) calc(l - 0.20) c h);
-  background-color: oklch(from var(--palette-info) calc(l + 0.30) calc(c * 0.2) h);
-  border-color: oklch(from var(--palette-info) calc(l + 0.10) calc(c * 0.4) h);
+  color: var(--color-info-text);
+  background-color: var(--color-info-bg);
+  border-color: var(--color-info-border);
 }
 
 .badge[data-status="paid"] {
-  color: oklch(from var(--palette-success) calc(l - 0.30) c h);
-  background-color: oklch(from var(--palette-success) calc(l + 0.30) calc(c * 0.3) h);
-  border-color: oklch(from var(--palette-success) calc(l + 0.10) calc(c * 0.5) h);
+  color: var(--color-success-text);
+  background-color: var(--color-success-bg);
+  border-color: var(--color-success-border);
 }
 
 .badge[data-status="void"] {
-  color: oklch(from var(--palette-neutral-5) l c h);
-  background-color: oklch(from var(--palette-neutral-2) l c h);
-  border-color: oklch(from var(--palette-neutral-3) l c h);
+  color: var(--color-text-muted);
+  background-color: var(--color-surface-inset);
+  border-color: var(--color-border);
   text-decoration: line-through;
   opacity: 0.75;
 }
@@ -71,54 +70,25 @@
 /* ── General variants ────────────────────────────────────── */
 
 .badge[data-variant="success"] {
-  color: oklch(from var(--palette-success) calc(l - 0.30) c h);
-  background-color: oklch(from var(--palette-success) calc(l + 0.30) calc(c * 0.3) h);
-  border-color: oklch(from var(--palette-success) calc(l + 0.10) calc(c * 0.5) h);
+  color: var(--color-success-text);
+  background-color: var(--color-success-bg);
+  border-color: var(--color-success-border);
 }
 
 .badge[data-variant="warning"] {
-  color: oklch(from var(--palette-warning) calc(l - 0.40) c h);
-  background-color: oklch(from var(--palette-warning) calc(l + 0.20) calc(c * 0.3) h);
-  border-color: oklch(from var(--palette-warning) calc(l - 0.05) calc(c * 0.5) h);
+  color: var(--color-warning-text);
+  background-color: var(--color-warning-bg);
+  border-color: var(--color-warning-border);
 }
 
 .badge[data-variant="error"] {
-  color: oklch(from var(--palette-error) calc(l - 0.10) c h);
-  background-color: oklch(from var(--palette-error) calc(l + 0.35) calc(c * 0.2) h);
-  border-color: oklch(from var(--palette-error) calc(l + 0.15) calc(c * 0.4) h);
+  color: var(--color-error-text);
+  background-color: var(--color-error-bg);
+  border-color: var(--color-error-border);
 }
 
 .badge[data-variant="neutral"] {
   color: var(--color-text-muted);
-  background-color: var(--color-surface-overlay);
+  background-color: var(--color-surface-inset);
   border-color: var(--color-border);
-}
-
-/* ── Dark mode ───────────────────────────────────────────── */
-
-@media (prefers-color-scheme: dark) {
-  .badge[data-status="sent"] {
-    color: oklch(from var(--palette-info) calc(l + 0.25) calc(c * 0.7) h);
-    background-color: oklch(from var(--palette-info) calc(l - 0.25) calc(c * 0.3) h);
-    border-color: oklch(from var(--palette-info) calc(l - 0.10) calc(c * 0.4) h);
-  }
-
-  .badge[data-status="paid"],
-  .badge[data-variant="success"] {
-    color: oklch(from var(--palette-success) calc(l + 0.25) calc(c * 0.7) h);
-    background-color: oklch(from var(--palette-success) calc(l - 0.25) calc(c * 0.4) h);
-    border-color: oklch(from var(--palette-success) calc(l - 0.10) calc(c * 0.5) h);
-  }
-
-  .badge[data-variant="warning"] {
-    color: oklch(from var(--palette-warning) calc(l + 0.10) c h);
-    background-color: oklch(from var(--palette-warning) calc(l - 0.35) calc(c * 0.4) h);
-    border-color: oklch(from var(--palette-warning) calc(l - 0.20) calc(c * 0.5) h);
-  }
-
-  .badge[data-variant="error"] {
-    color: oklch(from var(--palette-error) calc(l + 0.30) calc(c * 0.7) h);
-    background-color: oklch(from var(--palette-error) calc(l - 0.20) calc(c * 0.3) h);
-    border-color: oklch(from var(--palette-error) calc(l - 0.05) calc(c * 0.4) h);
-  }
 }

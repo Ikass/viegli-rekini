@@ -2,84 +2,115 @@
 
 <h1>Settings</h1>
 
-<%= form_with model: @account, url: account_path do |form| %>
+<%= form_with model: @account, url: account_path, html: { class: "stack" } do |form| %>
   <% if @account.errors.any? %>
-    <div role="alert">
+    <div role="alert" style="margin-block-end: var(--space-m);">
       <% @account.errors.full_messages.each do |message| %>
-        <p><%= message %></p>
+        <p class="flash" data-type="error"><%= message %></p>
       <% end %>
     </div>
   <% end %>
 
-  <fieldset>
-    <legend>Company details</legend>
-    <div>
-      <%= form.label :company_name %>
-      <%= form.text_field :company_name %>
+  <section aria-labelledby="company-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="company-heading" class="section-label">Company details</h2>
+    <div class="card">
+      <div>
+        <div class="fields-grid">
+          <div class="field">
+            <%= form.label :company_name %>
+            <%= form.text_field :company_name %>
+          </div>
+          <div class="field">
+            <%= form.label :registration_number %>
+            <%= form.text_field :registration_number %>
+          </div>
+          <div class="field">
+            <%= form.label :vat_number, "VAT number" %>
+            <%= form.text_field :vat_number %>
+          </div>
+        </div>
+      </div>
     </div>
-    <div>
-      <%= form.label :registration_number %>
-      <%= form.text_field :registration_number %>
-    </div>
-    <div>
-      <%= form.label :vat_number, "VAT number" %>
-      <%= form.text_field :vat_number %>
-    </div>
-  </fieldset>
+  </section>
 
-  <fieldset>
-    <legend>Address</legend>
-    <div>
-      <%= form.label :address %>
-      <%= form.text_field :address %>
+  <section aria-labelledby="address-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="address-heading" class="section-label">Address</h2>
+    <div class="card">
+      <div>
+        <div class="fields-grid">
+          <div class="field">
+            <%= form.label :address %>
+            <%= form.text_field :address %>
+          </div>
+          <div class="field">
+            <%= form.label :city %>
+            <%= form.text_field :city %>
+          </div>
+          <div class="field">
+            <%= form.label :postal_code %>
+            <%= form.text_field :postal_code %>
+          </div>
+          <div class="field">
+            <%= form.label :country %>
+            <%= form.text_field :country %>
+          </div>
+        </div>
+      </div>
     </div>
-    <div>
-      <%= form.label :city %>
-      <%= form.text_field :city %>
-    </div>
-    <div>
-      <%= form.label :postal_code %>
-      <%= form.text_field :postal_code %>
-    </div>
-    <div>
-      <%= form.label :country %>
-      <%= form.text_field :country %>
-    </div>
-  </fieldset>
+  </section>
 
-  <fieldset>
-    <legend>Bank details</legend>
-    <div>
-      <%= form.label :bank_name %>
-      <%= form.text_field :bank_name %>
+  <section aria-labelledby="bank-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="bank-heading" class="section-label">Bank details</h2>
+    <div class="card">
+      <div>
+        <div class="fields-grid">
+          <div class="field">
+            <%= form.label :bank_name %>
+            <%= form.text_field :bank_name %>
+          </div>
+          <div class="field">
+            <%= form.label :bank_account, "IBAN" %>
+            <%= form.text_field :bank_account %>
+          </div>
+          <div class="field">
+            <%= form.label :bank_swift, "SWIFT/BIC" %>
+            <%= form.text_field :bank_swift %>
+          </div>
+        </div>
+      </div>
     </div>
-    <div>
-      <%= form.label :bank_account, "IBAN" %>
-      <%= form.text_field :bank_account %>
-    </div>
-    <div>
-      <%= form.label :bank_swift, "SWIFT/BIC" %>
-      <%= form.text_field :bank_swift %>
-    </div>
-  </fieldset>
+  </section>
 
-  <fieldset>
-    <legend>Invoice settings</legend>
-    <div>
-      <%= form.label :invoice_prefix %>
-      <%= form.text_field :invoice_prefix, class: "input--small" %>
+  <section aria-labelledby="invoice-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="invoice-heading" class="section-label">Invoice settings</h2>
+    <div class="card">
+      <div style="display: flex; flex-direction: column; gap: var(--space-s);">
+        <div class="fields-inline">
+          <div class="field">
+            <%= form.label :invoice_prefix %>
+            <%= form.text_field :invoice_prefix %>
+          </div>
+          <div class="field">
+            <%= form.label :invoice_number_padding, "Number padding" %>
+            <%= form.number_field :invoice_number_padding, min: 1, max: 10 %>
+          </div>
+        </div>
+        <div class="field">
+          <%= form.label :payment_terms %>
+          <%= form.text_area :payment_terms, rows: 3 %>
+        </div>
+      </div>
     </div>
-    <div>
-      <%= form.label :payment_terms %>
-      <%= form.text_area :payment_terms, rows: 3 %>
-    </div>
-    <div>
-      <%= form.label :invoice_number_padding, "Number padding (digits)" %>
-      <%= form.number_field :invoice_number_padding, class: "input--small", min: 1, max: 10 %>
-    </div>
-  </fieldset>
+  </section>
 
-  <%= form.submit "Save settings", class: "button", data: { variant: "primary" } %>
+  <div class="form-actions">
+    <%= form.button class: "button", data: { variant: "primary" } do %>
+      <%= tabler_icon("check") %>
+      Save settings
+    <% end %>
+    <%= link_to root_path, class: "button" do %>
+      <%= tabler_icon("x") %>
+      Cancel
+    <% end %>
+  </div>
 <% end %>
-
-<%= link_to "Back", root_path, class: "button" %>

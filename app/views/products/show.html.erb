@@ -5,17 +5,31 @@
     <h1><%= @product.name %></h1>
   </header>
 
-  <p><strong>Price:</strong> <%= number_to_currency(@product.default_price_cents / 100.0, unit: "€") %></p>
-  <p><strong>VAT rate:</strong> <%= @product.default_vat_rate %>%</p>
+  <dl>
+    <dt>Price</dt>
+    <dd><%= number_to_currency(@product.default_price_cents / 100.0, unit: "€") %></dd>
 
-  <% if @product.description.present? %>
-    <p><strong>Description:</strong></p>
-    <p><%= @product.description %></p>
-  <% end %>
+    <dt>VAT rate</dt>
+    <dd><%= @product.default_vat_rate %>%</dd>
+
+    <% if @product.description.present? %>
+      <dt>Description</dt>
+      <dd><%= @product.description %></dd>
+    <% end %>
+  </dl>
 
   <footer class="cluster">
-    <%= link_to "Edit", edit_product_path(@product), class: "button" %>
-    <%= button_to "Delete", product_path(@product), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Are you sure?" } } %>
-    <%= link_to "Back to products", products_path, class: "button", data: { variant: "ghost" } %>
+    <%= link_to edit_product_path(@product), class: "button" do %>
+      <%= tabler_icon("edit") %>
+      Edit
+    <% end %>
+    <%= button_to product_path(@product), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Delete #{@product.name}? This cannot be undone." } } do %>
+      <%= tabler_icon("trash") %>
+      Delete
+    <% end %>
+    <%= link_to products_path, class: "button", data: { variant: "ghost" } do %>
+      <%= tabler_icon("arrow-left") %>
+      Back to products
+    <% end %>
   </footer>
 </article>
