@@ -1,6 +1,7 @@
 # viegli-rēķini.lv — Implementation Plan
 
-> Last updated: May 2026  
+> Last updated: July 2026
+> Next: Phase 1B — Multi-Tenancy & Company Architecture  
 > Status: v0.1 MVP complete (clients, products, invoices, print view)
 
 ---
@@ -170,22 +171,26 @@ void    void   void
 
 ### 4.2 Fields to add (required for compliance and e-invoice XML)
 
-#### On `users` (seller details):
+#### On `accounts` (seller details — already exist since Phase 1):
 
 ```ruby
+# Already in schema. Listed here as the ground truth for UBL XML generation:
 # Bank details (for PEPPOL PaymentMeans element)
-add_column :users, :iban, :string
-add_column :users, :bank_name, :string
-add_column :users, :swift, :string
+#   accounts.bank_name      :string
+#   accounts.bank_account   :string   # IBAN
+#   accounts.bank_swift      :string
 
 # Invoice defaults
-add_column :users, :payment_terms_days, :integer, default: 30
-add_column :users, :next_invoice_number, :integer, default: 1
-add_column :users, :invoice_number_prefix, :string  # e.g. "INV-", "2026-"
+#   accounts.invoice_prefix          :string, default: "INV"
+#   accounts.invoice_number_padding  :integer, default: 4
+#   Number sequence derived from existing invoices per account, not a stored counter
 
 # PEPPOL (future — when registering as PEPPOL participant)
-add_column :users, :peppol_id, :string
+# add_column :accounts, :peppol_id, :string
 ```
+
+**Note:** In previous versions of this document these fields were incorrectly listed under `users`. They are company-level, not user-level, and already exist on the `accounts` table as of Phase 1.
+
 
 #### On `clients` (buyer details):
 
@@ -708,7 +713,129 @@ The 5-business-day VID submission deadline requires skipping weekends and Latvia
 
 ### Invoice number format
 
-Configurable prefix + sequential counter per user. Examples: `2026-001`, `INV-0042`, `R-2026-001`. Store `next_invoice_number` on the user and increment atomically (use `with_lock` to prevent race conditions).
+Configurable prefix + sequential counter per account (per location in Phase 1B). Examples: `2026-001`, `INV-0042`, `RIGA-2026-001`. Counter derived from existing invoices per scope at generation time, using `with_lock` to prevent race conditions.
+
+### Multi-tenancy: Identity/User split
+
+**What:** `Identity` (global email+password, one per human) + `User` (per-company role join). A person signs in as an Identity; which Company they're acting within determines which User record is active. Adopted from Fizzy.
+
+**Why:** A Latvian accountant managing multiple clients needs one login for multiple companies. The current schema stores `email_address` with a global unique constraint directly on `User` — the same human cannot belong to two accounts.
+
+**Pros:** One credential set per person. Clean role-per-company. No duplicated email/password. The Fizzy cascading setter pattern (`Current.session=` → `Current.identity=` → `Current.user=` scoped to `Current.account`) makes resolution near-invisible at the controller level.
+
+**Cons:** Adds one join hop to every `Current.user` resolution. Existing registration flow needs rewriting (creates Identity + Account + User in one transaction). Password reset needs to find Identity by email, not User.
+
+### Tenant resolution: URL path prefix vs session-only
+
+**What:** Tenant (Company) is identified by a numeric ID in the URL path (`/42/invoices/5`). A Rack middleware extracts the slug, rewrites `SCRIPT_NAME`, and sets `Current.account`. Adopted from Fizzy's `AccountSlug::Extractor`.
+
+**Why:** Deep-linking is critical for invoicing — users share invoice links with colleagues and clients. Session-only tenancy (`Current.account = current_user.selected_account`) breaks on direct links and prevents multi-tab use (different companies in different tabs share one session).
+
+**Pros:** URLs carry their own context — bookmarkable, shareable, multi-tab-safe. Middleware is ~30 lines. No DNS wildcard or SSL complexity (unlike subdomain approach). Rails' `SCRIPT_NAME` rewrite makes all URL helpers work automatically.
+
+**Cons:** Every route needs the tenant prefix. Turbo Streams and ActionCable need explicit `script_name` awareness (Fizzy has proven patterns for both). Registration/login pages need `disallow_account_scope` to reject tenant-prefixed URLs.
+
+### Company invite flow: join code vs email invitation
+
+**What:** Each Company has a generated join code (e.g. `aB3d-9Xy2-wQ7k-Lm5n`). The admin shares this code; new users visit `/join/:join_code`, verify it against `Current.account.join_code`, and register. Adopted from Campfire and Writebook.
+
+**Why:** Email-based invitation requires a working mailer before anyone can join a second company — a bootstrap problem. Manual user creation by admin doesn't scale past 2–3 users.
+
+**Pros:** Shareable via any channel (email, Slack, WhatsApp — the admin chooses). No mailer dependency. `before_create` generates the code automatically. Admin can regenerate to revoke access. Pattern is 15 lines of concern + one controller action.
+
+**Cons:** No per-invitation tracking (who used the code, when). No expiry (though regeneration = revocation). Not suitable for bulk invitations with role pre-selection — if needed later, extend to `CompanyInvitation` model with email + role.
+
+### Multi-location: membership join vs simple location_id
+
+**What:** `LocationMembership` join table (`user_id`, `location_id`, `role`) scopes which users can create/view invoices for which locations. Admin/accountant roles bypass the check entirely (`User#accessible_locations` returns all company locations). Adopted from Campfire's Room/Membership pattern.
+
+**Why:** A bare `location_id` drop-down on the invoice form lets every user create invoices for any location — fails for franchise/retail scenarios where a cashier shouldn't see another store's invoices. Separate Accounts per location work under the tenancy model but make cross-location reporting painful.
+
+**Pros:** Clean access boundaries. Admin override via role check, not membership check. Three-column table — negligible schema overhead. Checked once per request in `before_action`, not on every query. Per-location invoice numbering (prefix + counter) naturally follows.
+
+**Cons:** UI for managing memberships (admin assigns operators to locations). Initial setup: creating a location should auto-grant the creator operator access. Slightly more schema than bare `location_id`.
+
+### Authentication concern: require_account and disallow_account_scope
+
+**What:** Two class-level methods on the `Authentication` concern. `require_account` is a `before_action` that redirects to a session-selection menu if `Current.account` is nil. `disallow_account_scope` (used on signup/login pages) redirects away if a tenant slug IS present in the URL. Adopted from Fizzy.
+
+**Why:** After introducing URL-path tenancy, pages have implicit expectations about whether a tenant context should exist. A bookmarked invoice URL without an active session hits a page it can't render. A login page at `/42/session/new` is confusing — which company are you logging into?
+
+**Pros:** Formalises tenant-context requirements as an explicit concern rather than implicit assumptions. Both methods are ~5 lines. `disallow_account_scope` prevents the confusing "half-scoped" state on auth pages.
+
+**Cons:** Adds a before_action to every request. But the check is `Current.account.present?` — negligible overhead.
+
+### Per-company JSON settings (Campfire's `has_json` pattern)
+
+**What:** Optional per-company preferences stored as a JSON column on `Account` (`settings`), using `ActiveRecord::Base.store_accessor` for typed getters/setters with defaults. Not individual schema columns. Adopted from Campfire's `has_json :settings` on Account.
+
+**Why:** Avoids column proliferation for optional preferences: default VAT rate, default payment terms in days, default currency, notification toggles (email on send, email on overdue), invoice template selection. Each new option would otherwise require a migration.
+
+**Pros:** New preferences require no migration — just add a default to `store_accessor`. Settings are read once per request into `Current.account`. Typed accessors (`settings[:default_vat_rate]` returns Float, not String).
+
+**Cons:** JSON columns cannot be indexed or queried via SQL efficiently. Not suitable for data you need to `WHERE` on (that belongs in real columns). Schema-less by definition — no DB-level type enforcement for nested values.
+
+### Webhook system for external integrations
+
+**What:** Two custom models — `Webhook` (per-company URL + HMAC secret) and `WebhookDelivery` (request/response log per delivery). Domain events (invoice.created, invoice.sent, invoice.paid, invoice.voided) fire registered webhooks via a background job. Adopted from Fizzy. No third-party gem.
+
+**Why:** Webhooks are the integration surface for external accounting software, Zapier, and custom client dashboards. A gem adds abstraction for a pattern that is fundamentally two tables + one HTTP POST.
+
+**Pros:** ~100 lines of owned code. Two models, one job, one service — fully debuggable. Follows existing service-object conventions. Company-scoped (each Company manages its own webhooks).
+
+**Cons:** No automatic retry beyond Solid Queue's native retries out of the box. No webhook signature verification out of the box (add HMAC verification to `Webhook` model when needed). No webhook event type filtering initially — all events fire to all registered URLs.
+
+### SQLite FTS5 full-text search (no Elasticsearch/Meilisearch)
+
+**What:** SQLite's built-in FTS5 virtual tables for full-text search across invoices, clients, and products. No external search service. Adopted from Campfire (`message_search_index`) and Fizzy (sharded `search_records_*`).
+
+**Why:** As soon as a company has 50+ invoices, searching by client name, invoice number, or line item description becomes necessary. FTS5 is built into SQLite — zero additional infrastructure — and handles prefix queries, phrase matching, and relevance ranking.
+
+**Pros:** Zero infrastructure. Single-table approach (Campfire's model) is sufficient for viegli-rekini's scale — Fizzy's sharding is overkill until millions of records. No separate service to maintain, monitor, or pay for.
+
+**Cons:** FTS5 doesn't support Latvian stemming out of the box. Acceptable for structured data (invoice numbers, client names, product codes) — less relevant for free-text notes. Triggers need to be maintained to keep the FTS index in sync with source tables.
+
+### Cross-device session transfer (QR code login)
+
+**What:** A logged-in user can generate a transfer token (Rails `signed_id`, 4-hour expiry) displayed as a QR code. Scanning it on another device authenticates that device without re-entering credentials. Adopted from Campfire and Writebook's `User::Transferable` concern.
+
+**Why:** Business users switch devices — an accountant starts on desktop, needs to show something on their phone during a client meeting. Re-entering credentials on mobile is friction. The pattern is ~20 lines and purely additive.
+
+**Pros:** High perceived polish for a business app. ~20 lines of implementation — a model concern + one controller action. Uses Rails' built-in `signed_id` (no new dependency). Route reserved early avoids renumbering later.
+
+**Cons:** 4-hour expiry window means the QR code on a long-idle screen may be stale. No revocation mechanism (acceptable for a convenience feature, not a security control). Requires `rqrcode` gem (already in Writebook's Gemfile as a reference).
+
+### SaaS engine separation (Fizzy's `saas/` directory)
+
+**What:** Billing, subscription, provisioning, and storage-limit logic lives in a `saas/` directory loaded only when `ENV["SAAS"]=true`. The core invoicing app has no knowledge of billing beyond checking `Account.active?`. Adopted from Fizzy.
+
+**Why:** When Stripe/LemonSqueezy subscriptions are added in Phase 8, billing code should not leak into invoice logic. The separation makes the app testable without billing dependencies and makes changing billing providers a single-directory swap.
+
+**Pros:** Clean boundary between core domain and billing infrastructure. Tests for invoicing don't need Stripe mocks. Switching billing providers means replacing one directory, not hunting through models. Fizzy has proven this in production.
+
+**Cons:** Adds an engine loading conditional in `config/application.rb`. The `Account.active?` flag is the only shared interface — needs to be maintained as the contract between billing and core.
+
+### Rate limiting: built-in `rate_limit` vs rack-attack
+
+**What:** Use Rails 8's built-in `rate_limit` controller macro (`rate_limit to: 10, within: 3.minutes`) for login attempts and API endpoints. Not the `rack-attack` gem. Observed in all three Basecamp reference apps.
+
+**Why:** The built-in `rate_limit` covers the core use cases — login attempts, magic link requests, API endpoint throttling — without an additional dependency. `rack-attack` adds IP-based blocks and Redis-backed counters but is premature for a small SaaS.
+
+**Pros:** No additional dependency. Single-line declaration per action. Works with Rails' existing cache store (Solid Cache). Covers per-action throttling which is sufficient through Phase 5+.
+
+**Cons:** Less granular than rack-attack — no IP-based rate limiting at the Rack level, no custom throttling rules based on request headers. If per-IP blocking becomes necessary (e.g., after a brute-force attack), rack-attack or Cloudflare is the upgrade path.
+
+### No Devise, no acts_as_tenant — custom auth and tenancy as core domain
+
+**What:** Stay on Rails' `has_secure_password` + custom `Authentication` concern for auth, and explicit `account_id` FKs with `Current.account` for tenancy. Do not introduce Devise or acts_as_tenant. Validated by all three Basecamp reference apps — none use either gem.
+
+**Why for no Devise:** Password reset, session management, and registration are already working with `has_secure_password` + `Authentication` concern. Devise adds metaprogramming, a global initializer, and view-generation conventions that fight against custom UI. The current approach is 80 lines of concern + ~30 lines of views — known, owned, debuggable.
+
+**Why for no acts_as_tenant:** acts_as_tenant uses `default_scope`-based row filtering — it silently hides rows from other tenants, which breaks when you forget to call `current_tenant=` and makes debugging cross-tenant leaks painful. Fizzy's explicit `account_id` on every table + association traversal is more predictable. Cross-tenant leak tests are straightforward: `assert_not_equal account_a.invoices, account_b.invoices`.
+
+**Pros (custom auth):** No magic. Every line is yours. Debuggable without reading gem source. `has_secure_password` handles bcrypt correctly (Battle-tested Rails built-in). **Pros (custom tenancy):** No silent row filtering. No `default_scope` surprises. Explicit scoping makes security audits straightforward.
+
+**Cons (custom auth):** You maintain password-reset mailer, rate limiting, and session expiry yourself — Devise handles these out of the box. **Cons (custom tenancy):** Every developer must remember to scope queries — `acts_as_tenant` does this automatically (for better and worse).
 
 ---
 

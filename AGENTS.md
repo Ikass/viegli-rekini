@@ -6,7 +6,7 @@ Coding agent context for the Invoicio e-invoicing Rails app. Read this before ma
 
 ## What this app is
 
-A focused Rails 8 invoicing application. Single-user for now, but the data model is built for multi-tenancy. SQLite3.
+A focused Rails 8 e-invoicing SaaS for Latvian small businesses. Multi-tenant with multi-user company accounts, multi-location support. SQLite3.
 
 Portfolio project — code quality and architectural clarity matter as much as feature completeness.
 
@@ -85,14 +85,14 @@ end
 ### Controllers
 
 - One instance variable per action (`@invoice`, `@client`, etc.)
-- All queries scoped through `current_user.account` — never bare `Invoice.find`
+- All queries scoped through `Current.account` — never bare `Model.find`
 - Use `find_by!` — never `find_by` (silent nil is a bug waiting to happen)
 - No business logic — delegate to services
 - Strong parameters: use `params.expect(user: [:email_address, :password])` (Rails 8.1), not `permit`
 
 ```ruby
 # Good
-@invoice = current_user.account.invoices.find_by!(id: params[:id])
+@invoice = Current.account.invoices.find_by!(id: params[:id])
 
 # Bad — never do this
 @invoice = Invoice.find(params[:id])
@@ -136,13 +136,36 @@ end
 ## Data model
 
 ```
-Account
-  - name: string, null: false
-
-User
+Identity (global — email+password, one per human)
   - email_address: string, null: false, unique
   - password_digest: string, null: false
+  - has_many :users
+  - has_many :accounts, through: :users
+
+Account (tenant — one per company)
+  - name: string, null: false
+  - has_many :users
+  - has_many :locations
+
+User (per-company role join — bridges Identity to Account)
   - account_id: references Account, null: false
+  - identity_id: references Identity, null: false
+  - role: enum (admin, accountant, member), default: member
+  - has_many :location_memberships
+
+Location (company sub-unit — store, branch, warehouse)
+  - account_id: references Account, null: false
+  - name: string, null: false
+  - prefix: string           # invoice number prefix, e.g. "RIGA"
+  - invoice_counter: integer  # per-location sequential counter
+  - has_many :location_memberships
+  - has_many :invoices
+
+LocationMembership (scopes which users can operate in a location)
+  - location_id: references Location, null: false
+  - user_id: references User, null: false
+  - role: enum (viewer, operator), default: operator
+  - unique index on [location_id, user_id]
 
 Client (belongs_to :account)
   - name: string, null: false
@@ -151,14 +174,16 @@ Client (belongs_to :account)
   - vat_number: string
   - address, city, postal_code, country: string
 
-Invoice (belongs_to :account, belongs_to :client)
-  - invoice_number: string, null: false, unique (INV-0001 format)
+Invoice (belongs_to :account, belongs_to :client, belongs_to :location)
+  - invoice_number: string, null: false, unique per account
+  - location_id: references Location
   - issued_on: date, null: false
   - due_on: date, null: false
   - status: enum (draft, sent, paid, void), null: false, default: draft
   - notes: text
 
 LineItem (belongs_to :invoice)
+  - account_id: references Account, null: false  # denormalised for direct tenancy scoping
   - description: string, null: false
   - quantity: decimal, null: false
   - unit_price_cents: integer, null: false (euro cents — 5000 = €50.00)
@@ -243,14 +268,28 @@ Invalid transitions raise an error — they do not silently fail. Each transitio
 
 ---
 
+---
+
+## Architecture references
+
+Key patterns adopted from 37signals/Basecamp Rails reference apps:
+
+| Pattern | Source | What we adopted |
+|---|---|---|
+| Identity/User split | Fizzy | `Identity` (global, email+password) + `User` (per-company role join). Enables multi-company accountants. |
+| URL-path tenancy | Fizzy | `AccountSlug` middleware extracts company ID from URL prefix. `Current.account` set per-request via `Current.with_account`. |
+| Cascading Current attributes | Fizzy | `Current.session=` auto-sets `Current.identity`; `Current.identity=` finds `User` for `Current.account`. |
+| Join code invite | Campfire/Writebook | `Account::Joinable` concern generates join codes. Invite link → registration → auto-join company. |
+| Membership scoping | Campfire | `LocationMembership` join scopes which users can operate in which locations. Admin/accountant role bypasses checks. |
+| AccountTenanted job concern | Fizzy | Serializes `Current.account` via GlobalID. All background jobs automatically restore tenant context. |
+| Explicit account_id, no default_scope | Fizzy | `account_id` FK on every tenanted table. No hidden scoping — all queries explicitly traverse associations. |
+
+---
+
 ## What's out of scope — do not build these
 
-- Email delivery
-- Background jobs / Solid Queue
-- Multi-user account management UI
 - Subscription billing
 - PDF generation (print CSS is sufficient)
 - Pagination
-- Overdue reminders
 
 If asked to implement any of the above, flag it and ask for confirmation first.
