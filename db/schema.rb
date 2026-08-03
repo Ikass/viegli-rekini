@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_09_151457) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_03_150918) do
   create_table "accounts", force: :cascade do |t|
     t.string "address"
     t.string "bank_account"
@@ -45,10 +45,13 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_09_151457) do
     t.boolean "is_budget_institution", default: false, null: false
     t.string "name", null: false
     t.string "postal_code"
+    t.string "registration_number"
     t.datetime "updated_at", null: false
     t.string "vat_number"
+    t.integer "vat_regime", default: 0
     t.index ["account_id"], name: "index_clients_on_account_id"
     t.check_constraint "delivery_channel IN (0, 1)", name: "clients_delivery_channel_check"
+    t.check_constraint "vat_regime IN (0, 1, 2)", name: "clients_vat_regime_check"
   end
 
   create_table "invoices", force: :cascade do |t|

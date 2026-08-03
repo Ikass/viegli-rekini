@@ -29,6 +29,11 @@ class Invoice < ApplicationRecord
     subtotal + vat_total
   end
 
+  def vat_regime_note
+    return nil if account.vat_number.blank?
+    client.vat_regime_note
+  end
+
   private
 
   def generate_invoice_number

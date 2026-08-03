@@ -34,4 +34,48 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "INV-0001", first.invoice_number
     assert_equal "INV-0002", second.invoice_number
   end
+
+  test "vat_regime_note returns nil when issuer has no VAT number" do
+    account = accounts(:one)
+    client = clients(:one)
+    client.update_column(:vat_regime, 1) # reverse_charge
+
+    invoice = account.invoices.create!(
+      client: client,
+      issued_on: Date.current,
+      due_on: Date.current + 30
+    )
+
+    assert_nil invoice.vat_regime_note
+  end
+
+  test "vat_regime_note returns note when issuer is VAT-registered and client has special regime" do
+    account = accounts(:one)
+    account.update_column(:vat_number, "LV40001234567")
+    client = clients(:one)
+    client.update_column(:vat_regime, 1) # reverse_charge
+
+    invoice = account.invoices.create!(
+      client: client,
+      issued_on: Date.current,
+      due_on: Date.current + 30
+    )
+
+    assert_match(/Reverse charge/i, invoice.vat_regime_note)
+  end
+
+  test "vat_regime_note returns nil for standard regime even when issuer is VAT-registered" do
+    account = accounts(:one)
+    account.update_column(:vat_number, "LV40001234567")
+    client = clients(:one)
+    client.update_column(:vat_regime, 0) # standard
+
+    invoice = account.invoices.create!(
+      client: client,
+      issued_on: Date.current,
+      due_on: Date.current + 30
+    )
+
+    assert_nil invoice.vat_regime_note
+  end
 end

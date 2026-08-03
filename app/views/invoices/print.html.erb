@@ -1,47 +1,47 @@
 <% account = Current.user.account %>
 <% client = @invoice.client %>
+<% items_by_rate = @invoice.line_items.group_by(&:vat_rate) %>
 
 <div class="invoice-header">
   <div>
-    <h1>Invoice <%= @invoice.invoice_number %></h1>
+    <p class="company-name"><%= account.company_name.presence || account.name %></p>
+    <p class="issuer-details">
+      <% if account.registration_number.present? %>
+        Reg. No: <%= account.registration_number %>
+      <% end %>
+      <% if account.vat_number.present? %>
+        <% if account.registration_number.present? %> · <% end %>
+        VAT: <%= account.vat_number %>
+      <% end %>
+    </p>
+    <% if account.address.present? || account.city.present? || account.postal_code.present? %>
+      <p class="issuer-details">
+        <%= [account.address, account.postal_code, account.city].compact.join(", ") %>
+        <% if account.country.present? %>
+          · <%= account.country %>
+        <% end %>
+      </p>
+    <% end %>
   </div>
-  <div class="status">
-    <span class="badge" data-status="<%= @invoice.status %>"><%= @invoice.status.humanize %></span>
+  <div class="invoice-title">
+    <h1>Invoice</h1>
+    <p>No. <%= @invoice.invoice_number %></p>
   </div>
 </div>
 
+<hr class="header-rule">
+
 <div class="addresses">
   <div>
-    <h2>From</h2>
-    <p class="company-name"><%= account.company_name.presence || account.name %></p>
-    <% if account.registration_number.present? %>
-      <p>Reg. No: <%= account.registration_number %></p>
-    <% end %>
-    <% if account.vat_number.present? %>
-      <p>VAT: <%= account.vat_number %></p>
-    <% end %>
-    <% if account.address.present? %>
-      <p><%= account.address %></p>
-    <% end %>
-    <% if account.city.present? || account.postal_code.present? %>
-      <p><%= [account.postal_code, account.city].compact.join(" ") %></p>
-    <% end %>
-    <% if account.country.present? %>
-      <p><%= account.country %></p>
-    <% end %>
-  </div>
-
-  <div>
-    <h2>To</h2>
-    <p class="company-name"><%= client.name %></p>
+    <h2>Bill to</h2>
+    <p class="company-name"><%= client.company_name.presence || client.name %></p>
     <% if client.company_name.present? %>
-      <p><%= client.company_name %></p>
-    <% end %>
-    <% if client.email.present? %>
-      <p><%= client.email %></p>
+      <p><%= client.name %></p>
     <% end %>
     <% if client.vat_number.present? %>
       <p>VAT: <%= client.vat_number %></p>
+    <% elsif client.registration_number.present? %>
+      <p>Reg. No: <%= client.registration_number %></p>
     <% end %>
     <% if client.address.present? %>
       <p><%= client.address %></p>
@@ -49,28 +49,15 @@
     <% if client.city.present? || client.postal_code.present? %>
       <p><%= [client.postal_code, client.city].compact.join(" ") %></p>
     <% end %>
-    <% if client.country.present? %>
-      <p><%= client.country %></p>
-    <% end %>
   </div>
+
+  <table class="invoice-meta">
+    <tr><td>Issued</td><td><%= @invoice.issued_on %></td></tr>
+    <tr><td>Due</td><td><%= @invoice.due_on %></td></tr>
+  </table>
 </div>
 
-<dl class="invoice-meta">
-  <div>
-    <dt>Invoice Number</dt>
-    <dd><%= @invoice.invoice_number %></dd>
-  </div>
-  <div>
-    <dt>Issued</dt>
-    <dd><%= @invoice.issued_on %></dd>
-  </div>
-  <div>
-    <dt>Due</dt>
-    <dd><%= @invoice.due_on %></dd>
-  </div>
-</dl>
-
-<table>
+<table class="line-items">
   <thead>
     <tr>
       <th class="col-desc">Description</th>
@@ -83,11 +70,11 @@
   <tbody>
     <% @invoice.line_items.each do |item| %>
       <tr>
-        <td class="desc-cell"><%= item.description %></td>
-        <td class="numeric"><%= item.quantity %></td>
-        <td class="numeric"><%= number_to_currency(item.unit_price_cents / 100.0, unit: "€") %></td>
-        <td class="numeric"><%= item.vat_rate %>%</td>
-        <td class="numeric"><%= number_to_currency(item.total / 100.0, unit: "€") %></td>
+        <td class="col-desc desc-cell"><%= item.description %></td>
+        <td class="col-qty numeric"><%= item.quantity %></td>
+        <td class="col-price numeric"><%= number_to_currency(item.unit_price_cents / 100.0, unit: "€") %></td>
+        <td class="col-vat numeric"><%= item.vat_rate %>%</td>
+        <td class="col-total numeric"><%= number_to_currency(item.total / 100.0, unit: "€") %></td>
       </tr>
     <% end %>
   </tbody>
@@ -95,20 +82,37 @@
 
 <div class="totals">
   <table>
-    <tr>
-      <td>Subtotal</td>
-      <td class="numeric"><%= number_to_currency(@invoice.subtotal / 100.0, unit: "€") %></td>
-    </tr>
-    <tr>
-      <td>VAT</td>
-      <td class="numeric"><%= number_to_currency(@invoice.vat_total / 100.0, unit: "€") %></td>
-    </tr>
+    <% items_by_rate.each do |rate, items| %>
+      <tr>
+        <td class="label">Taxable (VAT <%= rate %>%)</td>
+        <td class="numeric"><%= number_to_currency(items.sum(&:subtotal) / 100.0, unit: "€") %></td>
+      </tr>
+      <tr>
+        <td class="label">VAT <%= rate %>%</td>
+        <td class="numeric"><%= number_to_currency(items.sum(&:vat_amount) / 100.0, unit: "€") %></td>
+      </tr>
+    <% end %>
     <tr class="total-row">
       <td>Total</td>
       <td class="numeric"><%= number_to_currency(@invoice.total / 100.0, unit: "€") %></td>
     </tr>
   </table>
 </div>
+
+<% if account.bank_name.present? || account.bank_account.present? %>
+  <div class="payment-details">
+    <h2>Payment details</h2>
+    <p>
+      <% if account.bank_name.present? %><%= account.bank_name %> · <% end %>
+      <% if account.bank_account.present? %>IBAN <%= account.bank_account %><% end %>
+      <% if account.bank_swift.present? %> · SWIFT/BIC <%= account.bank_swift %><% end %>
+    </p>
+  </div>
+<% end %>
+
+<% if @invoice.vat_regime_note.present? %>
+  <p class="vat-regime-note"><%= @invoice.vat_regime_note %></p>
+<% end %>
 
 <% if @invoice.notes.present? %>
   <div class="notes">
@@ -117,17 +121,13 @@
   </div>
 <% end %>
 
-<% if account.bank_name.present? || account.bank_account.present? %>
-  <div class="bank-details">
-    <h2>Payment details</h2>
-    <% if account.bank_name.present? %>
-      <p><strong>Bank:</strong> <%= account.bank_name %></p>
-    <% end %>
-    <% if account.bank_account.present? %>
-      <p><strong>IBAN:</strong> <%= account.bank_account %></p>
-    <% end %>
-    <% if account.bank_swift.present? %>
-      <p><strong>SWIFT/BIC:</strong> <%= account.bank_swift %></p>
-    <% end %>
-  </div>
-<% end %>
+<div class="compliance-footer">
+  <p class="signature-note">
+    This invoice is issued electronically and does not require a signature,
+    as the underlying transaction is substantiated by the agreement/order
+    it relates to.
+  </p>
+  <# if @invoice.peppol_ready? %>
+    <p class="compliance-note">✓ PEPPOL-ready structured invoice</p>
+  <# end %>
+</div>
