@@ -2,45 +2,94 @@
 
 <h1><%= @client.name %></h1>
 
-<dl>
-  <% if @client.company_name.present? %>
-    <dt>Company</dt>
-    <dd><%= @client.company_name %></dd>
-  <% end %>
+<section aria-labelledby="client-details-heading" style="margin-block-end: var(--space-l);">
+  <h2 id="client-details-heading" class="section-label">Client details</h2>
+  <div class="card">
+    <dl>
+      <% if @client.company_name.present? %>
+        <dt>Company</dt>
+        <dd><%= @client.company_name %></dd>
+      <% end %>
 
-  <% if @client.email.present? %>
-    <dt>Email</dt>
-    <dd><%= @client.email %></dd>
-  <% end %>
+      <% if @client.email.present? %>
+        <dt>Email</dt>
+        <dd><%= @client.email %></dd>
+      <% end %>
 
-  <% if @client.vat_number.present? %>
-    <dt>VAT number</dt>
-    <dd><%= @client.vat_number %></dd>
-  <% end %>
+      <% if @client.registration_number.present? %>
+        <dt>Registration number</dt>
+        <dd><%= @client.registration_number %></dd>
+      <% end %>
 
-  <% if @client.country_code.present? %>
-    <dt>Country code</dt>
-    <dd><%= @client.country_code %></dd>
-  <% end %>
+      <% if @client.vat_number.present? %>
+        <dt>VAT number</dt>
+        <dd><%= @client.vat_number %></dd>
+      <% end %>
 
-  <% if @client.iban.present? %>
-    <dt>IBAN</dt>
-    <dd><%= @client.iban %></dd>
-  <% end %>
+      <dt>VAT regime</dt>
+      <dd><%= @client.vat_regime.humanize %></dd>
 
-  <dt>Delivery channel</dt>
-  <dd><%= @client.delivery_channel.humanize %></dd>
+      <% if @client.country_code.present? %>
+        <dt>Country code</dt>
+        <dd><%= @client.country_code %></dd>
+      <% end %>
 
-  <% if @client.is_budget_institution? %>
-    <dt>Budget institution</dt>
-    <dd>Yes</dd>
-  <% end %>
+      <% if @client.iban.present? %>
+        <dt>IBAN</dt>
+        <dd><%= @client.iban %></dd>
+      <% end %>
+    </dl>
+  </div>
+</section>
 
-  <% if @client.e_adrese_id.present? %>
-    <dt>E-adrese ID</dt>
-    <dd><%= @client.e_adrese_id %></dd>
-  <% end %>
-</dl>
+<% if @client.address.present? || @client.city.present? || @client.postal_code.present? || @client.country.present? %>
+  <section aria-labelledby="client-address-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="client-address-heading" class="section-label">Address</h2>
+    <div class="card">
+      <dl>
+        <% if @client.address.present? %>
+          <dt>Address</dt>
+          <dd><%= @client.address %></dd>
+        <% end %>
+
+        <% if @client.city.present? %>
+          <dt>City</dt>
+          <dd><%= @client.city %></dd>
+        <% end %>
+
+        <% if @client.postal_code.present? %>
+          <dt>Postal code</dt>
+          <dd><%= @client.postal_code %></dd>
+        <% end %>
+
+        <% if @client.country.present? %>
+          <dt>Country</dt>
+          <dd><%= @client.country %></dd>
+        <% end %>
+      </dl>
+    </div>
+  </section>
+<% end %>
+
+<section aria-labelledby="client-delivery-heading" style="margin-block-end: var(--space-l);">
+  <h2 id="client-delivery-heading" class="section-label">e-Invoice delivery</h2>
+  <div class="card">
+    <dl>
+      <dt>Delivery channel</dt>
+      <dd><%= @client.delivery_channel.humanize %></dd>
+
+      <% if @client.is_budget_institution? %>
+        <dt>Budget institution</dt>
+        <dd>Yes</dd>
+      <% end %>
+
+      <% if @client.e_adrese_id.present? %>
+        <dt>E-adrese ID</dt>
+        <dd><%= @client.e_adrese_id %></dd>
+      <% end %>
+    </dl>
+  </div>
+</section>
 
 <div class="cluster">
   <%= link_to edit_client_path(@client), class: "button" do %>
