@@ -2,6 +2,9 @@
 
 Coding agent context for the Invoicio e-invoicing Rails app. Read this before making any changes.
 
+> **Obsidian vault reference docs:** `01.Projects/Rails/viegli-rekini/` in MainVault:
+> `lv-invoice-legal-requirements.md`, `viegli-rekini-invoice-generation-architecture.md`
+
 ---
 
 ## What this app is
@@ -221,7 +224,9 @@ LineItem (belongs_to :invoice)
   - account_id: references Account, null: false  # denormalised for direct tenancy scoping
   - description: string, null: false
   - quantity: decimal, null: false
+  - unit_code: string, null: false, default: "C62"  # UN/ECE 20 (C62, HUR, DAY, WEE, MON, QAN, ANN, KGM, LTR, MTR, PK, MTK)
   - unit_price_cents: integer, null: false (euro cents — 5000 = €50.00)
+  - tax_category_code: string, null: false, default: "S"  # UNCL 5305 via InvoiceCodes concern (S, S12, S5, Z, E, AE, G)
   - vat_rate: decimal, null: false, default: 0
   - position: integer (for ordering)
 
@@ -229,6 +234,8 @@ Product (belongs_to :account)
   - name: string, null: false
   - description: text
   - unit_price_cents: integer, null: false (euro cents)
+  - unit_code: string, null: false, default: "C62"  # UN/ECE 20
+  - tax_category_code: string, null: false, default: "S"  # UNCL 5305
   - vat_rate: decimal, null: false, default: 21.0
 ```
 
@@ -296,10 +303,14 @@ Invalid transitions raise an error — they do not silently fail. Each transitio
 - Product picker (Stimulus controller + JSON endpoint) — auto-fills line item fields from product
 - Seed file — demo account with sample clients, products, and invoices across all statuses
 - System tests — invoice lifecycle + client CRUD (via `bin/rails test:system`)
+- UN/ECE unit codes (C62, HUR, DAY, WEE, MON, QAN, ANN, KGM, LTR, MTR, PK, MTK) on Products and LineItems
+- VAT category codes (S/21%, S12/12%, S5/5%, Z, E, AE, G) with Stimulus auto-rate controller
+- Card-section UI pattern applied to all show views (client, product) and invoice edit form
+- `InvoiceCodes` concern — shared UNIT_CODES and TAX_CATEGORY_CODES constants
 
 ### What's next
-1. Print-ready invoice view (`layouts/print.html.erb` + print CSS)
-2. Seed file — demo account with sample clients, products, and invoices across all statuses
+1. PDF generation (plain human-readable PDF — evaluate Grover vs Prawn)
+2. UBL 2.1 XML generation (`UblInvoiceBuilder` service, PEPPOL BIS 3.0)
 
 ---
 
@@ -324,7 +335,6 @@ Key patterns adopted from 37signals/Basecamp Rails reference apps:
 ## What's out of scope — do not build these
 
 - Subscription billing
-- PDF generation (print CSS is sufficient)
 - Pagination
 
 If asked to implement any of the above, flag it and ask for confirmation first.
