@@ -13,11 +13,12 @@
     <h2 id="product-details-heading" class="section-label">Product details</h2>
     <div class="card" data-controller="vat-category">
       <div>
-        <div class="fields-grid">
-          <div class="field">
-            <%= form.label :name %>
-            <%= form.text_field :name, required: true, autofocus: true %>
-          </div>
+        <div class="field">
+          <%= form.label :name %>
+          <%= form.text_field :name, required: true, autofocus: true %>
+        </div>
+
+        <div class="fields-inline" style="margin-block-start: var(--space-s);">
           <div class="field">
             <%= form.label :default_price, "Price (€)" %>
             <%= form.number_field :default_price, step: "0.01", min: "0" %>
@@ -29,6 +30,9 @@
                   {},
                   required: true %>
           </div>
+        </div>
+
+        <div class="fields-inline" style="margin-block-start: var(--space-s);">
           <div class="field">
             <%= form.label :tax_category_code, "VAT category" %>
             <%= form.select :tax_category_code,
@@ -37,11 +41,12 @@
                   required: true,
                   data: { vat_category_target: "category", action: "vat-category#updateRate" } %>
           </div>
+          <div class="field">
+            <%= form.label :default_vat_rate, "VAT rate (%)" %>
+            <%= form.number_field :default_vat_rate, step: "0.01", min: "0", data: { vat_category_target: "rate" } %>
+          </div>
         </div>
-        <div class="field" style="margin-block-start: var(--space-s);">
-          <%= form.label :default_vat_rate, "VAT rate (%)" %>
-          <%= form.number_field :default_vat_rate, step: "0.01", min: "0", data: { vat_category_target: "rate" } %>
-        </div>
+
         <div class="field" style="margin-block-start: var(--space-s);">
           <%= form.label :description %>
           <%= form.text_area :description, rows: 3 %>
