@@ -113,6 +113,41 @@ end
 - Partials receive exactly what they need, nothing more
 - Use `data-testid` attributes for system test selectors, not CSS classes
 
+### Show views
+
+Every show view follows the same structure as edit views — card sections with `section-label` headings, wrapped in a `.stack` container:
+
+```erb
+<h1><%= @record.name %></h1>
+
+<div class="stack">
+  <section aria-labelledby="details-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="details-heading" class="section-label">Section heading</h2>
+    <div class="card">
+      <div>                      <!-- ← inner div required for card padding -->
+        <dl>
+          <dt>Field label</dt>
+          <dd><%= @record.field %></dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <div class="form-actions">
+    <%# Primary action, destructive action, ghost "back" link %>
+    <%= link_to "Edit", ..., class: "button" %>
+    <%= button_to "Delete", ..., class: "button", data: { variant: "danger" } %>
+    <%= link_to "Back", ..., class: "button", data: { variant: "ghost" } %>
+  </div>
+</div>
+```
+
+Key rules:
+- `<h1>` sits **outside** the `.stack` wrapper
+- Every `.card` **must** have an inner `<div>` — `.card > div` is what gets `padding: var(--space-m)` in CSS. A bare `<dl>` inside `.card` receives zero padding
+- The button row uses `form-actions` (not `cluster`) — gives proper `margin-block-start` and `gap`
+- The "back" link is a ghost button **inside** `form-actions`, not standalone
+
 ### Routes
 
 Follow canonical REST. If a behaviour doesn't fit the 7 standard actions, it becomes a new resource.

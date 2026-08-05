@@ -2,42 +2,45 @@
 
 <h1><%= @product.name %></h1>
 
-<section aria-labelledby="product-details-heading" style="margin-block-end: var(--space-l);">
-  <h2 id="product-details-heading" class="section-label">Product details</h2>
-  <div class="card">
-    <dl>
-      <dt>Price</dt>
-      <dd><%= number_to_currency(@product.default_price_cents / 100.0, unit: "€") %></dd>
+<div class="stack">
+  <section aria-labelledby="product-details-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="product-details-heading" class="section-label">Product details</h2>
+    <div class="card">
+      <div>
+        <dl>
+          <dt>Price</dt>
+          <dd><%= number_to_currency(@product.default_price_cents / 100.0, unit: "€") %></dd>
 
-      <dt>Unit</dt>
-      <dd><%= LineItem::UNIT_CODES[@product.unit_code] || @product.unit_code %></dd>
+          <dt>Unit</dt>
+          <dd><%= LineItem::UNIT_CODES[@product.unit_code] || @product.unit_code %></dd>
 
-      <dt>VAT category</dt>
-      <dd><%= LineItem::TAX_CATEGORY_CODES[@product.tax_category_code] || @product.tax_category_code %></dd>
+          <dt>VAT category</dt>
+          <dd><%= LineItem::TAX_CATEGORY_CODES[@product.tax_category_code] || @product.tax_category_code %></dd>
 
-      <dt>VAT rate</dt>
-      <dd><%= @product.default_vat_rate %>%</dd>
+          <dt>VAT rate</dt>
+          <dd><%= @product.default_vat_rate %>%</dd>
 
-      <% if @product.description.present? %>
-        <dt>Description</dt>
-        <dd><%= @product.description %></dd>
-      <% end %>
-    </dl>
+          <% if @product.description.present? %>
+            <dt>Description</dt>
+            <dd><%= @product.description %></dd>
+          <% end %>
+        </dl>
+      </div>
+    </div>
+  </section>
+
+  <div class="form-actions">
+    <%= link_to edit_product_path(@product), class: "button" do %>
+      <%= tabler_icon("edit") %>
+      Edit
+    <% end %>
+    <%= button_to product_path(@product), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Delete #{@product.name}? This cannot be undone." } } do %>
+      <%= tabler_icon("trash") %>
+      Delete
+    <% end %>
+    <%= link_to products_path, class: "button", data: { variant: "ghost" } do %>
+      <%= tabler_icon("arrow-left") %>
+      Back to products
+    <% end %>
   </div>
-</section>
-
-<div class="cluster">
-  <%= link_to edit_product_path(@product), class: "button" do %>
-    <%= tabler_icon("edit") %>
-    Edit
-  <% end %>
-  <%= button_to product_path(@product), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Delete #{@product.name}? This cannot be undone." } } do %>
-    <%= tabler_icon("trash") %>
-    Delete
-  <% end %>
 </div>
-
-<%= link_to products_path, class: "button", data: { variant: "ghost" } do %>
-  <%= tabler_icon("arrow-left") %>
-  Back to products
-<% end %>
