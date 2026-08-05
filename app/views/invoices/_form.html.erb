@@ -4,50 +4,71 @@
   <% if invoice.errors.any? %>
     <div role="alert">
       <% invoice.errors.full_messages.each do |message| %>
-        <p><%= message %></p>
+        <p class="flash" data-type="error"><%= message %></p>
       <% end %>
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :client_id, "Client" %>
-    <%= form.collection_select :client_id, Current.user.account.clients, :id, :name, { prompt: "Select a client" }, required: true %>
-  </div>
-
-  <div class="fields-inline">
-    <div>
-      <%= form.label :issued_on, "Issued on" %>
-      <%= form.date_field :issued_on, required: true %>
+  <section aria-labelledby="invoice-details-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="invoice-details-heading" class="section-label">Invoice details</h2>
+    <div class="card">
+      <div>
+        <div class="fields-grid">
+          <div class="field">
+            <%= form.label :client_id, "Client" %>
+            <%= form.collection_select :client_id, Current.user.account.clients, :id, :name, { prompt: "Select a client" }, required: true %>
+          </div>
+          <div class="field">
+            <%= form.label :issued_on, "Issued on" %>
+            <%= form.date_field :issued_on, required: true %>
+          </div>
+          <div class="field">
+            <%= form.label :due_on, "Due on" %>
+            <%= form.date_field :due_on, required: true %>
+          </div>
+        </div>
+        <div class="field" style="margin-block-start: var(--space-s);">
+          <%= form.label :notes %>
+          <%= form.text_area :notes, rows: 3 %>
+        </div>
+      </div>
     </div>
-    <div>
-      <%= form.label :due_on, "Due on" %>
-      <%= form.date_field :due_on, required: true %>
+  </section>
+
+  <section aria-labelledby="line-items-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="line-items-heading" class="section-label">Line items</h2>
+    <div class="card">
+      <div>
+        <div data-nested-form-target="container">
+          <%= form.fields_for :line_items do |line_item_form| %>
+            <%= render "invoices/line_item_fields", form: line_item_form %>
+          <% end %>
+        </div>
+
+        <template data-nested-form-target="template">
+          <%= form.fields_for :line_items, LineItem.new, child_index: "NEW_RECORD" do |line_item_form| %>
+            <%= render "invoices/line_item_fields", form: line_item_form %>
+          <% end %>
+        </template>
+
+        <div style="margin-block-start: var(--space-s);">
+          <button type="button" data-action="nested-form#add" class="button">
+            <%= tabler_icon("plus") %>
+            Add line item
+          </button>
+        </div>
+      </div>
     </div>
-  </div>
+  </section>
 
-  <div>
-    <%= form.label :notes %>
-    <%= form.text_area :notes, rows: 3 %>
-  </div>
-
-  <h3>Line Items</h3>
-
-  <div data-nested-form-target="container">
-    <%= form.fields_for :line_items do |line_item_form| %>
-      <%= render "invoices/line_item_fields", form: line_item_form %>
+  <div class="form-actions">
+    <%= form.button class: "button", data: { variant: "primary" } do %>
+      <%= tabler_icon("check") %>
+      Save invoice
+    <% end %>
+    <%= link_to (invoice.persisted? ? invoice_path(invoice) : invoices_path), class: "button" do %>
+      <%= tabler_icon("x") %>
+      Cancel
     <% end %>
   </div>
-
-  <template data-nested-form-target="template">
-    <%= form.fields_for :line_items, LineItem.new, child_index: "NEW_RECORD" do |line_item_form| %>
-      <%= render "invoices/line_item_fields", form: line_item_form %>
-    <% end %>
-  </template>
-
-  <button type="button" data-action="nested-form#add" class="button">
-    <%= tabler_icon("plus") %>
-    Add line item
-  </button>
-
-  <%= form.submit class: "button", data: { variant: "primary" } %>
 <% end %>
