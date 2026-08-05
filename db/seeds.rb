@@ -45,12 +45,12 @@ ActiveRecord::Base.transaction do
   ].map { |attrs| account.clients.create!(attrs) }
 
   products = [
-    { name: "Konsultāciju stunda", description: "Biznesa konsultācija 1 stunda", default_price_cents: 12000, default_vat_rate: 21 },
-    { name: "Mājas lapas izstrāde", description: "Vienas lapas tīmekļa vietne", default_price_cents: 50000, default_vat_rate: 21 },
-    { name: "Gada grāmatvedības pārskats", description: "Gada pārskata sagatavošana", default_price_cents: 35000, default_vat_rate: 21 },
-    { name: "IT atbalsts mēnesī", description: "IT sistēmu uzturēšana un atbalsts", default_price_cents: 8000, default_vat_rate: 21 },
-    { name: "Apgrozījuma aprēķins", description: "Mēneša apgrozījuma atskaite", default_price_cents: 4500, default_vat_rate: 0 },
-    { name: "Dizaina koncepts", description: "Vizuālās identitātes izstrāde", default_price_cents: 25000, default_vat_rate: 21 }
+    { name: "Konsultāciju stunda", description: "Biznesa konsultācija 1 stunda", default_price_cents: 12000, default_vat_rate: 21, unit_code: "HUR", tax_category_code: "S" },
+    { name: "Mājas lapas izstrāde", description: "Vienas lapas tīmekļa vietne", default_price_cents: 50000, default_vat_rate: 21, unit_code: "C62", tax_category_code: "S" },
+    { name: "Gada grāmatvedības pārskats", description: "Gada pārskata sagatavošana", default_price_cents: 35000, default_vat_rate: 21, unit_code: "C62", tax_category_code: "S" },
+    { name: "IT atbalsts mēnesī", description: "IT sistēmu uzturēšana un atbalsts", default_price_cents: 8000, default_vat_rate: 21, unit_code: "C62", tax_category_code: "S" },
+    { name: "Apgrozījuma aprēķins", description: "Mēneša apgrozījuma atskaite", default_price_cents: 4500, default_vat_rate: 0, unit_code: "C62", tax_category_code: "Z" },
+    { name: "Dizaina koncepts", description: "Vizuālās identitātes izstrāde", default_price_cents: 25000, default_vat_rate: 21, unit_code: "C62", tax_category_code: "S" }
   ].map { |attrs| account.products.create!(attrs) }
 
   today = Date.current
@@ -96,7 +96,9 @@ ActiveRecord::Base.transaction do
       invoice.line_items.create!(
         description: product.description || product.name,
         quantity: item_data[:quantity],
+        unit_code: product.unit_code,
         unit_price_cents: product.default_price_cents,
+        tax_category_code: product.tax_category_code,
         vat_rate: product.default_vat_rate,
         position: idx
       )

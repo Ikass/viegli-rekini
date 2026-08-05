@@ -50,6 +50,6 @@ class LineItemsController < ApplicationController
   end
 
   def line_item_params
-    params.expect(line_item: [ :description, :quantity, :unit_price, :vat_rate, :position ])
+    params.expect(line_item: [ :description, :quantity, :unit_code, :unit_price, :tax_category_code, :vat_rate, :position ])
   end
 end

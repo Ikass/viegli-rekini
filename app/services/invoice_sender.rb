@@ -32,6 +32,10 @@ class InvoiceSender
     end
 
     missing << "Line items" if invoice.line_items.empty?
+    invoice.line_items.each_with_index do |item, index|
+      missing << "Unit code for line #{index + 1}" if item.unit_code.blank?
+      missing << "Tax category for line #{index + 1}" if item.tax_category_code.blank?
+    end
 
     missing
   end

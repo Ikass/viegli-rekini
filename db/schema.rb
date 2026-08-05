@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_03_150918) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_05_130901) do
   create_table "accounts", force: :cascade do |t|
     t.string "address"
     t.string "bank_account"
@@ -76,6 +76,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_03_150918) do
     t.integer "invoice_id", null: false
     t.integer "position"
     t.decimal "quantity", precision: 10, scale: 2, null: false
+    t.string "tax_category_code", default: "S", null: false
+    t.string "unit_code", default: "C62", null: false
     t.integer "unit_price_cents", null: false
     t.datetime "updated_at", null: false
     t.decimal "vat_rate", precision: 5, scale: 2, default: "0.0", null: false
@@ -89,6 +91,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_03_150918) do
     t.decimal "default_vat_rate", precision: 5, scale: 2, default: "21.0", null: false
     t.text "description"
     t.string "name", null: false
+    t.string "tax_category_code", default: "S", null: false
+    t.string "unit_code", default: "C62", null: false
     t.datetime "updated_at", null: false
     t.index ["account_id"], name: "index_products_on_account_id"
   end

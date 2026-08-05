@@ -1,12 +1,16 @@
 # frozen_string_literal: true
 
 class LineItem < ApplicationRecord
+  include InvoiceCodes
+
   belongs_to :invoice
 
   validates :description, presence: true
   validates :quantity, presence: true, numericality: { greater_than: 0 }
   validates :unit_price_cents, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :vat_rate, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :unit_code, presence: true, inclusion: { in: UNIT_CODES.keys }
+  validates :tax_category_code, presence: true, inclusion: { in: TAX_CATEGORY_CODES.keys }
 
   # Virtual attribute for form-friendly price input (euros, not cents).
   # The getter formats cents as a decimal string for the form.

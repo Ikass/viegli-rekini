@@ -3,9 +3,13 @@ one:
   name: Consulting Hour
   default_price_cents: 15000
   default_vat_rate: 21.0
+  unit_code: C62
+  tax_category_code: S
 
 two:
   account: two
   name: Design Package
   default_price_cents: 50000
   default_vat_rate: 12.0
+  unit_code: C62
+  tax_category_code: S

@@ -26,7 +26,7 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
 
   test "create" do
     assert_difference("Product.count") do
-      post products_path, params: { product: { name: "New Product", default_price: "100.00", default_vat_rate: "21.0" } }
+      post products_path, params: { product: { name: "New Product", default_price: "100.00", default_vat_rate: "21.0", unit_code: "C62", tax_category_code: "S" } }
     end
     assert_redirected_to product_path(Product.last)
   end

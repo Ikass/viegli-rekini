@@ -15,6 +15,7 @@
         <tr>
           <th>Name</th>
           <th class="col-numeric">Price</th>
+          <th>Unit</th>
           <th class="col-numeric">VAT rate</th>
           <th class="col-actions"></th>
         </tr>
@@ -24,6 +25,7 @@
           <tr>
             <td><%= link_to product.name, product %></td>
             <td class="col-numeric"><%= number_to_currency(product.default_price_cents / 100.0, unit: "€") %></td>
+            <td><%= LineItem::UNIT_CODES[product.unit_code] || product.unit_code %></td>
             <td class="col-numeric"><%= product.default_vat_rate %>%</td>
             <td class="col-actions"><%= link_to edit_product_path(product), class: "button", data: { size: "sm" } do %>
               <%= tabler_icon("edit") %>

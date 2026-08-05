@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 class Product < ApplicationRecord
+  include InvoiceCodes
+
   belongs_to :account
 
   validates :name, presence: true
   validates :default_price_cents, presence: true, numericality: { only_integer: true, greater_than_or_equal_to: 0 }
   validates :default_vat_rate, presence: true, numericality: { greater_than_or_equal_to: 0 }
+  validates :unit_code, presence: true, inclusion: { in: UNIT_CODES.keys }
+  validates :tax_category_code, presence: true, inclusion: { in: TAX_CATEGORY_CODES.keys }
 
   attribute :default_price, :string
 

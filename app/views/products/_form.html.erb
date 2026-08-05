@@ -11,7 +11,7 @@
 
   <section aria-labelledby="product-details-heading" style="margin-block-end: var(--space-l);">
     <h2 id="product-details-heading" class="section-label">Product details</h2>
-    <div class="card">
+    <div class="card" data-controller="vat-category">
       <div>
         <div class="fields-grid">
           <div class="field">
@@ -23,9 +23,24 @@
             <%= form.number_field :default_price, step: "0.01", min: "0" %>
           </div>
           <div class="field">
-            <%= form.label :default_vat_rate, "VAT rate (%)" %>
-            <%= form.number_field :default_vat_rate, step: "0.01", min: "0" %>
+            <%= form.label :unit_code, "Unit" %>
+            <%= form.select :unit_code,
+                  LineItem::UNIT_CODES.map { |code, label| [ label, code ] },
+                  {},
+                  required: true %>
           </div>
+          <div class="field">
+            <%= form.label :tax_category_code, "VAT category" %>
+            <%= form.select :tax_category_code,
+                  LineItem::TAX_CATEGORY_CODES.map { |code, label| [ label, code ] },
+                  {},
+                  required: true,
+                  data: { vat_category_target: "category", action: "vat-category#updateRate" } %>
+          </div>
+        </div>
+        <div class="field" style="margin-block-start: var(--space-s);">
+          <%= form.label :default_vat_rate, "VAT rate (%)" %>
+          <%= form.number_field :default_vat_rate, step: "0.01", min: "0", data: { vat_category_target: "rate" } %>
         </div>
         <div class="field" style="margin-block-start: var(--space-s);">
           <%= form.label :description %>

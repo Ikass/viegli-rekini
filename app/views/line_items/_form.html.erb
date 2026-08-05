@@ -1,6 +1,6 @@
 <%# locals: (line_item:, url:) %>
 
-<%= form_with model: line_item, url: url, html: { class: "stack" } do |form| %>
+<%= form_with model: line_item, url: url, html: { class: "stack", data: { controller: "vat-category" } } do |form| %>
   <% if line_item.errors.any? %>
     <div role="alert">
       <% line_item.errors.full_messages.each do |message| %>
@@ -20,13 +20,30 @@
   </div>
 
   <div>
+    <%= form.label :unit_code, "Unit" %>
+    <%= form.select :unit_code,
+          LineItem::UNIT_CODES.map { |code, label| [ label, code ] },
+          {},
+          required: true %>
+  </div>
+
+  <div>
     <%= form.label :unit_price, "Unit price (€)" %>
     <%= form.number_field :unit_price, step: "0.01", min: "0", required: true %>
   </div>
 
   <div>
+    <%= form.label :tax_category_code, "VAT category" %>
+    <%= form.select :tax_category_code,
+          LineItem::TAX_CATEGORY_CODES.map { |code, label| [ label, code ] },
+          {},
+          required: true,
+          data: { vat_category_target: "category", action: "vat-category#updateRate" } %>
+  </div>
+
+  <div>
     <%= form.label :vat_rate, "VAT rate (%)" %>
-    <%= form.number_field :vat_rate, step: "0.01", min: "0", value: line_item.vat_rate || 0 %>
+    <%= form.number_field :vat_rate, step: "0.01", min: "0", value: line_item.vat_rate || 0, data: { vat_category_target: "rate" } %>
   </div>
 
   <%= form.hidden_field :position %>

@@ -1,6 +1,6 @@
 <%# locals: (form:) %>
 
-<div data-nested-form-field data-controller="product-picker" class="flow">
+<div data-nested-form-field data-controller="product-picker vat-category" class="flow">
   <% if form.object.persisted? %>
     <%= form.hidden_field :_destroy, value: "0" %>
   <% end %>
@@ -25,12 +25,28 @@
       <%= form.number_field :quantity, step: "0.01", min: "0.01", required: true, data: { product_picker_target: "quantity" } %>
     </div>
     <div>
+      <%= form.label :unit_code, "Unit" %>
+      <%= form.select :unit_code,
+            LineItem::UNIT_CODES.map { |code, label| [ label, code ] },
+            {},
+            required: true,
+            data: { product_picker_target: "unitCode" } %>
+    </div>
+    <div>
       <%= form.label :unit_price, "Unit price (€)" %>
       <%= form.number_field :unit_price, step: "0.01", min: "0", required: true, data: { product_picker_target: "unitPrice" } %>
     </div>
     <div>
+      <%= form.label :tax_category_code, "VAT category" %>
+      <%= form.select :tax_category_code,
+            LineItem::TAX_CATEGORY_CODES.map { |code, label| [ label, code ] },
+            {},
+            required: true,
+            data: { product_picker_target: "taxCategory", vat_category_target: "category", action: "vat-category#updateRate" } %>
+    </div>
+    <div>
       <%= form.label :vat_rate, "VAT rate (%)" %>
-      <%= form.number_field :vat_rate, step: "0.01", min: "0", value: form.object.vat_rate || 0, data: { product_picker_target: "vatRate" } %>
+      <%= form.number_field :vat_rate, step: "0.01", min: "0", value: form.object.vat_rate || 0, data: { product_picker_target: "vatRate", vat_category_target: "rate" } %>
     </div>
   </div>
 

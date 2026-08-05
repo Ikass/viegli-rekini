@@ -18,7 +18,7 @@ class InvoiceSendsControllerTest < ActionDispatch::IntegrationTest
     @client = clients(:one)
     sign_in_as(@user)
     @invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-S1", issued_on: Date.current, due_on: Date.current + 14.days)
-    @invoice.line_items.create!(description: "Test", quantity: 1, unit_price_cents: 1000, vat_rate: 21)
+    @invoice.line_items.create!(description: "Test", quantity: 1, unit_code: "C62", unit_price_cents: 1000, tax_category_code: "S", vat_rate: 21)
   end
 
   test "create transitions draft to sent" do

@@ -16,7 +16,9 @@ class ProductsController < ApplicationController
           description: @product.description,
           default_price: @product.default_price,
           default_price_cents: @product.default_price_cents,
-          default_vat_rate: @product.default_vat_rate
+          default_vat_rate: @product.default_vat_rate,
+          unit_code: @product.unit_code,
+          tax_category_code: @product.tax_category_code
         }
       end
     end
@@ -59,6 +61,6 @@ class ProductsController < ApplicationController
   end
 
   def product_params
-    params.expect(product: [ :name, :description, :default_price, :default_vat_rate ])
+    params.expect(product: [ :name, :description, :default_price, :default_vat_rate, :unit_code, :tax_category_code ])
   end
 end

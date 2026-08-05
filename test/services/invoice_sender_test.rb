@@ -17,7 +17,7 @@ class InvoiceSenderTest < ActiveSupport::TestCase
     )
     @client = clients(:one)
     @invoice = @account.invoices.create!(client: @client, invoice_number: "INV-S1", issued_on: Date.current, due_on: Date.current + 14.days)
-    @invoice.line_items.create!(description: "Test item", quantity: 1, unit_price_cents: 1000, vat_rate: 21)
+    @invoice.line_items.create!(description: "Test item", quantity: 1, unit_code: "C62", unit_price_cents: 1000, tax_category_code: "S", vat_rate: 21)
   end
 
   test "sends a draft invoice" do

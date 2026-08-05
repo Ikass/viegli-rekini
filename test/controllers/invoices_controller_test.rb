@@ -30,7 +30,7 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
         issued_on: Date.current,
         due_on: Date.current + 14.days,
         line_items_attributes: {
-          "0" => { description: "Design work", quantity: 10, unit_price: "50.00", vat_rate: 21 }
+          "0" => { description: "Design work", quantity: 10, unit_code: "C62", unit_price: "50.00", tax_category_code: "S", vat_rate: 21 }
         }
       } }
     end

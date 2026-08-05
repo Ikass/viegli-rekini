@@ -9,6 +9,12 @@
     <dt>Price</dt>
     <dd><%= number_to_currency(@product.default_price_cents / 100.0, unit: "€") %></dd>
 
+    <dt>Unit</dt>
+    <dd><%= LineItem::UNIT_CODES[@product.unit_code] || @product.unit_code %></dd>
+
+    <dt>VAT category</dt>
+    <dd><%= LineItem::TAX_CATEGORY_CODES[@product.tax_category_code] || @product.tax_category_code %></dd>
+
     <dt>VAT rate</dt>
     <dd><%= @product.default_vat_rate %>%</dd>
 
