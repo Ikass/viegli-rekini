@@ -39,10 +39,24 @@
     <h2 id="line-items-heading" class="section-label">Line items</h2>
     <div class="card">
       <div>
-        <div data-nested-form-target="container">
-          <%= form.fields_for :line_items do |line_item_form| %>
-            <%= render "invoices/line_item_fields", form: line_item_form %>
-          <% end %>
+        <div class="table-wrapper">
+          <table class="table line-items-form">
+            <thead>
+              <tr>
+                <th>Product/Service</th>
+                <th class="col-numeric">Qty</th>
+                <th>Unit</th>
+                <th class="col-numeric">Unit price</th>
+                <th>VAT</th>
+                <th class="col-actions"></th>
+              </tr>
+            </thead>
+            <tbody data-nested-form-target="container">
+              <%= form.fields_for :line_items do |line_item_form| %>
+                <%= render "invoices/line_item_fields", form: line_item_form %>
+              <% end %>
+            </tbody>
+          </table>
         </div>
 
         <template data-nested-form-target="template">

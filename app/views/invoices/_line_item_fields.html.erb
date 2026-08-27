@@ -1,59 +1,49 @@
 <%# locals: (form:) %>
 
-<div data-nested-form-field data-controller="product-picker vat-category" class="flow">
-  <% if form.object.persisted? %>
-    <%= form.hidden_field :_destroy, value: "0" %>
-  <% end %>
+<tr data-nested-form-field data-controller="product-picker vat-category">
+  <td>
+    <% if form.object.persisted? %>
+      <%= form.hidden_field :_destroy, value: "0" %>
+    <% end %>
+    <%= form.hidden_field :position %>
 
-  <div>
-    <%= label_tag nil, "Product/Service" %>
-    <%= select_tag :product_selector,
-          options_from_collection_for_select(Current.user.account.products, :id, :name, nil),
-          prompt: "Select a product...",
-          aria: { label: "Product/Service" },
-          data: { product_picker_target: "selector", action: "product-picker#select" } %>
-  </div>
-
-  <div>
-    <%= form.label :description %>
-    <%= form.text_field :description, required: true, data: { product_picker_target: "description" } %>
-  </div>
-
-  <div class="fields-inline">
-    <div>
-      <%= form.label :quantity %>
-      <%= form.number_field :quantity, step: "0.01", min: "0.01", required: true, data: { product_picker_target: "quantity" } %>
+    <div class="stack" style="--stack-gap: var(--space-2xs)">
+      <%= select_tag :product_selector,
+            options_from_collection_for_select(Current.user.account.products, :id, :name, nil),
+            prompt: "Select a product...",
+            aria: { label: "Product/Service" },
+            data: { product_picker_target: "selector", action: "product-picker#select" } %>
+      <%= form.text_field :description, required: true, aria: { label: "Description" }, data: { product_picker_target: "description" } %>
     </div>
-    <div>
-      <%= form.label :unit_code, "Unit" %>
-      <%= form.select :unit_code,
-            LineItem::UNIT_CODES.map { |code, label| [ label, code ] },
-            {},
-            required: true,
-            data: { product_picker_target: "unitCode" } %>
-    </div>
-    <div>
-      <%= form.label :unit_price, "Unit price (€)" %>
-      <%= form.number_field :unit_price, step: "0.01", min: "0", required: true, data: { product_picker_target: "unitPrice" } %>
-    </div>
-    <div>
-      <%= form.label :tax_category_code, "VAT category" %>
+  </td>
+  <td class="col-numeric">
+    <%= form.number_field :quantity, step: "0.01", min: "0.01", required: true, aria: { label: "Quantity" }, data: { product_picker_target: "quantity" } %>
+  </td>
+  <td>
+    <%= form.select :unit_code,
+          LineItem::UNIT_CODES.map { |code, label| [ label, code ] },
+          {},
+          required: true,
+          aria: { label: "Unit" },
+          data: { product_picker_target: "unitCode" } %>
+  </td>
+  <td class="col-numeric">
+    <%= form.number_field :unit_price, step: "0.01", min: "0", required: true, aria: { label: "Unit price" }, data: { product_picker_target: "unitPrice" } %>
+  </td>
+  <td>
+    <div class="stack" style="--stack-gap: var(--space-2xs);">
       <%= form.select :tax_category_code,
-            LineItem::TAX_CATEGORY_CODES.map { |code, label| [ label, code ] },
+            LineItem::SHORT_TAX_CATEGORY_CODES.map { |code, label| [ label, code ] },
             {},
             required: true,
+            aria: { label: "VAT category" },
             data: { product_picker_target: "taxCategory", vat_category_target: "category", action: "vat-category#updateRate" } %>
+      <%= form.number_field :vat_rate, step: "0.01", min: "0", value: form.object.vat_rate || 0, aria: { label: "VAT rate" }, data: { product_picker_target: "vatRate", vat_category_target: "rate" } %>
     </div>
-    <div>
-      <%= form.label :vat_rate, "VAT rate (%)" %>
-      <%= form.number_field :vat_rate, step: "0.01", min: "0", value: form.object.vat_rate || 0, data: { product_picker_target: "vatRate", vat_category_target: "rate" } %>
-    </div>
-  </div>
-
-  <%= form.hidden_field :position %>
-
-  <button type="button" data-action="nested-form#remove" class="button" data-variant="danger">
-    <%= tabler_icon("trash") %>
-    Remove
-  </button>
-</div>
+  </td>
+  <td class="col-actions">
+    <button type="button" data-action="nested-form#remove" class="button" data-variant="ghost-danger" data-size="sm" aria-label="Remove line item">
+      <%= tabler_icon("trash") %>
+    </button>
+  </td>
+</tr>

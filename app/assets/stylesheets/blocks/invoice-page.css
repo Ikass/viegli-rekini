@@ -113,3 +113,46 @@
   color: var(--color-text);
   font-variant-numeric: tabular-nums;
 }
+
+/* ── Line-items editor table ───────────────────────────── */
+/* The draft editor renders line items as an editable table  */
+/* so it reads like the document it will become.             */
+
+.card .table-wrapper {
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.line-items-form {
+  table-layout: fixed;
+  min-width: 46rem;
+}
+
+.line-items-form th,
+.line-items-form td {
+  vertical-align: top;
+}
+
+.line-items-form th:nth-child(2),
+.line-items-form td:nth-child(2) { width: 5rem; }    /* Qty */
+
+.line-items-form th:nth-child(3),
+.line-items-form td:nth-child(3) { width: 8rem; }    /* Unit */
+
+.line-items-form th:nth-child(4),
+.line-items-form td:nth-child(4) { width: 7rem; }    /* Unit price */
+
+.line-items-form th:nth-child(5),
+.line-items-form td:nth-child(5) { width: 12rem; }   /* VAT */
+
+.line-items-form th:nth-child(6),
+.line-items-form td:nth-child(6) { width: 3.5rem; }  /* Remove */
+
+.line-items-form select {
+  padding-inline-end: var(--space-m);
+}
+
+.line-items-form .col-actions .button {
+  padding-inline: var(--space-2xs);
+}

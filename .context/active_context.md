@@ -13,9 +13,11 @@ Goal: a single status-aware invoice page that visually matches the print/PDF out
 - Phase 3: status-aware `show` — sticky toolbar, status badge + number, shared document, activity strip.
 - Phase 5: locked `edit`/`update`/`destroy` (invoice + line items) for non-drafts.
 - Phase 6 (stage 2): draft show page renders the editable form inline; `/edit` now redirects to `show`.
+- Send wiring: toolbar "Send invoice" submits the form (commit=send) so edits save before sending.
+- Polish: line items are editable table rows (product picker + VAT auto-rate preserved); remove is an in-row icon.
 
 ## Next
-- Polish (deferred from stage 2): style the draft form to match the document; line-item rows as editable table cells (currently card-based form).
+- Deferred features (toolbar stubs): PDF download, resend, reminder, payment link, duplicate, partial-payment UI.
 
 ## Decisions locked
 - Void = any non-void → void (number reserved); Delete = drafts only.
