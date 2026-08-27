@@ -19,11 +19,11 @@ Goal: a single status-aware invoice page that visually matches the print/PDF out
 
 ## Next
 - Deferred features (toolbar stubs): PDF download, resend, reminder, payment link, duplicate, partial-payment UI.
-- Long-term: searchable autocomplete for product/service selection (Option 3).
+- Long-term: combobox for product/service selection (Option 3) — spec documented in `agents/line-item-selection-options.md`.
 
 ## Decisions locked
 - Void = any non-void → void (number reserved); Delete = drafts only.
 - `overdue` is derived (sent && due < today), not a DB status.
 - Deferred: PDF download, resend, reminder, payment link, duplicate, partial-payment UI.
-- Line-item selection: "Add from product" helper (Option 1) for now; autocomplete is the future target.
-- VAT rate is a Product attribute; line items display it read-only.
+- Line-item selection: "Add from product" helper (Option 1) for now; combobox (Option 3) is the future target.
+- VAT rate is a Product attribute; line items display it read-only today — future direction is category-select-overridable (combobox spec).
