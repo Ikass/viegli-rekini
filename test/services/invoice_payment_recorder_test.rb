@@ -14,6 +14,7 @@ class InvoicePaymentRecorderTest < ActiveSupport::TestCase
 
     assert result.success?
     assert @invoice.reload.paid?
+    assert_not_nil @invoice.paid_at
   end
 
   test "fails for draft invoices" do

@@ -34,6 +34,18 @@ class Invoice < ApplicationRecord
     client.vat_regime_note
   end
 
+  # Derived state — not a persisted status. An invoice is overdue when it has
+  # been sent but its due date has passed without payment.
+  def overdue?
+    sent? && due_on < Date.current
+  end
+
+  # The status to surface in the UI, collapsing the derived "overdue" condition
+  # into the same vocabulary as the persisted enum (draft/sent/overdue/paid/void).
+  def display_status
+    overdue? ? "overdue" : status
+  end
+
   private
 
   def generate_invoice_number

@@ -48,7 +48,7 @@ class InvoicesTest < ApplicationSystemTestCase
     fill_field_via_js("input[name='invoice[due_on]']", (Date.current + 14.days).to_s)
 
     # Add a line item via product picker
-    within first("[data-controller='product-picker']") do
+    within first("[data-controller~='product-picker']") do
       select "Testpakalpojums", from: "product_selector"
     end
 
@@ -62,7 +62,7 @@ class InvoicesTest < ApplicationSystemTestCase
     assert_text "€181.50"
 
     # --- Send the invoice ---
-    page.execute_script("document.querySelector('form.button_to[action*=\"invoice_sends\"]')?.submit()")
+    click_button "Send invoice"
     assert_text "SENT"
     assert_text "Record payment"
 
@@ -76,13 +76,13 @@ class InvoicesTest < ApplicationSystemTestCase
     assert_text "System Test Client"
     assert_text "Testa pakalpojums sistēmu testēšanai"
 
-    # --- Go back and void a different invoice ---
+    # --- Go back, send, and void a different invoice ---
     visit new_invoice_url
     select "System Test Client", from: "invoice_client_id"
     fill_field_via_js("input[name='invoice[issued_on]']", Date.current.to_s)
     fill_field_via_js("input[name='invoice[due_on]']", (Date.current + 14.days).to_s)
 
-    within first("[data-controller='product-picker']") do
+    within first("[data-controller~='product-picker']") do
       select "Testpakalpojums", from: "product_selector"
     end
 
@@ -90,6 +90,9 @@ class InvoicesTest < ApplicationSystemTestCase
 
     submit_via_native_form
     assert_text "Invoice created"
+
+    click_button "Send invoice"
+    assert_text "SENT"
 
     page.execute_script("document.querySelector('form.button_to[action*=\"invoice_voids\"]')?.submit()")
     assert_text "VOID"

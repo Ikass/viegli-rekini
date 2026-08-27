@@ -3,6 +3,7 @@
 class LineItemsController < ApplicationController
   before_action :set_invoice, only: %i[new create]
   before_action :set_line_item, only: %i[edit update destroy]
+  before_action :ensure_editable_invoice, only: %i[new create edit update destroy]
 
   def new
     @line_item = @invoice.line_items.build(position: @invoice.line_items.size)
@@ -36,6 +37,13 @@ class LineItemsController < ApplicationController
   end
 
   private
+
+  def ensure_editable_invoice
+    invoice = @line_item ? @line_item.invoice : @invoice
+    return if invoice.draft?
+
+    redirect_to invoice, alert: "Line items can only be edited on draft invoices."
+  end
 
   def set_invoice
     @invoice = Current.user.account.invoices.find_by!(id: params[:invoice_id])

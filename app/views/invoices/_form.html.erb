@@ -1,6 +1,6 @@
 <%# locals: (invoice:) %>
 
-<%= form_with model: invoice, html: { class: "stack" }, data: { controller: "nested-form" } do |form| %>
+<%= form_with model: invoice, html: { class: "stack", id: "invoice_form" }, data: { controller: "nested-form" } do |form| %>
   <% if invoice.errors.any? %>
     <div role="alert">
       <% invoice.errors.full_messages.each do |message| %>
@@ -61,8 +61,24 @@
     </div>
   </section>
 
+  <section aria-labelledby="totals-heading" style="margin-block-end: var(--space-l);">
+    <h2 id="totals-heading" class="section-label">Totals</h2>
+    <div class="card">
+      <div>
+        <dl>
+          <dt>Subtotal</dt>
+          <dd><%= number_to_currency(invoice.subtotal / 100.0, unit: "€") %></dd>
+          <dt>VAT</dt>
+          <dd><%= number_to_currency(invoice.vat_total / 100.0, unit: "€") %></dd>
+          <dt>Total</dt>
+          <dd><strong><%= number_to_currency(invoice.total / 100.0, unit: "€") %></strong></dd>
+        </dl>
+      </div>
+    </div>
+  </section>
+
   <div class="form-actions">
-    <%= form.button class: "button", data: { variant: "primary" } do %>
+    <%= form.button name: "commit", value: "save", class: "button", data: { variant: "primary" } do %>
       <%= tabler_icon("check") %>
       Save invoice
     <% end %>

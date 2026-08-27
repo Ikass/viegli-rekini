@@ -1,0 +1,115 @@
+/* ============================================================
+   BLOCK — invoice-page.css
+   Invoice show page chrome: page wrapper, sticky toolbar,
+   status heading, native <details> overflow menu, activity
+   strip. The document itself is styled by invoice-doc.css
+   (shared with the print view).
+
+   Usage:
+     <div class="invoice-page">
+       <header class="invoice-toolbar">…</header>
+       <div class="invoice-heading">…</div>
+       <article class="card"><div>…document…</div></article>
+       <section class="invoice-activity">…</section>
+     </div>
+   ============================================================ */
+
+/* ── Page wrapper ──────────────────────────────────────── */
+/* Single column, centred, narrower than the default container */
+/* so the document reads like a printed page.                  */
+
+.invoice-page {
+  width: 100%;
+  max-width: var(--container-md);
+  margin-inline: auto;
+}
+
+/* ── Sticky toolbar ────────────────────────────────────── */
+
+.invoice-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-s);
+  padding-block: var(--space-s);
+  background-color: var(--color-surface-base);
+  border-block-end: 1px solid var(--color-border);
+}
+
+/* ── Status heading ────────────────────────────────────── */
+/* Invoice number + status badge on one line.                */
+
+.invoice-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-s);
+}
+
+.invoice-heading h1 {
+  font-size: var(--step-3);
+}
+
+/* ── Overflow menu ─────────────────────────────────────── */
+/* Native <details>/<summary> disclosure — no JS dependency. */
+
+.overflow-menu {
+  position: relative;
+}
+
+.overflow-menu summary {
+  list-style: none;
+  cursor: pointer;
+}
+
+.overflow-menu summary::-webkit-details-marker {
+  display: none;
+}
+
+.overflow-menu-content {
+  position: absolute;
+  inset-block-start: calc(100% + var(--space-2xs));
+  inset-inline-end: 0;
+  z-index: 20;
+  min-width: 14rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  padding: var(--space-2xs);
+  background-color: var(--color-surface-overlay);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-raised);
+}
+
+/* ── Activity strip ────────────────────────────────────── */
+
+.invoice-activity {
+  margin-block-start: var(--space-l);
+}
+
+.invoice-activity-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.invoice-activity-list li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-xs);
+  font-size: var(--step--1);
+  color: var(--color-text-muted);
+}
+
+.invoice-activity-list time {
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}

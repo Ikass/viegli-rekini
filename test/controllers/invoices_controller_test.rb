@@ -44,10 +44,17 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
-  test "edit" do
+  test "edit redirects drafts to show for inline editing" do
     invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0002", issued_on: Date.current, due_on: Date.current + 14.days)
     get edit_invoice_path(invoice)
-    assert_response :success
+    assert_redirected_to invoice_path(invoice)
+  end
+
+  test "edit redirects non-draft invoices to show" do
+    invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0002b", issued_on: Date.current, due_on: Date.current + 14.days, status: :sent)
+    get edit_invoice_path(invoice)
+    assert_redirected_to invoice_path(invoice)
+    assert_equal "This invoice is locked and can no longer be edited.", flash[:alert]
   end
 
   test "update" do
@@ -57,11 +64,76 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     assert_equal "Updated notes", invoice.reload.notes
   end
 
+  test "update rejects non-draft invoices" do
+    invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0003b", issued_on: Date.current, due_on: Date.current + 14.days, status: :sent)
+    patch invoice_path(invoice), params: { invoice: { notes: "Should not save" } }
+    assert_redirected_to invoice_path(invoice)
+    assert_nil invoice.reload.notes
+  end
+
+  test "update with commit=send saves then sends the invoice" do
+    @user.account.update!(
+      company_name: "SIA Test",
+      registration_number: "LV40001234567",
+      address: "Brīvības iela 100",
+      city: "Rīga",
+      postal_code: "LV-1001",
+      country: "Latvija",
+      bank_name: "Swedbank",
+      bank_account: "LV12HABA0001234567890"
+    )
+    invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-SEND1", issued_on: Date.current, due_on: Date.current + 14.days)
+    invoice.line_items.create!(description: "Work", quantity: 1, unit_code: "C62", unit_price_cents: 5000, tax_category_code: "S", vat_rate: 21)
+
+    patch invoice_path(invoice), params: { invoice: { notes: "Saved before send" }, commit: "send" }
+
+    assert_redirected_to invoice_path(invoice)
+    assert invoice.reload.sent?
+    assert_equal "Saved before send", invoice.notes
+  end
+
+  test "update with commit=send surfaces the send error when legal fields are missing" do
+    invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-SEND2", issued_on: Date.current, due_on: Date.current + 14.days)
+    invoice.line_items.create!(description: "Work", quantity: 1, unit_code: "C62", unit_price_cents: 5000, tax_category_code: "S", vat_rate: 21)
+
+    patch invoice_path(invoice), params: { invoice: { notes: "Still saved" }, commit: "send" }
+
+    assert_response :unprocessable_entity
+    assert invoice.reload.draft?
+    assert_equal "Still saved", invoice.notes
+    assert_includes response.body, "Cannot send invoice"
+  end
+
   test "destroy" do
     invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0004", issued_on: Date.current, due_on: Date.current + 14.days)
     assert_difference("Invoice.count", -1) do
       delete invoice_path(invoice)
     end
     assert_redirected_to invoices_path
+  end
+
+  test "destroy rejects non-draft invoices" do
+    invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0004b", issued_on: Date.current, due_on: Date.current + 14.days, status: :sent)
+    assert_no_difference("Invoice.count") do
+      delete invoice_path(invoice)
+    end
+    assert_redirected_to invoice_path(invoice)
+  end
+
+  test "print renders the shared document" do
+    invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0005", issued_on: Date.current, due_on: Date.current + 14.days)
+    invoice.line_items.create!(description: "Consulting", quantity: 1, unit_code: "C62", unit_price_cents: 10_000, tax_category_code: "S", vat_rate: 21, position: 0)
+
+    get print_invoice_path(invoice)
+    assert_response :success
+    assert_match "INV-0005", response.body
+    assert_match "Consulting", response.body
+  end
+
+  test "print does not leak literal template syntax or the PEPPOL note" do
+    invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0006", issued_on: Date.current, due_on: Date.current + 14.days)
+    get print_invoice_path(invoice)
+    assert_no_match(/<#/, response.body)
+    assert_no_match(/PEPPOL-ready/, response.body)
   end
 end

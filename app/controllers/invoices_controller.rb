@@ -36,17 +36,42 @@ class InvoicesController < ApplicationController
   end
 
   def edit
+    if @invoice.draft?
+      redirect_to @invoice
+    else
+      redirect_to @invoice, alert: "This invoice is locked and can no longer be edited."
+    end
   end
 
   def update
+    unless @invoice.draft?
+      redirect_to @invoice, alert: "This invoice is locked and can no longer be edited."
+      return
+    end
+
     if @invoice.update(invoice_params)
-      redirect_to @invoice, notice: "Invoice updated."
+      if params[:commit] == "send"
+        result = InvoiceSender.new.send_invoice(invoice: @invoice)
+        if result.success?
+          redirect_to @invoice, notice: "Invoice sent."
+        else
+          flash.now[:alert] = result.error
+          render :show, status: :unprocessable_entity
+        end
+      else
+        redirect_to @invoice, notice: "Invoice updated."
+      end
     else
-      render :edit, status: :unprocessable_entity
+      render :show, status: :unprocessable_entity
     end
   end
 
   def destroy
+    unless @invoice.draft?
+      redirect_to @invoice, alert: "Only draft invoices can be deleted."
+      return
+    end
+
     @invoice.destroy
     redirect_to invoices_path, notice: "Invoice deleted."
   end

@@ -39,6 +39,8 @@
 @import "blocks/table.css" layer(blocks);
 @import "blocks/activity-item.css" layer(blocks);
 @import "blocks/badge.css" layer(blocks);
+@import "blocks/invoice-doc.css" layer(blocks);
+@import "blocks/invoice-page.css" layer(blocks);
 @import "blocks/prose.css" layer(blocks);
 
 /* Utilities */

@@ -10,7 +10,7 @@ class InvoicePaymentRecorder
   def record_payment(invoice:)
     return Result.new(success: false, invoice: invoice) unless invoice.sent?
 
-    invoice.update!(status: :paid)
+    invoice.update!(status: :paid, paid_at: Time.current)
     Result.new(success: true, invoice: invoice)
   end
 end

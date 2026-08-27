@@ -78,4 +78,38 @@ class InvoiceTest < ActiveSupport::TestCase
 
     assert_nil invoice.vat_regime_note
   end
+
+  test "overdue? is true for sent invoices past their due date" do
+    invoice = accounts(:one).invoices.create!(
+      client: clients(:one),
+      issued_on: Date.current - 30,
+      due_on: Date.current - 1,
+      status: :sent
+    )
+
+    assert invoice.overdue?
+    assert_equal "overdue", invoice.display_status
+  end
+
+  test "overdue? is false for sent invoices not yet due" do
+    invoice = accounts(:one).invoices.create!(
+      client: clients(:one),
+      issued_on: Date.current,
+      due_on: Date.current + 30,
+      status: :sent
+    )
+
+    assert_not invoice.overdue?
+    assert_equal "sent", invoice.display_status
+  end
+
+  test "overdue? is false for draft and paid invoices regardless of due date" do
+    draft = accounts(:one).invoices.create!(client: clients(:one), issued_on: Date.current - 30, due_on: Date.current - 1, status: :draft)
+    paid = accounts(:one).invoices.create!(client: clients(:one), issued_on: Date.current - 30, due_on: Date.current - 1, status: :paid)
+
+    assert_not draft.overdue?
+    assert_not paid.overdue?
+    assert_equal "draft", draft.display_status
+    assert_equal "paid", paid.display_status
+  end
 end

@@ -10,7 +10,7 @@ class InvoiceVoider
   def void_invoice(invoice:)
     return Result.new(success: false, invoice: invoice) if invoice.void?
 
-    invoice.update!(status: :void)
+    invoice.update!(status: :void, voided_at: Time.current)
     Result.new(success: true, invoice: invoice)
   end
 end

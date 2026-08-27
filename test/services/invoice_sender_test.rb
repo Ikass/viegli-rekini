@@ -27,6 +27,7 @@ class InvoiceSenderTest < ActiveSupport::TestCase
 
     assert result.success?
     assert @invoice.reload.sent?
+    assert_not_nil @invoice.sent_at
   end
 
   test "fails for non-draft invoices" do

@@ -7,6 +7,7 @@
      <span class="badge" data-status="paid">Paid</span>
      <span class="badge" data-status="draft">Draft</span>
      <span class="badge" data-status="sent">Sent</span>
+     <span class="badge" data-status="overdue">Overdue</span>
      <span class="badge" data-status="void">Void</span>
 
    General variants:
@@ -65,6 +66,12 @@
   border-color: var(--color-border);
   text-decoration: line-through;
   opacity: 0.75;
+}
+
+.badge[data-status="overdue"] {
+  color: var(--color-error-text);
+  background-color: var(--color-error-bg);
+  border-color: var(--color-error-border);
 }
 
 /* ── General variants ────────────────────────────────────── */

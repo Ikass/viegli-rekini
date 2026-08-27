@@ -14,6 +14,7 @@ class InvoiceVoiderTest < ActiveSupport::TestCase
 
     assert result.success?
     assert @invoice.reload.void?
+    assert_not_nil @invoice.voided_at
   end
 
   test "voids a sent invoice" do

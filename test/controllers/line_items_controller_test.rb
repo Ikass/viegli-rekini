@@ -49,4 +49,22 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     end
     assert_redirected_to invoice_path(@invoice)
   end
+
+  test "edit rejects non-draft invoices" do
+    @invoice.update!(status: :sent)
+    line_item = @invoice.line_items.create!(description: "Work", quantity: 1, unit_code: "C62", unit_price_cents: 5000, tax_category_code: "S", vat_rate: 21)
+
+    get edit_line_item_path(line_item)
+    assert_redirected_to invoice_path(@invoice)
+    assert_equal "Line items can only be edited on draft invoices.", flash[:alert]
+  end
+
+  test "create rejects non-draft invoices" do
+    @invoice.update!(status: :sent)
+
+    assert_no_difference("LineItem.count") do
+      post invoice_line_items_path(@invoice), params: { line_item: { description: "Late add", quantity: 1, unit_code: "C62", unit_price: "10.00", tax_category_code: "S", vat_rate: 21 } }
+    end
+    assert_redirected_to invoice_path(@invoice)
+  end
 end

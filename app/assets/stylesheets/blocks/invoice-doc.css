@@ -1,0 +1,315 @@
+/* ============================================================
+   BLOCK — invoice-doc.css
+   The invoice "document" — shared between the print view
+   (layouts/print.html.erb) and the invoice show page, so the
+   two never drift apart. All rules keyed off .invoice-doc.
+
+   Page chrome (@page, body reset, .print-page card) lives in
+   layouts/print.html.erb — only the document's own content
+   styling lives here.
+
+   Usage:
+     <div class="invoice-doc"> ... </div>
+   ============================================================ */
+
+/* ── Print palette tokens ────────────────────────────────── */
+/* Global (:root) so both .invoice-doc (show + print) and      */
+/* .print-page (print layout chrome) can reference them.       */
+
+:root {
+  /* Neutral print palette — near-black to near-white */
+  --print-ink:        oklch(0.12 0.005 264);  /* body text */
+  --print-ink-muted:  oklch(0.40 0.008 264);  /* secondary text */
+  --print-ink-subtle: oklch(0.60 0.006 264);  /* labels, captions */
+  --print-border:     oklch(0.80 0.005 264);  /* light rules */
+  --print-border-dark:oklch(0.25 0.006 264);  /* heavy rules */
+  --print-surface:    oklch(0.98 0.002 264);  /* page background */
+  --print-card:       oklch(1.00 0 0);        /* pure white */
+
+  /* Typography — pt units for print precision */
+  --print-size-xs:   8pt;
+  --print-size-sm:   9pt;
+  --print-size-base: 10pt;
+  --print-size-md:   11pt;
+  --print-size-lg:   14pt;
+  --print-size-xl:   18pt;
+
+  /* Spacing — pt units */
+  --print-gap-xs:  4pt;
+  --print-gap-sm:  8pt;
+  --print-gap-md:  16pt;
+  --print-gap-lg:  24pt;
+  --print-gap-xl:  32pt;
+}
+
+/* ── Typography ──────────────────────────────────────────── */
+
+.invoice-doc h1,
+.invoice-doc h2,
+.invoice-doc h3,
+.invoice-doc h4,
+.invoice-doc h5,
+.invoice-doc h6 {
+  margin: 0;
+  font-family: inherit;
+  font-weight: bold;
+  line-height: inherit;
+  color: var(--print-ink);
+}
+
+.invoice-doc h1 { font-size: var(--print-size-xl); }
+
+.invoice-doc h2 {
+  font-size: var(--print-size-sm);
+  color: var(--print-ink-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.5pt;
+  margin-block-end: var(--print-gap-sm);
+}
+
+.invoice-doc h3 { font-size: var(--print-size-md); }
+.invoice-doc h4 { font-size: var(--print-size-base); }
+.invoice-doc h5 { font-size: var(--print-size-sm); }
+.invoice-doc h6 { font-size: var(--print-size-xs); }
+
+.invoice-doc p {
+  max-width: none;
+  margin: 0 0 var(--print-gap-xs);
+}
+
+.invoice-doc strong {
+  color: var(--print-ink);
+}
+
+.invoice-doc dl,
+.invoice-doc dd {
+  margin: 0;
+  padding: 0;
+}
+
+/* ── Invoice header ──────────────────────────────────────── */
+
+.invoice-doc .invoice-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-block-end: var(--print-gap-md);
+}
+
+.invoice-doc .invoice-header .company-name {
+  font-weight: 500;
+  font-size: var(--print-size-md);
+  margin-block-end: 2pt;
+}
+
+.invoice-doc .invoice-header .issuer-details {
+  font-size: var(--print-size-sm);
+  color: var(--print-ink-muted);
+}
+
+.invoice-doc .invoice-title {
+  text-align: right;
+}
+
+.invoice-doc .invoice-title h1 {
+  font-size: var(--print-size-lg);
+  font-weight: 500;
+  margin-block-end: 2pt;
+}
+
+.invoice-doc .invoice-title p {
+  font-size: var(--print-size-sm);
+  color: var(--print-ink-subtle);
+  margin-block-end: 0;
+}
+
+/* ── Header rule ─────────────────────────────────────────── */
+
+.invoice-doc .header-rule {
+  height: 1pt;
+  background: var(--print-border);
+  border: none;
+  margin: 0 0 var(--print-gap-lg);
+}
+
+/* ── Address block ───────────────────────────────────────── */
+
+.invoice-doc .addresses {
+  display: flex;
+  gap: var(--print-gap-lg);
+  margin-block-end: var(--print-gap-lg);
+}
+
+.invoice-doc .addresses > div {
+  flex: 1;
+}
+
+.invoice-doc .company-name {
+  font-weight: bold;
+  font-size: var(--print-size-md);
+  margin-block-end: var(--print-gap-xs);
+}
+
+/* ── Invoice meta ────────────────────────────────────────── */
+
+.invoice-doc .invoice-meta {
+  margin-inline-start: auto;
+  font-size: var(--print-size-sm);
+  margin-block-end: var(--print-gap-lg);
+  width: auto;
+}
+
+.invoice-doc .invoice-meta td {
+  padding: 2pt 0;
+}
+
+.invoice-doc .invoice-meta td:first-child {
+  color: var(--print-ink-subtle);
+  padding-inline-end: var(--print-gap-sm);
+}
+
+.invoice-doc .invoice-meta td:last-child {
+  color: var(--print-ink);
+}
+
+/* ── Line items table ────────────────────────────────────── */
+
+.invoice-doc table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-block-end: var(--print-gap-lg);
+}
+
+.invoice-doc thead th {
+  text-align: left;
+  font-size: var(--print-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5pt;
+  color: var(--print-ink-subtle);
+  border-block-end: 1pt solid var(--print-border);
+  padding: var(--print-gap-sm) var(--print-gap-xs);
+}
+
+.invoice-doc tbody td {
+  padding: var(--print-gap-sm) var(--print-gap-xs);
+  border-block-end: 1pt solid var(--print-border);
+  vertical-align: top;
+  font-size: var(--print-size-base);
+}
+
+/* Avoid page breaks mid-row */
+.invoice-doc tbody tr {
+  break-inside: avoid;
+}
+
+.invoice-doc .col-desc  { width: 40%; }
+.invoice-doc .col-qty   { width: 10%; }
+.invoice-doc .col-price { width: 16%; }
+.invoice-doc .col-vat   { width: 10%; }
+.invoice-doc .col-total { width: 16%; }
+
+.invoice-doc .numeric {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.invoice-doc .desc-cell {
+  word-break: break-word;
+}
+
+/* ── Totals ──────────────────────────────────────────────── */
+
+.invoice-doc .totals {
+  margin-inline-start: auto;
+  width: 240pt;
+}
+
+.invoice-doc .totals table {
+  margin-block-end: 0;
+}
+
+.invoice-doc .totals td {
+  padding: var(--print-gap-xs);
+  border: none;
+  font-size: var(--print-size-base);
+}
+
+.invoice-doc .totals .label {
+  color: var(--print-ink-muted);
+}
+
+.invoice-doc .totals .total-row td {
+  font-weight: bold;
+  font-size: var(--print-size-md);
+  border-block-start: 2pt solid var(--print-border-dark);
+  padding-block-start: var(--print-gap-sm);
+  color: var(--print-ink);
+}
+
+/* ── Notes ───────────────────────────────────────────────── */
+
+.invoice-doc .notes {
+  margin-block-start: var(--print-gap-lg);
+  padding-block-start: var(--print-gap-md);
+  border-block-start: 1pt solid var(--print-border);
+  font-size: var(--print-size-sm);
+  color: var(--print-ink-muted);
+}
+
+.invoice-doc .notes h2 {
+  margin-block-end: var(--print-gap-xs);
+}
+
+/* ── Payment details ─────────────────────────────────────── */
+
+.invoice-doc .payment-details {
+  margin-block-start: var(--print-gap-lg);
+  padding-block-start: var(--print-gap-md);
+  font-size: var(--print-size-sm);
+  color: var(--print-ink-muted);
+}
+
+.invoice-doc .payment-details h2 {
+  margin-block-end: var(--print-gap-xs);
+}
+
+.invoice-doc .payment-details p {
+  margin-block-end: 2pt;
+}
+
+/* ── VAT-regime note ─────────────────────────────────────── */
+
+.invoice-doc .vat-regime-note {
+  margin-block-start: var(--print-gap-lg);
+  font-size: var(--print-size-sm);
+  color: var(--print-ink-muted);
+}
+
+/* ── Compliance footer ───────────────────────────────────── */
+
+.invoice-doc .compliance-footer {
+  margin-block-start: var(--print-gap-lg);
+  font-size: var(--print-size-xs);
+  color: var(--print-ink-subtle);
+}
+
+.invoice-doc .compliance-footer p {
+  margin-block-end: 2pt;
+}
+
+.invoice-doc .signature-note {
+  color: var(--print-ink-subtle);
+  margin-block-end: var(--print-gap-xs);
+}
+
+/* ── Page break hints ────────────────────────────────────── */
+
+.invoice-doc .addresses,
+.invoice-doc .invoice-meta,
+.invoice-doc .totals,
+.invoice-doc .notes,
+.invoice-doc .payment-details,
+.invoice-doc .vat-regime-note,
+.invoice-doc .compliance-footer {
+  break-inside: avoid;
+}

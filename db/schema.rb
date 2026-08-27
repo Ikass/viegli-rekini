@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_05_130901) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_27_121919) do
   create_table "accounts", force: :cascade do |t|
     t.string "address"
     t.string "bank_account"
@@ -62,8 +62,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_05_130901) do
     t.string "invoice_number", null: false
     t.date "issued_on", null: false
     t.text "notes"
+    t.datetime "paid_at"
+    t.datetime "sent_at"
     t.integer "status", default: 0, null: false
     t.datetime "updated_at", null: false
+    t.datetime "voided_at"
     t.index ["account_id", "invoice_number"], name: "index_invoices_on_account_id_and_invoice_number", unique: true
     t.index ["account_id"], name: "index_invoices_on_account_id"
     t.index ["client_id"], name: "index_invoices_on_client_id"
