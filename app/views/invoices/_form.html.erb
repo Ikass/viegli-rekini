@@ -1,6 +1,6 @@
 <%# locals: (invoice:) %>
 
-<%= form_with model: invoice, html: { class: "stack", id: "invoice_form" }, data: { controller: "nested-form" } do |form| %>
+<%= form_with model: invoice, html: { class: "stack", id: "invoice_form" }, data: { controller: "line-items" } do |form| %>
   <% if invoice.errors.any? %>
     <div role="alert">
       <% invoice.errors.full_messages.each do |message| %>
@@ -13,11 +13,12 @@
     <h2 id="invoice-details-heading" class="section-label">Invoice details</h2>
     <div class="card">
       <div>
-        <div class="fields-grid">
-          <div class="field">
-            <%= form.label :client_id, "Client" %>
-            <%= form.collection_select :client_id, Current.user.account.clients, :id, :name, { prompt: "Select a client" }, required: true %>
-          </div>
+        <div class="field">
+          <%= form.label :client_id, "Client" %>
+          <%= form.collection_select :client_id, Current.user.account.clients, :id, :name, { prompt: "Select a client" }, required: true %>
+        </div>
+
+        <div class="fields-inline" style="margin-block-start: var(--space-s);">
           <div class="field">
             <%= form.label :issued_on, "Issued on" %>
             <%= form.date_field :issued_on, required: true %>
@@ -27,6 +28,7 @@
             <%= form.date_field :due_on, required: true %>
           </div>
         </div>
+
         <div class="field" style="margin-block-start: var(--space-s);">
           <%= form.label :notes %>
           <%= form.text_area :notes, rows: 3 %>
@@ -43,7 +45,7 @@
           <table class="table line-items-form">
             <thead>
               <tr>
-                <th>Product/Service</th>
+                <th>Description</th>
                 <th class="col-numeric">Qty</th>
                 <th>Unit</th>
                 <th class="col-numeric">Unit price</th>
@@ -51,7 +53,7 @@
                 <th class="col-actions"></th>
               </tr>
             </thead>
-            <tbody data-nested-form-target="container">
+            <tbody data-line-items-target="container">
               <%= form.fields_for :line_items do |line_item_form| %>
                 <%= render "invoices/line_item_fields", form: line_item_form %>
               <% end %>
@@ -59,17 +61,22 @@
           </table>
         </div>
 
-        <template data-nested-form-target="template">
+        <template data-line-items-target="template">
           <%= form.fields_for :line_items, LineItem.new, child_index: "NEW_RECORD" do |line_item_form| %>
             <%= render "invoices/line_item_fields", form: line_item_form %>
           <% end %>
         </template>
 
-        <div style="margin-block-start: var(--space-s);">
-          <button type="button" data-action="nested-form#add" class="button">
+        <div class="cluster" style="margin-block-start: var(--space-s);">
+          <button type="button" data-action="line-items#add" class="button">
             <%= tabler_icon("plus") %>
             Add line item
           </button>
+          <%= select_tag :product_adder,
+                options_for_select([ [ "Add from product…", "" ] ]) + options_from_collection_for_select(Current.user.account.products, :id, :name),
+                aria: { label: "Add from product" },
+                style: "inline-size: 16rem;",
+                data: { line_items_target: "productSelector", action: "line-items#addFromProduct" } %>
         </div>
       </div>
     </div>

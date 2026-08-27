@@ -15,11 +15,15 @@ Goal: a single status-aware invoice page that visually matches the print/PDF out
 - Phase 6 (stage 2): draft show page renders the editable form inline; `/edit` now redirects to `show`.
 - Send wiring: toolbar "Send invoice" submits the form (commit=send) so edits save before sending.
 - Polish: line items are editable table rows (product picker + VAT auto-rate preserved); remove is an in-row icon.
+- Line-item editor redesign: editable fields are description/qty/unit price; unit + VAT read-only (from product, hidden fields). "Add from product" dropdown appends a pre-filled row. Client field now full-width. See `agents/line-item-selection-options.md`.
 
 ## Next
 - Deferred features (toolbar stubs): PDF download, resend, reminder, payment link, duplicate, partial-payment UI.
+- Long-term: searchable autocomplete for product/service selection (Option 3).
 
 ## Decisions locked
 - Void = any non-void → void (number reserved); Delete = drafts only.
 - `overdue` is derived (sent && due < today), not a DB status.
 - Deferred: PDF download, resend, reminder, payment link, duplicate, partial-payment UI.
+- Line-item selection: "Add from product" helper (Option 1) for now; autocomplete is the future target.
+- VAT rate is a Product attribute; line items display it read-only.

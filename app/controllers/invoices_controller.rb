@@ -19,8 +19,8 @@ class InvoicesController < ApplicationController
       issued_on: Date.current,
       due_on: Date.current + 14.days
     )
-    # Pre-build three empty line items so the form has something to render.
-    3.times { @invoice.line_items.build(position: @invoice.line_items.size) }
+    # Pre-build one empty line item so the form has a starting row.
+    @invoice.line_items.build(position: @invoice.line_items.size)
   end
 
   def create

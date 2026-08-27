@@ -126,7 +126,7 @@
 
 .line-items-form {
   table-layout: fixed;
-  min-width: 46rem;
+  min-width: 44rem;
 }
 
 .line-items-form th,
@@ -135,24 +135,31 @@
 }
 
 .line-items-form th:nth-child(2),
-.line-items-form td:nth-child(2) { width: 5rem; }    /* Qty */
+.line-items-form td:nth-child(2) { width: 6rem; }    /* Qty */
 
 .line-items-form th:nth-child(3),
 .line-items-form td:nth-child(3) { width: 8rem; }    /* Unit */
 
 .line-items-form th:nth-child(4),
-.line-items-form td:nth-child(4) { width: 7rem; }    /* Unit price */
+.line-items-form td:nth-child(4) { width: 8rem; }    /* Unit price */
 
 .line-items-form th:nth-child(5),
-.line-items-form td:nth-child(5) { width: 12rem; }   /* VAT */
+.line-items-form td:nth-child(5) { width: 5rem; }    /* VAT */
 
 .line-items-form th:nth-child(6),
 .line-items-form td:nth-child(6) { width: 3.5rem; }  /* Remove */
 
-.line-items-form select {
-  padding-inline-end: var(--space-m);
-}
-
 .line-items-form .col-actions .button {
   padding-inline: var(--space-2xs);
+}
+
+/* Read-only unit / VAT display inside the editor table. */
+.line-item-meta {
+  display: block;
+  padding-block: var(--space-xs);
+  font-size: var(--step--1);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

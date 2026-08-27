@@ -47,12 +47,10 @@ class InvoicesTest < ApplicationSystemTestCase
     fill_field_via_js("input[name='invoice[issued_on]']", Date.current.to_s)
     fill_field_via_js("input[name='invoice[due_on]']", (Date.current + 14.days).to_s)
 
-    # Add a line item via product picker
-    within first("[data-controller~='product-picker']") do
-      select "Testpakalpojums", from: "product_selector"
-    end
+    # Add a line item via the "Add from product" picker
+    select "Testpakalpojums", from: "product_adder"
 
-    # Wait for product picker AJAX to fill fields
+    # Wait for the product fetch to fill a row
     sleep 0.5
 
     submit_via_native_form
@@ -82,9 +80,7 @@ class InvoicesTest < ApplicationSystemTestCase
     fill_field_via_js("input[name='invoice[issued_on]']", Date.current.to_s)
     fill_field_via_js("input[name='invoice[due_on]']", (Date.current + 14.days).to_s)
 
-    within first("[data-controller~='product-picker']") do
-      select "Testpakalpojums", from: "product_selector"
-    end
+    select "Testpakalpojums", from: "product_adder"
 
     sleep 0.5
 

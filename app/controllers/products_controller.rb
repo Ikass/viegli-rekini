@@ -18,7 +18,9 @@ class ProductsController < ApplicationController
           default_price_cents: @product.default_price_cents,
           default_vat_rate: @product.default_vat_rate,
           unit_code: @product.unit_code,
-          tax_category_code: @product.tax_category_code
+          unit_code_label: Product::UNIT_CODES[@product.unit_code],
+          tax_category_code: @product.tax_category_code,
+          vat_label: "#{@product.default_vat_rate.to_i}%"
         }
       end
     end
