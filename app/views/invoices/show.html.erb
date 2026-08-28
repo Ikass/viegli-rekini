@@ -7,6 +7,11 @@
       <% end %>
 
       <div class="cluster">
+        <%= link_to pdf_invoice_path(@invoice), class: "button" do %>
+          <%= tabler_icon("download") %>
+          Download PDF
+        <% end %>
+
         <% unless @invoice.paid? || @invoice.void? %>
           <%= link_to print_invoice_path(@invoice), target: "_blank", class: "button" do %>
             <%= tabler_icon("printer") %>

@@ -11,6 +11,7 @@ PDF download shipped: `ferrum_pdf` gem (Ferrum/headless Chrome — no Node dep),
 - Invoice download page (PDF + XML buttons, MIME types) — vault session 8.
 - Mark-as-sent flow (`sent_at`, VID 5-business-day deadline) — vault session 9.
 - Prod: add Chromium to Docker image for `ferrum_pdf` (deploy session).
+- Polish round: revisit PDF `disposition: :inline` (in-tab preview) vs current forced download.
 
 ## Decisions locked
 - PDF engine: **ferrum_pdf** (Chrome-rendered HTML→PDF, no Node) over Grover/Prawn — reuses `_document` partial + print CSS, no layout drift. Chrome-in-Docker is the accepted deploy cost.

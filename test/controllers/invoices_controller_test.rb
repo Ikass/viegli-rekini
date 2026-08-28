@@ -16,6 +16,7 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0001", issued_on: Date.current, due_on: Date.current + 14.days)
     get invoice_path(invoice)
     assert_response :success
+    assert_select "a[href=?]", pdf_invoice_path(invoice), text: /Download PDF/
   end
 
   test "new" do
@@ -128,6 +129,7 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_match "INV-0005", response.body
     assert_match "Consulting", response.body
+    assert_match 'charset="utf-8"', response.body
   end
 
   test "print does not leak literal template syntax or the PEPPOL note" do
