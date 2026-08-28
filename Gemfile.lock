@@ -112,6 +112,14 @@ GEM
     ed25519 (1.4.0)
     erb (6.0.7)
     erubi (1.13.1)
+    ferrum (0.18.0)
+      addressable (~> 2.5)
+      base64 (~> 0.2)
+      concurrent-ruby (~> 1.1)
+      websocket-driver (~> 0.7)
+    ferrum_pdf (3.1.0)
+      actionpack (>= 6.0.0)
+      ferrum (~> 0.15)
     ffi (1.17.4-aarch64-linux-gnu)
     ffi (1.17.4-aarch64-linux-musl)
     ffi (1.17.4-arm-linux-gnu)
@@ -369,6 +377,7 @@ DEPENDENCIES
   bundler-audit
   capybara
   debug
+  ferrum_pdf (~> 3.1)
   image_processing (~> 1.2)
   importmap-rails
   jbuilder

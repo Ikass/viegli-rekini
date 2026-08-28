@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class InvoicesController < ApplicationController
-  before_action :set_invoice, only: %i[show edit update destroy print]
+  before_action :set_invoice, only: %i[show edit update destroy print pdf]
 
   def index
     @invoices = Current.user.account.invoices.order(created_at: :desc)
@@ -12,6 +12,16 @@ class InvoicesController < ApplicationController
 
   def print
     render layout: "print"
+  end
+
+  def pdf
+    html = render_to_string(template: "invoices/print", layout: "print")
+    invoice_pdf = InvoicePdf.new(@invoice)
+
+    send_data invoice_pdf.render(html: html, display_url: request.base_url),
+      filename: invoice_pdf.filename,
+      type: "application/pdf",
+      disposition: :attachment
   end
 
   def new

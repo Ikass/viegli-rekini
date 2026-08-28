@@ -136,4 +136,21 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     assert_no_match(/<#/, response.body)
     assert_no_match(/PEPPOL-ready/, response.body)
   end
+
+  test "pdf renders a downloadable invoice PDF" do
+    invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0007", issued_on: Date.current, due_on: Date.current + 14.days)
+
+    fake_pdf = "%PDF-1.4\nfake content".b
+    FerrumPdf.define_singleton_method(:render_pdf) { |**| fake_pdf }
+
+    get pdf_invoice_path(invoice)
+
+    assert_response :success
+    assert_equal "application/pdf", response.media_type
+    assert_match "attachment", response.headers["Content-Disposition"]
+    assert_match "INV-0007.pdf", response.headers["Content-Disposition"]
+    assert_equal fake_pdf, response.body
+  ensure
+    FerrumPdf.singleton_class.remove_method(:render_pdf)
+  end
 end

@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   resources :invoices, shallow: true do
     member do
       get :print
+      get :pdf
     end
     resources :line_items, only: %i[new create edit update destroy]
 

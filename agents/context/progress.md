@@ -14,6 +14,7 @@
 - Custom CUBE CSS design system (OKLCH tokens, Every Layout primitives, forms, tables, badges, buttons); card-section UI pattern across show/edit views.
 - `InvoiceCodes` concern — shared `UNIT_CODES`, `TAX_CATEGORY_CODES`, `SHORT_TAX_CATEGORY_CODES`.
 - Seed file (demo account: clients, products, invoices across all statuses).
+- PDF generation via `ferrum_pdf` (Ferrum/headless Chrome — no Node): `InvoicePdf` service + `get :pdf` member route, rendering the shared print view to a downloadable A4 PDF.
 - `bin/ci`, `bin/setup`, `bin/dev`; system tests (invoice lifecycle + client CRUD).
 
 ## Known issues
@@ -23,8 +24,8 @@
 
 ## Next (planned)
 
-- PDF generation (plain human-readable — evaluate Grover vs Prawn).
 - UBL 2.1 XML generation (`UblInvoiceBuilder`, PEPPOL BIS 3.0).
 - Download page, mark-as-sent, partial-payment UI (deferred toolbar stubs).
 - Phase 1B tenancy (Identity/User split, URL-path tenancy, `Location`/`LocationMembership`) — see `ARCHITECTURE.md`.
 - Line-item combobox (select-or-create) — see `agents/specs/line-item-selection-options.md`.
+- Prod: install Chromium in Docker image (`ferrum_pdf` `browser_path`/`no-sandbox`) — deploy session.
