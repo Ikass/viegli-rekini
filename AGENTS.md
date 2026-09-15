@@ -9,7 +9,9 @@ Coding agent context for the Viegli-Rēķini e-invoicing Rails app. Read this be
 
 ## What this app is
 
-A focused Rails 8 e-invoicing SaaS for Latvian small businesses. Multi-tenant with multi-user company accounts, multi-location support. SQLite3.
+A focused Rails 8 e-invoicing SaaS for Latvian small businesses. Multi-tenant at the `Account` level (one company per account). SQLite3.
+
+Today each account has a single user; multi-user and multi-location are the near-term target (see `ARCHITECTURE.md` §"Phase 1B target"). Production domain: `vieglirekini.lv`.
 
 Portfolio project — code quality and architectural clarity matter as much as feature completeness.
 
@@ -17,21 +19,22 @@ Portfolio project — code quality and architectural clarity matter as much as f
 
 ## Stack
 
-- **Rails 8.1.2** — modern idioms; `params.expect()` for strong parameters
+- **Rails 8.1** — modern idioms; `params.expect()` for strong parameters
 - **SQLite3**
 - **Hotwire** — Turbo + Stimulus
 - **Custom vanilla CSS** (CUBE CSS) — OKLCH color tokens, Every Layout primitives, logical properties
 - **Minitest** — model, service, and system tests
-- **Hetzner + Kamal 2** — deployment target
+- **Hetzner + Kamal 2** — deployment target; domain `vieglirekini.lv`; Litestream → Cloudflare R2 backups planned (hosting not started yet)
 
 ---
 
 ## Before a non-trivial change
 
-1. Read `agents/docs/index.md` (the map) — then `ARCHITECTURE.md`
-2. Read the relevant file under `agents/docs/contracts/` (canon) — or check `agents/docs/recipes/` first if the feature is a not-yet-built capability
-3. Inspect the closest existing implementation
-4. Extend the pattern — don't invent a new shape for something that already has one
+1. Read `agents/docs/index.md` (the map)
+2. Read `ARCHITECTURE.md` (the why)
+3. Read the relevant contract / recipe / spec under `agents/docs/`
+4. Inspect the closest existing implementation
+5. Extend the pattern — don't invent a new shape for something that already has one
 
 ---
 
@@ -62,6 +65,14 @@ Zeitwerk caches the autoload tree at boot time. If you create a new file in a di
 
 Tests are unaffected — each `bin/rails test` run boots a fresh environment.
 
+### Background jobs and cache — Solid Queue/Cache is the intended future, not active yet
+
+The intended stack is **Solid Queue** (background jobs) and **Solid Cache** (durable cache). The gems are currently commented out of the `Gemfile` (issues enabling them now), so production runs `config.active_job.queue_adapter = :async` and `config.cache_store = :memory_store` (in-process, non-durable). Consequences:
+
+- `deliver_later` (e.g. the password-reset mail) runs in-process and is not durable across restarts.
+- `bin/jobs`, `config/queue.yml`, `config/recurring.yml`, `config/cache.yml`, and `db/{queue,cache,cable}_schema.rb` are the **intended-future** Solid config, not active today. Don't delete them as dead; don't assume they work yet.
+- When the gems are re-enabled: flip the adapters in `production.rb` and wire `SOLID_QUEUE_IN_PUMA`.
+
 ---
 
 ## Architecture rules
@@ -77,6 +88,11 @@ One service object per state transition, following the shape in `agents/docs/con
 - No business logic — delegate to services
 - Strong parameters: use `params.expect(user: [:email_address, :password])` (Rails 8.1), not `permit`
 - All queries scoped through the tenancy boundary — see `agents/docs/contracts/tenancy.md`
+- Foreign keys submitted in params (`invoice[client_id]`, etc.) must be resolved **through `Current.user.account`**, never trusted verbatim. A scoped `<option>` list in the view is not protection — validate the FK on the way in. See `tenancy.md` §"Foreign keys in params".
+
+### Authorization (near-term — not yet defined)
+
+There is no role/permission model today: any user of an account can do anything. Multi-user-per-account is a near-term requirement (to test with real users), which forces a roles decision (admin / accountant / member at minimum) before then. Until it lands, don't invent ad-hoc `if user.admin?` checks — decide the model once and apply it consistently. See `ARCHITECTURE.md` §"What's deliberately not built yet".
 
 ### Database migrations
 

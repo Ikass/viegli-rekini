@@ -60,10 +60,15 @@ These are absent on purpose, not by oversight — don't add them speculatively:
   `agents/docs/recipes/entitlements-lite.md` first; it's designed to grow into a Pay/Stripe
   boundary later without a rewrite.
 - **Pagination** — dataset sizes don't warrant it yet.
-- **A generic "policy" layer (Pundit-style)** — roles are simple enough (admin / accountant /
-  member, viewer / operator at location level) that explicit checks in services are more legible
-  than a policy-object layer would be at this size. Revisit only if role logic starts repeating
-  across more than ~4 places.
+- **Solid Queue / Solid Cache** — the intended background-job + durable-cache stack. The gems are
+  commented out for now (issues enabling them), so production runs `:async` + `:memory_store`; the
+  Solid config files are the intended future. See `AGENTS.md` §"Operational gotchas".
+- **A generic "policy" layer (Pundit-style)** — there is **no role model yet**: no `role` column
+  and no authorization checks exist anywhere; every user of an account has full access. Multi-user
+  accounts are a near-term requirement (to test with real users), which will force a roles decision
+  first (admin / accountant / member at minimum, later viewer / operator at location level). Prefer
+  explicit checks in services over a policy-object layer at this size; revisit only if role logic
+  repeats across more than ~4 places.
 
 ## Compliance context
 

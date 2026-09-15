@@ -4,7 +4,7 @@
 
 > **Full implementation plan → [PLAN.md](PLAN.md)** — includes regulatory background, data model, phased feature roadmap, and technical decisions.
 
-This is the first working version of what will eventually become [viegli-rēķini.lv](https://viegli-rekini.lv) — a simple, no-nonsense invoicing tool for Latvian freelancers and small businesses.
+This is the first working version of what will eventually become [vieglirekini.lv](https://vieglirekini.lv) — a simple, no-nonsense invoicing tool for Latvian freelancers and small businesses.
 
 I'm building this for two reasons: (1) it's a real product I want to exist, and (2) it's my primary Rails learning project. I'm documenting my architectural decisions here as notes to my future self — the reasoning behind each choice, not just what was chosen.
 
@@ -18,9 +18,9 @@ I'm building this for two reasons: (1) it's a real product I want to exist, and 
 - Automatic calculations — subtotal, VAT, total
 - Sequential invoice numbers (INV-0001, INV-0002, …)
 - Invoice lifecycle: `draft → sent → paid`, with `void` as an escape hatch
-- Print-ready invoice layout (HTML + print CSS — no PDF gem)
+- Print-ready invoice layout (HTML + print CSS) and downloadable PDF (ferrum_pdf / headless Chrome)
 - Account settings for company details, address, and bank information
-- Single-user for now; data model is ready for multi-tenancy
+- Single user per account for now; multi-user and multi-location are near-term (data model ready)
 
 ---
 
@@ -29,12 +29,12 @@ I'm building this for two reasons: (1) it's a real product I want to exist, and 
 | Layer | Choice | Why |
 |-------|--------|-----|
 | Framework | Rails 8 | Learning Rails properly; using latest stable |
-| Database | SQLite3 | Right choice for this stage — simple, zero-config, backed up via Litestream |
+| Database | SQLite3 | Right choice for this stage — simple, zero-config; Litestream backups planned |
 | Auth | Rails 8 built-in | New in Rails 8 — no Devise needed for simple cases |
 | CSS | Custom vanilla (CUBE CSS) | CUBE CSS methodology with Every Layout primitives, OKLCH color tokens, logical properties |
 | Frontend | Hotwire (Turbo) | Rails default — SPA-feel without writing JS |
 | Testing | Minitest | Rails default; system tests + model/service unit tests |
-| Deployment | Hetzner + Kamal 2 | Docker-based deploy; Litestream → Cloudflare R2 backups |
+| Deployment | Hetzner + Kamal 2 | Docker-based deploy; Litestream → Cloudflare R2 backups planned (hosting not started) |
 
 ---
 
@@ -45,15 +45,13 @@ I'm building this for two reasons: (1) it's a real product I want to exist, and 
 SQLite3 is the database for this project. For a single-user invoicing app at MVP stage, it's the pragmatic choice:
 
 - **Zero configuration** — no server process to manage, no credentials, no connection pooling. The database is a single file.
-- **Litestream backups** — continuous replication to Cloudflare R2. In the event of server failure, the database can be restored to the exact point of failure.
+- **Litestream backups (planned)** — continuous replication to Cloudflare R2, not configured yet. In the event of server failure, the database can be restored to the exact point of failure.
 - **Production-tested** — SQLite3 handles concurrency well for low-write workloads. Rails 8's `RETURNING` clause support and WAL mode make it a solid production database for this use case.
 - **Scale when needed** — if the app outgrows SQLite3, the data can be migrated to PostgreSQL. But that day is not today.
 
-### Why `structure.sql` instead of `schema.rb`
+### Schema format: `schema.rb`
 
-Rails can represent your database schema in two formats. `schema.rb` is simpler but lossy — it can't represent database-specific features like check constraints, custom functions, or partial indexes. `structure.sql` is a direct SQL dump of your schema, so it preserves everything exactly.
-
-Set `config.active_record.schema_format = :sql` in `config/application.rb`. This means the schema file always reflects the real database state.
+The app uses `config.active_record.schema_format = :ruby` (`config/application.rb`), so `db/schema.rb` is the source of truth. Rails 8.1's `schema.rb` preserves DB check constraints (see `invoices_status_check`, `clients_vat_regime_check` in the schema), so the earlier idea of switching to `structure.sql` turned out to be unnecessary. If a future feature needs something `schema.rb` can't express (custom functions, partial indexes), revisit `schema_format = :sql` then.
 
 **Reference:** Sustainable Web Development with Ruby on Rails, Ch. 14
 
@@ -219,7 +217,7 @@ bin/rails test:system
 
 ## What's intentionally out of scope for v0.1
 
-These are planned for later versions:
+These are planned for later versions (PDF download was originally listed here but is now shipped via `ferrum_pdf`):
 
 | Feature | Version |
 |---------|---------|
@@ -227,7 +225,6 @@ These are planned for later versions:
 | Multi-user accounts (invite team members) | v0.2 |
 | Latvian/English bilingual UI | v0.2 |
 | Overdue reminders and background jobs | v0.3 |
-| PDF download | v0.3 |
 | Subscription billing | v1.0 |
 | Latvian e-invoice standard (eFaktura) | v1.0 |
 

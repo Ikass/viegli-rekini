@@ -27,5 +27,5 @@
 - UBL 2.1 XML generation (`UblInvoiceBuilder`, PEPPOL BIS 3.0).
 - Download page, mark-as-sent, partial-payment UI (deferred toolbar stubs).
 - Phase 1B tenancy (Identity/User split, URL-path tenancy, `Location`/`LocationMembership`) — see `ARCHITECTURE.md`.
-- Line-item combobox (select-or-create) — see `agents/specs/line-item-selection-options.md`.
+- Line-item combobox (select-or-create) — see `agents/docs/specs/line-item-selection-options.md`.
 - Prod: install Chromium in Docker image (`ferrum_pdf` `browser_path`/`no-sandbox`) — deploy session.

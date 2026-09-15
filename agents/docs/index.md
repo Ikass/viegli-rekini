@@ -1,34 +1,27 @@
-# Agent Docs Index
+# agents/docs — index
 
-The map of every doc under `agents/`. **Read this first** on any task, then open the file it
-points to. Keep it current — add or update a line whenever you create or move a doc.
+The map for the `agents/docs/` tree. Read this first — a doc not listed here is invisible.
 
----
+## Reading order (before any non-trivial change)
+
+1. `AGENTS.md` (repo root) — line-level rules, quick commands, gotchas.
+2. `ARCHITECTURE.md` (repo root) — *why* the app is shaped this way.
+3. This index — find the contract / recipe / spec that applies.
+4. The relevant doc below, then the closest existing implementation.
 
 ## Contracts (canon — always follow)
 
-| File | Covers |
-|---|---|
-| [tenancy.md](contracts/tenancy.md) | The one scoping pattern every tenant-owned resource follows; new-resource checklist |
-| [service-objects.md](contracts/service-objects.md) | One service per state transition; `Result` struct; audit inside the transaction |
+- `contracts/tenancy.md` — how tenant-owned records are scoped (`Current.user.account…find_by!`), plus the foreign-key rule (`client_id` must be resolved through the account, never trusted verbatim).
+- `contracts/service-objects.md` — one-service-per-transition shape returning a `Result` struct.
 
-## Recipes (non-canon — opt-in, not built yet)
+## Recipes (non-canon — opt-in, reach for when a capability is needed)
 
-| File | Reach for when |
-|---|---|
-| [audit-events.md](recipes/audit-events.md) | You need "who did this, when" for a VID inquiry or client dispute |
-| [entitlements-lite.md](recipes/entitlements-lite.md) | A pricing decision lands and product code must ask "can this account do X" |
+- `recipes/audit-events.md` — explicit, service-side audit trail for sensitive operations. Not built yet.
+- `recipes/entitlements-lite.md` — Entitlements / Limits split sized for "no billing yet". Not built yet.
+- `recipes/invoice-number-sequences.md` — dedicated counter table, multiple sequences per account (location + ecommerce). Decided direction, not built.
+- `recipes/money-calculations.md` — consolidate on Ruby BigDecimal + `MoneyAmount` value object; drop SQL SUM. Decided direction, not built.
 
-## Specs (proposals — confirm open questions before implementing)
+## Specs (proposals / recorded decisions)
 
-| File | Scope |
-|---|---|
-| [invoice-show-view-spec.md](../specs/invoice-show-view-spec.md) | Status-aware single show view; open questions on void/delete, viewed-tracking, mark-as-paid |
-| [line-item-selection-options.md](../specs/line-item-selection-options.md) | Product-picker → combobox (select-or-create) evolution |
-
-## Session state (not docs — read for context, never treat as locked)
-
-- `../context/active_context.md` — what's in progress right now
-- `../context/progress.md` — rolling summary of what's built (overwrites on purpose)
-- `../logs/` — append-only per-session build log
-- `../../LEARNING.md` — curated how/why-built guide; durable decisions + lessons promoted from `logs/`
+- `specs/invoice-show-view-spec.md` — status-aware invoice show view design.
+- `specs/line-item-selection-options.md` — line-item select-or-create combobox direction.
