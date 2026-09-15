@@ -24,6 +24,30 @@ explicitly.
 Always `find_by!`, never `find_by` — a silently-nil tenant lookup is a bug, not a 404 to handle
 gracefully later.
 
+## Foreign keys in params
+
+A foreign key submitted by the client (`invoice[client_id]`, a future `location_id`, etc.) is **not**
+proof that the referenced record belongs to the current account. Resolve it through the account on
+the way in:
+
+```ruby
+# Good — resolve the FK through the account, never trust the raw id
+@invoice = Current.user.account.invoices.build(invoice_params)
+@invoice.client = Current.user.account.clients.find(params[:invoice][:client_id])
+
+# or validate at the model boundary
+#   validate :client_belongs_to_account
+#   def client_belongs_to_account
+#     errors.add(:client, "must belong to your account") if client && client.account_id != account_id
+#   end
+```
+
+A `collection_select` scoped to `Current.user.account.clients` in the view only constrains the
+`<option>` list — a crafted request can submit any `client_id`. `InvoicesController` resolves the
+client through the account (`resolve_client`), and `Invoice` also validates
+`client_belongs_to_account` as defense in depth. The negative cross-tenant test (checklist item 5)
+is what keeps this from regressing.
+
 ## Location-level scoping
 
 > **Phase 1B — not built yet.** `Location`/`LocationMembership` are planned but don't exist. When

@@ -19,6 +19,11 @@ class ProductsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "show rejects a product from another account" do
+    get product_path(products(:two))
+    assert_response :not_found
+  end
+
   test "new" do
     get new_product_path
     assert_response :success

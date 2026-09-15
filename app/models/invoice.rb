@@ -12,6 +12,7 @@ class Invoice < ApplicationRecord
   validates :invoice_number, presence: true
   validates :issued_on, presence: true
   validates :due_on, presence: true
+  validate :client_belongs_to_account
 
   before_validation :generate_invoice_number, on: :create
 
@@ -47,6 +48,11 @@ class Invoice < ApplicationRecord
   end
 
   private
+
+  def client_belongs_to_account
+    return unless client && account_id
+    errors.add(:client, "must belong to your account") unless client.account_id == account_id
+  end
 
   def generate_invoice_number
     return if invoice_number.present?

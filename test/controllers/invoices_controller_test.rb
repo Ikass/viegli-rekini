@@ -19,6 +19,26 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", pdf_invoice_path(invoice), text: /Download PDF/
   end
 
+  test "show rejects an invoice belonging to another account" do
+    foreign_invoice = accounts(:two).invoices.create!(client: clients(:two), invoice_number: "INV-FOREIGN", issued_on: Date.current, due_on: Date.current + 14.days)
+
+    get invoice_path(foreign_invoice)
+
+    assert_response :not_found
+  end
+
+  test "create rejects a client_id belonging to another account" do
+    assert_no_difference("Invoice.count") do
+      post invoices_path, params: { invoice: {
+        client_id: clients(:two).id,
+        issued_on: Date.current,
+        due_on: Date.current + 14.days
+      } }
+    end
+
+    assert_response :not_found
+  end
+
   test "new" do
     get new_invoice_path
     assert_response :success
@@ -70,6 +90,16 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     patch invoice_path(invoice), params: { invoice: { notes: "Should not save" } }
     assert_redirected_to invoice_path(invoice)
     assert_nil invoice.reload.notes
+  end
+
+  test "update rejects a client_id belonging to another account" do
+    invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0003c", issued_on: Date.current, due_on: Date.current + 14.days)
+
+    assert_no_changes -> { invoice.reload.client_id } do
+      patch invoice_path(invoice), params: { invoice: { client_id: clients(:two).id, notes: "Should not save" } }
+    end
+
+    assert_response :not_found
   end
 
   test "update with commit=send saves then sends the invoice" do

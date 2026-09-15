@@ -8,7 +8,9 @@ class PasswordsController < ApplicationController
   end
 
   def create
-    if user = User.find_by(email_address: params[:email_address])
+    email_address = params.expect(:email_address)
+
+    if user = User.find_by(email_address: email_address)
       PasswordsMailer.reset(user).deliver_later
     end
 
@@ -19,7 +21,9 @@ class PasswordsController < ApplicationController
   end
 
   def update
-    if @user.update(params.permit(:password, :password_confirmation))
+    password, password_confirmation = params.expect(:password, :password_confirmation)
+
+    if @user.update(password: password, password_confirmation: password_confirmation)
       @user.sessions.destroy_all
       redirect_to new_session_path, notice: "Password has been reset."
     else

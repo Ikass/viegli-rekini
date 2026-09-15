@@ -29,6 +29,15 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
   end
 
+  test "edit rejects a line item from another account" do
+    foreign_invoice = accounts(:two).invoices.create!(client: clients(:two), invoice_number: "INV-FOREIGN-LI", issued_on: Date.current, due_on: Date.current + 14.days)
+    foreign_line_item = foreign_invoice.line_items.create!(description: "Foreign", quantity: 1, unit_code: "C62", unit_price_cents: 1000, tax_category_code: "S", vat_rate: 21)
+
+    get edit_line_item_path(foreign_line_item)
+
+    assert_response :not_found
+  end
+
   test "edit" do
     line_item = @invoice.line_items.create!(description: "Work", quantity: 1, unit_code: "C62", unit_price_cents: 5000, tax_category_code: "S", vat_rate: 21)
     get edit_line_item_path(line_item)

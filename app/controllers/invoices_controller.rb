@@ -35,6 +35,7 @@ class InvoicesController < ApplicationController
 
   def create
     @invoice = Current.user.account.invoices.build(invoice_params)
+    @invoice.client = resolve_client
 
     if @invoice.save
       redirect_to @invoice, notice: "Invoice created."
@@ -58,6 +59,9 @@ class InvoicesController < ApplicationController
       redirect_to @invoice, alert: "This invoice is locked and can no longer be edited."
       return
     end
+
+    client = resolve_client
+    @invoice.client = client if client
 
     if @invoice.update(invoice_params)
       if params[:commit] == "send"
@@ -92,13 +96,22 @@ class InvoicesController < ApplicationController
     @invoice = Current.user.account.invoices.find_by!(id: params[:id])
   end
 
+  def resolve_client
+    client_id = params.dig(:invoice, :client_id)
+    return if client_id.blank?
+    Current.user.account.clients.find(client_id)
+  end
+
   def invoice_params
     # Use an empty hash {} for line_items_attributes because Rails 8.1's
     # params.expect does not yet support the nested-hash-with-string-keys
     # syntax that permit handles. This permits any index key ("0", "1", etc.)
     # and any sub-key within each nested item.
+    #
+    # client_id is deliberately NOT permitted here — it is resolved through
+    # Current.user.account (see tenancy.md §"Foreign keys in params").
     params.expect(invoice: [
-      :client_id, :issued_on, :due_on, :notes,
+      :issued_on, :due_on, :notes,
       line_items_attributes: {}
     ])
   end

@@ -79,6 +79,17 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_nil invoice.vat_regime_note
   end
 
+  test "rejects a client belonging to another account" do
+    invoice = accounts(:one).invoices.build(
+      client: clients(:two),
+      issued_on: Date.current,
+      due_on: Date.current + 30
+    )
+
+    assert_not invoice.valid?
+    assert_includes invoice.errors[:client], "must belong to your account"
+  end
+
   test "overdue? is true for sent invoices past their due date" do
     invoice = accounts(:one).invoices.create!(
       client: clients(:one),

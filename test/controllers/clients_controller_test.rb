@@ -17,6 +17,11 @@ class ClientsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "show rejects a client from another account" do
+    get client_path(clients(:two))
+    assert_response :not_found
+  end
+
   test "new" do
     get new_client_path
     assert_response :success
