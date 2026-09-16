@@ -28,8 +28,8 @@ Portfolio project — code quality and architectural clarity matter as much as f
 
 ## Before a non-trivial change
 
-1. Read `ARCHITECTURE.md`
-2. Read the relevant file under `agents/docs/contracts/`
+1. Read `agents/docs/index.md` (the map) — then `ARCHITECTURE.md`
+2. Read the relevant file under `agents/docs/contracts/` (canon) — or check `agents/docs/recipes/` first if the feature is a not-yet-built capability
 3. Inspect the closest existing implementation
 4. Extend the pattern — don't invent a new shape for something that already has one
 
@@ -166,6 +166,7 @@ end
 - Prefer explicit over clever
 - `bin/ci` must pass before considering anything shippable
 - Commit messages: imperative mood, present tense ("Add invoice number generation")
+- Maintain `LEARNING.md` (repo root) — durable decisions/lessons promoted from `agents/logs/`; updated by `/session-log` (per-session) and `/log-catchup` (reconciles git history after a gap)
 
 ---
 
