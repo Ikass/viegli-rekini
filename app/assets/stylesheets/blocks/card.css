@@ -56,7 +56,7 @@
 .card > div,
 .card > section,
 .card > main {
-  padding: var(--space-m);
+  padding: var(--space-s);
   flex: 1;  /* push footer to bottom */
 }
 
