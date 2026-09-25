@@ -24,4 +24,5 @@ The map for the `agents/docs/` tree. Read this first — a doc not listed here i
 ## Specs (proposals / recorded decisions)
 
 - `specs/invoice-show-view-spec.md` — status-aware invoice show view design.
+- `specs/invoice-print-styling.md` — print/PDF styling review + prioritized implementation plan (fonts, money precision, localization, `.addresses` grid).
 - `specs/line-item-selection-options.md` — line-item select-or-create combobox direction.

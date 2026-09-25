@@ -12,8 +12,9 @@
         <% if account.registration_number.present? %>
           Reg. No: <%= account.registration_number %>
         <% end %>
+      </p>
+      <p class="issuer-details">
         <% if account.vat_number.present? %>
-          <% if account.registration_number.present? %> · <% end %>
           VAT: <%= account.vat_number %>
         <% end %>
       </p>
@@ -28,36 +29,36 @@
     </div>
     <div class="invoice-title">
       <h1>Invoice</h1>
-      <p>No. <%= invoice.invoice_number %></p>
+      <dl class="invoice-meta">
+        <dt>No.:</dt>
+        <dd><%= invoice.invoice_number %></dd>
+        <dt>Issued:</dt>
+        <dd><%= invoice.issued_on %></dd>
+        <dt>Due:</dt>
+        <dd><%= invoice.due_on %></dd>
+      </dl>
     </div>
   </div>
 
   <hr class="header-rule">
 
-  <div class="addresses">
-    <div>
-      <h2>Bill to</h2>
-      <p class="company-name"><%= client.company_name.presence || client.name %></p>
-      <% if client.company_name.present? %>
-        <p><%= client.name %></p>
-      <% end %>
-      <% if client.vat_number.present? %>
-        <p>VAT: <%= client.vat_number %></p>
-      <% elsif client.registration_number.present? %>
-        <p>Reg. No: <%= client.registration_number %></p>
-      <% end %>
-      <% if client.address.present? %>
-        <p><%= client.address %></p>
-      <% end %>
-      <% if client.city.present? || client.postal_code.present? %>
-        <p><%= [client.postal_code, client.city].compact.join(" ") %></p>
-      <% end %>
-    </div>
-
-    <table class="invoice-meta">
-      <tr><td>Issued</td><td><%= invoice.issued_on %></td></tr>
-      <tr><td>Due</td><td><%= invoice.due_on %></td></tr>
-    </table>
+  <div class="bill-to">
+    <h2>Bill to</h2>
+    <p class="company-name"><%= client.company_name.presence || client.name %></p>
+    <% if client.company_name.present? %>
+      <p><%= client.name %></p>
+    <% end %>
+    <% if client.vat_number.present? %>
+      <p>VAT: <%= client.vat_number %></p>
+    <% elsif client.registration_number.present? %>
+      <p>Reg. No: <%= client.registration_number %></p>
+    <% end %>
+    <% if client.address.present? %>
+      <p><%= client.address %></p>
+    <% end %>
+    <% if client.city.present? || client.postal_code.present? %>
+      <p><%= [client.postal_code, client.city].compact.join(" ") %></p>
+    <% end %>
   </div>
 
   <table class="line-items">
@@ -76,31 +77,23 @@
           <td class="col-desc desc-cell"><%= item.description %></td>
           <td class="col-qty numeric"><%= item.quantity %></td>
           <td class="col-price numeric"><%= number_to_currency(item.unit_price_cents / 100.0, unit: "€") %></td>
-          <td class="col-vat numeric"><%= item.vat_rate %>%</td>
+          <td class="col-vat numeric"><%= vat_rate_percentage(item.vat_rate) %></td>
           <td class="col-total numeric"><%= number_to_currency(item.total / 100.0, unit: "€") %></td>
         </tr>
       <% end %>
     </tbody>
   </table>
 
-  <div class="totals">
-    <table>
-      <% items_by_rate.each do |rate, items| %>
-        <tr>
-          <td class="label">Taxable (VAT <%= rate %>%)</td>
-          <td class="numeric"><%= number_to_currency(items.sum(&:subtotal) / 100.0, unit: "€") %></td>
-        </tr>
-        <tr>
-          <td class="label">VAT <%= rate %>%</td>
-          <td class="numeric"><%= number_to_currency(items.sum(&:vat_amount) / 100.0, unit: "€") %></td>
-        </tr>
-      <% end %>
-      <tr class="total-row">
-        <td>Total</td>
-        <td class="numeric"><%= number_to_currency(invoice.total / 100.0, unit: "€") %></td>
-      </tr>
-    </table>
-  </div>
+  <dl class="totals">
+    <% items_by_rate.each do |rate, items| %>
+      <dt>Taxable (VAT <%= vat_rate_percentage(rate) %>)</dt>
+      <dd class="numeric"><%= number_to_currency(items.sum(&:subtotal) / 100.0, unit: "€") %></dd>
+      <dt>VAT <%= vat_rate_percentage(rate) %></dt>
+      <dd class="numeric"><%= number_to_currency(items.sum(&:vat_amount) / 100.0, unit: "€") %></dd>
+    <% end %>
+    <dt class="total-row">Total</dt>
+    <dd class="total-row numeric"><%= number_to_currency(invoice.total / 100.0, unit: "€") %></dd>
+  </dl>
 
   <% if account.bank_name.present? || account.bank_account.present? %>
     <div class="payment-details">

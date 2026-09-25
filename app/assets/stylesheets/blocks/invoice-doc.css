@@ -12,11 +12,42 @@
      <div class="invoice-doc"> ... </div>
    ============================================================ */
 
+/* ── Self-hosted font (OFL) ──────────────────────────────── */
+/* Atkinson Hyperlegible Next — pinned so print/PDF output is  */
+/* identical across machines. Docker Chromium has no system     */
+/* Helvetica/Arial, so a bundled font is the only reliable way. */
+/* Scoped to .invoice-doc (invoice + PDF only, not app-wide).   */
+
+@font-face {
+  font-family: "Atkinson Hyperlegible Next";
+  src: url("../atkinson-hyperlegible-next-regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Atkinson Hyperlegible Next";
+  src: url("../atkinson-hyperlegible-next-medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Atkinson Hyperlegible Next";
+  src: url("../atkinson-hyperlegible-next-bold.woff2") format("woff2");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* ── Print palette tokens ────────────────────────────────── */
 /* Global (:root) so both .invoice-doc (show + print) and      */
 /* .print-page (print layout chrome) can reference them.       */
 
 :root {
+  --print-font: "Atkinson Hyperlegible Next", system-ui, sans-serif;
   /* Neutral print palette — near-black to near-white */
   --print-ink:        oklch(0.12 0.005 264);  /* body text */
   --print-ink-muted:  oklch(0.40 0.008 264);  /* secondary text */
@@ -43,6 +74,10 @@
 }
 
 /* ── Typography ──────────────────────────────────────────── */
+
+.invoice-doc {
+  font-family: var(--print-font);
+}
 
 .invoice-doc h1,
 .invoice-doc h2,
@@ -92,13 +127,13 @@
 .invoice-doc .invoice-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: baseline;
   margin-block-end: var(--print-gap-md);
 }
 
 .invoice-doc .invoice-header .company-name {
   font-weight: 500;
-  font-size: var(--print-size-md);
+  font-size: var(--print-size-lg);
   margin-block-end: 2pt;
 }
 
@@ -117,12 +152,6 @@
   margin-block-end: 2pt;
 }
 
-.invoice-doc .invoice-title p {
-  font-size: var(--print-size-sm);
-  color: var(--print-ink-subtle);
-  margin-block-end: 0;
-}
-
 /* ── Header rule ─────────────────────────────────────────── */
 
 .invoice-doc .header-rule {
@@ -134,14 +163,8 @@
 
 /* ── Address block ───────────────────────────────────────── */
 
-.invoice-doc .addresses {
-  display: flex;
-  gap: var(--print-gap-lg);
+.invoice-doc .bill-to {
   margin-block-end: var(--print-gap-lg);
-}
-
-.invoice-doc .addresses > div {
-  flex: 1;
 }
 
 .invoice-doc .company-name {
@@ -153,29 +176,30 @@
 /* ── Invoice meta ────────────────────────────────────────── */
 
 .invoice-doc .invoice-meta {
-  margin-inline-start: auto;
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: var(--print-gap-sm);
+  row-gap: 2pt;
   font-size: var(--print-size-sm);
-  margin-block-end: var(--print-gap-lg);
-  width: auto;
 }
 
-.invoice-doc .invoice-meta td {
-  padding: 2pt 0;
-}
-
-.invoice-doc .invoice-meta td:first-child {
+.invoice-doc .invoice-meta dt {
   color: var(--print-ink-subtle);
-  padding-inline-end: var(--print-gap-sm);
+  font-size: var(--print-size-sm);
+  font-weight: inherit;
+  text-align: left;
 }
 
-.invoice-doc .invoice-meta td:last-child {
+.invoice-doc .invoice-meta dd {
   color: var(--print-ink);
+  text-align: right;
 }
 
 /* ── Line items table ────────────────────────────────────── */
 
 .invoice-doc table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   margin-block-end: var(--print-gap-lg);
 }
@@ -187,11 +211,11 @@
   letter-spacing: 0.5pt;
   color: var(--print-ink-subtle);
   border-block-end: 1pt solid var(--print-border);
-  padding: var(--print-gap-sm) var(--print-gap-xs);
+  padding: var(--print-gap-xs);
 }
 
 .invoice-doc tbody td {
-  padding: var(--print-gap-sm) var(--print-gap-xs);
+  padding: var(--print-gap-xs);
   border-block-end: 1pt solid var(--print-border);
   vertical-align: top;
   font-size: var(--print-size-base);
@@ -202,11 +226,11 @@
   break-inside: avoid;
 }
 
-.invoice-doc .col-desc  { width: 40%; }
-.invoice-doc .col-qty   { width: 10%; }
-.invoice-doc .col-price { width: 16%; }
-.invoice-doc .col-vat   { width: 10%; }
-.invoice-doc .col-total { width: 16%; }
+.invoice-doc .col-desc  { width: 50%; }
+.invoice-doc .col-qty   { width: 8%; }
+.invoice-doc .col-price { width: 17%; }
+.invoice-doc .col-vat   { width: 8%; }
+.invoice-doc .col-total { width: 17%; }
 
 .invoice-doc .numeric {
   text-align: right;
@@ -222,23 +246,24 @@
 .invoice-doc .totals {
   margin-inline-start: auto;
   width: 240pt;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 0;
+  row-gap: 2pt;
 }
 
-.invoice-doc .totals table {
-  margin-block-end: 0;
+.invoice-doc .totals dt {
+  color: var(--print-ink-muted);
+  font-size: var(--print-size-base);
+  font-weight: inherit;
+  padding-inline-end: var(--print-gap-sm);
 }
 
-.invoice-doc .totals td {
-  padding: var(--print-gap-xs);
-  border: none;
+.invoice-doc .totals dd {
   font-size: var(--print-size-base);
 }
 
-.invoice-doc .totals .label {
-  color: var(--print-ink-muted);
-}
-
-.invoice-doc .totals .total-row td {
+.invoice-doc .totals .total-row {
   font-weight: bold;
   font-size: var(--print-size-md);
   border-block-start: 2pt solid var(--print-border-dark);
@@ -304,7 +329,7 @@
 
 /* ── Page break hints ────────────────────────────────────── */
 
-.invoice-doc .addresses,
+.invoice-doc .bill-to,
 .invoice-doc .invoice-meta,
 .invoice-doc .totals,
 .invoice-doc .notes,

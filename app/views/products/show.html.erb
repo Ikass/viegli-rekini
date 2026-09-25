@@ -18,7 +18,7 @@
           <dd><%= LineItem::TAX_CATEGORY_CODES[@product.tax_category_code] || @product.tax_category_code %></dd>
 
           <dt>VAT rate</dt>
-          <dd><%= @product.default_vat_rate %>%</dd>
+          <dd><%= vat_rate_percentage(@product.default_vat_rate) %></dd>
 
           <% if @product.description.present? %>
             <dt>Description</dt>

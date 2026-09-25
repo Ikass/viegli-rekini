@@ -25,7 +25,7 @@
   <td>
     <%= form.hidden_field :tax_category_code, value: (form.object.tax_category_code.presence || "S"), data: { line_item_fill: "taxCategory" } %>
     <%= form.hidden_field :vat_rate, value: vat_rate, data: { line_item_fill: "vatRate" } %>
-    <span class="line-item-meta" data-line-item-fill="vatLabel"><%= vat_rate.to_i %>%</span>
+    <span class="line-item-meta" data-line-item-fill="vatLabel"><%= vat_rate_percentage(vat_rate) %></span>
   </td>
   <td class="col-actions">
     <button type="button" data-action="line-items#remove" class="button" data-variant="ghost-danger" data-size="sm" aria-label="Remove line item">

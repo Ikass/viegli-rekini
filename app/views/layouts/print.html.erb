@@ -14,7 +14,7 @@
 
       @page {
         size: A4;
-        margin: 15mm 20mm;
+        margin: 15mm 12mm;
 
         /* Suppress browser-added headers/footers (URL, page number) */
         @top-left   { content: none; }
@@ -28,7 +28,7 @@
       body {
         display: block;
         min-height: auto;
-        font-family: "Helvetica Neue", Helvetica, Arial, system-ui, sans-serif;
+        font-family: var(--print-font);
         font-size: var(--print-size-base);
         line-height: 1.5;
         color: var(--print-ink);
@@ -49,7 +49,7 @@
         max-width: 210mm;
         margin-inline: auto;
         margin-block: var(--print-gap-lg);
-        padding: 15mm 20mm;
+        padding: 15mm 12mm;
         border: 1pt solid var(--print-border);
         border-radius: 4px;
         box-shadow: 0 4px 24px oklch(0.20 0.005 264 / 0.12);
