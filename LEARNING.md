@@ -39,6 +39,12 @@ which commit path to take.
 **Why it matters:** floating point is unsafe for money. Integer cents keep arithmetic exact;
 format at the view layer only.
 
+### Sum money in Ruby, not SQL
+SQLite has no true decimal type (it stores decimals as 64-bit floats), and `Invoice#subtotal` used
+SQL `SUM`. The UBL builder sums `LineItem` values in Ruby instead.
+**Why it matters:** when output must reconcile to the cent (an e-invoice VAT breakdown), do the
+arithmetic in Ruby/BigDecimal — skip SQL `SUM` on decimal columns.
+
 ### Denormalized line items — prefill, not reference
 A `LineItem` copies description/price/VAT at creation; it doesn't reference the `Product`. The
 "add from product" helper prefills, it doesn't link.
@@ -87,3 +93,17 @@ Chrome-rendered HTML→PDF via Ferrum, no Node dependency; reuses the shared pri
 CSS, so no layout drift. Trade-off: Chromium in the prod Docker image.
 **Why it matters:** generating PDFs from the same HTML/CSS the user sees avoids a second
 rendering path. Accept the container-size cost instead of a separate template engine.
+
+## E-invoicing / XML
+
+### Generate XML with a builder, not `.xml.erb`
+Rails auto-escapes only `.html.erb`; `.xml.erb` does not. `UblInvoiceBuilder` uses
+`Builder::XmlMarkup`, which escapes text and attributes.
+**Why it matters:** unescaped `&`/`<` in user data silently produces malformed XML. Use a
+generator that escapes by construction for any structured-output format.
+
+### EN 16931 first, PEPPOL profile when endpoint data exists
+Output targets `CustomizationID urn:cen.eu:en16931:2017`. PEPPOL BIS 3.0 makes seller/buyer
+`cbc:EndpointID` + EAS `@schemeID` mandatory (fatal rule `PEPPOL-EN16931-R010`).
+**Why it matters:** don't emit a profile your data can't satisfy. Ship the achievable profile;
+add the stricter one when the data exists.
