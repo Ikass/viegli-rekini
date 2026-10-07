@@ -13,6 +13,7 @@ Rails.application.routes.draw do
     member do
       get :print
       get :pdf
+      get :ubl
     end
     resources :line_items, only: %i[new create edit update destroy]
 

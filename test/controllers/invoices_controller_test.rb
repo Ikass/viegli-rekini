@@ -185,4 +185,17 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
   ensure
     FerrumPdf.singleton_class.remove_method(:render_pdf)
   end
+
+  test "ubl renders a downloadable UBL XML document" do
+    invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0008", issued_on: Date.current, due_on: Date.current + 14.days)
+    invoice.line_items.create!(description: "Consulting", quantity: 1, unit_code: "C62", unit_price_cents: 10_000, tax_category_code: "S", vat_rate: 21, position: 0)
+
+    get ubl_invoice_path(invoice)
+
+    assert_response :success
+    assert_equal "application/xml", response.media_type
+    assert_match "attachment", response.headers["Content-Disposition"]
+    assert_match "INV-0008.xml", response.headers["Content-Disposition"]
+    assert_includes response.body, "urn:cen.eu:en16931:2017"
+  end
 end

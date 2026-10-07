@@ -1,15 +1,16 @@
 # Active Context — Viegli-Rēķini
 
 ## Current work
-PDF generation (vault: Phase 1, session 6). Plain human-readable A4 PDF download per invoice.
+Invoice download page (vault: Phase 1, session 8) — XML + PDF download buttons, correct MIME types.
 
 ## State
-PDF download shipped: `ferrum_pdf` gem (Ferrum/headless Chrome — no Node dep), `InvoicePdf` service (`app/services/invoice_pdf.rb`), `get :pdf` member route. Renders the shared `invoices/print` view + `print` layout via `render_to_string`, then `FerrumPdf.render_pdf` with `prefer_css_page_size`/`print_background` (geometry stays in the existing `@page` CSS). Controller test stubs `FerrumPdf.render_pdf`; real Chrome generation smoke-tested. Toolbar "Download PDF" button deferred to the download-page session.
+- PDF download shipped (session 6): `ferrum_pdf` gem (Ferrum/headless Chrome — no Node dep), `InvoicePdf` service (`app/services/invoice_pdf.rb`), `get :pdf` member route. Renders the shared `invoices/print` view + `print` layout via `render_to_string`, then `FerrumPdf.render_pdf`. "Download PDF" button is already on the show toolbar.
+- UBL 2.1 XML download shipped (session 7): `UblInvoiceBuilder` (`app/services/ubl_invoice_builder.rb`) rendered with `Builder::XmlMarkup` (not `.xml.erb` — that does not auto-escape), `get :ubl` member route + `InvoicesController#ubl`. Targets the **EN 16931** profile, not PEPPOL BIS 3.0 (missing EndpointID/EAS data). Amounts computed in Ruby from line items.
 
 ## Next
-- UBL 2.1 XML generation (`UblInvoiceBuilder`, PEPPOL BIS 3.0) — vault session 7.
 - Invoice download page (PDF + XML buttons, MIME types) — vault session 8.
 - Mark-as-sent flow (`sent_at`, VID 5-business-day deadline) — vault session 9.
+- PEPPOL BIS 3.0 profile: add seller/buyer `EndpointID` + EAS `schemeID` when e-adrese data exists (Phase 6).
 - Prod: add Chromium to Docker image for `ferrum_pdf` (deploy session).
 - Polish round: revisit PDF `disposition: :inline` (in-tab preview) vs current forced download.
 - Audit follow-ups: ✅ cross-tenant `client_id` validation fixed (model + controller) + negative cross-tenant tests added (clients, products, invoices, line_items). Remaining: define roles/permissions model.

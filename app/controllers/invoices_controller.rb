@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class InvoicesController < ApplicationController
-  before_action :set_invoice, only: %i[show edit update destroy print pdf]
+  before_action :set_invoice, only: %i[show edit update destroy print pdf ubl]
 
   def index
     @invoices = Current.user.account.invoices.order(created_at: :desc)
@@ -21,6 +21,15 @@ class InvoicesController < ApplicationController
     send_data invoice_pdf.render(html: html, display_url: request.base_url),
       filename: invoice_pdf.filename,
       type: "application/pdf",
+      disposition: :attachment
+  end
+
+  def ubl
+    builder = UblInvoiceBuilder.new(@invoice)
+
+    send_data builder.to_xml,
+      filename: builder.filename,
+      type: "application/xml",
       disposition: :attachment
   end
 

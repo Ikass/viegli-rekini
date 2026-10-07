@@ -26,3 +26,4 @@ The map for the `agents/docs/` tree. Read this first — a doc not listed here i
 - `specs/invoice-show-view-spec.md` — status-aware invoice show view design.
 - `specs/invoice-print-styling.md` — print/PDF styling review + prioritized implementation plan (fonts, money precision, localization, `.addresses` grid).
 - `specs/line-item-selection-options.md` — line-item select-or-create combobox direction.
+- `specs/ubl-invoice-generation.md` — UBL 2.1 / EN 16931 XML builder: profile decision, BT mapping, category mapping, money handling, known gaps.

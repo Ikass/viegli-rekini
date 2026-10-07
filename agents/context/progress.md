@@ -15,6 +15,7 @@
 - `InvoiceCodes` concern — shared `UNIT_CODES`, `TAX_CATEGORY_CODES`, `SHORT_TAX_CATEGORY_CODES`.
 - Seed file (demo account: clients, products, invoices across all statuses).
 - PDF generation via `ferrum_pdf` (Ferrum/headless Chrome — no Node): `InvoicePdf` service + `get :pdf` member route, rendering the shared print view to a downloadable A4 PDF.
+- UBL 2.1 XML generation via `UblInvoiceBuilder` (Builder::XmlMarkup, EN 16931 profile) + `get :ubl` member route, downloadable per invoice. See `agents/docs/specs/ubl-invoice-generation.md`.
 - `bin/ci`, `bin/setup`, `bin/dev`; system tests (invoice lifecycle + client CRUD).
 
 ## Known issues
@@ -24,8 +25,8 @@
 
 ## Next (planned)
 
-- UBL 2.1 XML generation (`UblInvoiceBuilder`, PEPPOL BIS 3.0).
-- Download page, mark-as-sent, partial-payment UI (deferred toolbar stubs).
+- Invoice download page (PDF + XML + print), mark-as-sent, partial-payment UI (deferred toolbar stubs).
+- PEPPOL BIS 3.0 profile (EndpointID/EAS) once e-adrese data exists (Phase 6).
 - Phase 1B tenancy (Identity/User split, URL-path tenancy, `Location`/`LocationMembership`) — see `ARCHITECTURE.md`.
 - Line-item combobox (select-or-create) — see `agents/docs/specs/line-item-selection-options.md`.
 - Prod: install Chromium in Docker image (`ferrum_pdf` `browser_path`/`no-sandbox`) — deploy session.
