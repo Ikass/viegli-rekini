@@ -114,6 +114,18 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* ── Document card ─────────────────────────────────────── */
+/* The invoice document is its own "paper": white surface with its own
+   margins, so it fills the card edge-to-edge with no themed padding gap. */
+
+.card.invoice-doc-card > div {
+  padding: 0;
+}
+
+.invoice-doc-card .invoice-doc {
+  padding: var(--print-gap-lg);
+}
+
 /* ── Line-items editor table ───────────────────────────── */
 /* The draft editor renders line items as an editable table  */
 /* so it reads like the document it will become.             */

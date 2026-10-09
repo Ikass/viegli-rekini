@@ -77,6 +77,12 @@
 
 .invoice-doc {
   font-family: var(--print-font);
+  /* Always render as paper: white surface + dark ink, independent of the
+     surrounding light/dark theme. The show page renders this inside a themed
+     .card, whose dark background would otherwise swallow the near-black
+     --print-ink headings/strong/totals. */
+  background-color: var(--print-card);
+  color: var(--print-ink);
 }
 
 .invoice-doc h1,

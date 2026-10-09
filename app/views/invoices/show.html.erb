@@ -63,7 +63,7 @@
     <% if @invoice.draft? %>
       <%= render "form", invoice: @invoice %>
     <% else %>
-      <article class="card">
+      <article class="card invoice-doc-card">
         <div>
           <%= render "document", invoice: @invoice %>
         </div>
