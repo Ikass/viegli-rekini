@@ -2,10 +2,7 @@
 
 return if Rails.env.test?
 
-demo_email = "demo@example.com"
-demo_password = "password"
-
-user = User.find_by(email_address: demo_email)
+user = User.find_by(email_address: DemoAccount::EMAIL)
 
 if user
   puts "Demo account already exists — skipping seed."
@@ -31,9 +28,9 @@ ActiveRecord::Base.transaction do
   )
 
   User.create!(
-    email_address: demo_email,
-    password: demo_password,
-    password_confirmation: demo_password,
+    email_address: DemoAccount::EMAIL,
+    password: DemoAccount::PASSWORD,
+    password_confirmation: DemoAccount::PASSWORD,
     account: account
   )
 
@@ -110,5 +107,5 @@ ActiveRecord::Base.transaction do
   total_products = account.products.count
 
   puts "Seed complete: #{total_clients} clients, #{total_products} products, #{total_invoices} invoices created."
-  puts "Sign in with #{demo_email} / #{demo_password}"
+  puts "Sign in with #{DemoAccount::EMAIL} / #{DemoAccount::PASSWORD}"
 end

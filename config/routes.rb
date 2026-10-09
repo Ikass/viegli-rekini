@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   resource :session
   resources :passwords, param: :token
 
+  # One-click demo login (sign-up is disabled for the demo).
+  post "demo_session", to: "demo_sessions#create", as: :demo_session
+
   # Registration — creating a new account + user in one step
   resource :registration, only: %i[new create]
   resource :account, only: %i[edit update]

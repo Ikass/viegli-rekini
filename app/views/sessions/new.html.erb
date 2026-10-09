@@ -6,7 +6,7 @@
         <%= tabler_icon("file-invoice", data: { size: "sm" }) %>
       </span>
     </div>
-    <h1 style="font-size: var(--step-2); font-weight: var(--font-weight-bold);">E-Rēķini</h1>
+    <h1 style="font-size: var(--step-2); font-weight: var(--font-weight-bold);">Viegli-Rēķini</h1>
   </header>
 
   <article class="card" style="margin-block-start: var(--space-l);">
@@ -35,11 +35,10 @@
           data: { variant: "primary", width: "full" } %>
     <% end %>
 
-    <footer style="text-align: center; border-block-start: 1px solid var(--color-border); padding: var(--space-s) var(--space-m);">
-      <p style="font-size: var(--step--1); color: var(--color-text-muted);">
-        Don't have an account? <%= link_to "Sign up", new_registration_path %>
-      </p>
-    </footer>
+    <div style="padding: 0 var(--space-m) var(--space-m);">
+      <%= button_to "Try the demo", demo_session_path, class: "button",
+          data: { variant: "primary", width: "full" } %>
+    </div>
   </article>
 
 </div>

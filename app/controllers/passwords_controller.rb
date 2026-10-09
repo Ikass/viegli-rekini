@@ -10,7 +10,8 @@ class PasswordsController < ApplicationController
   def create
     email_address = params.expect(:email_address)
 
-    if user = User.find_by(email_address: email_address)
+    # The demo account's password is public and shared — never issue a reset for it.
+    if email_address != DemoAccount::EMAIL && (user = User.find_by(email_address: email_address))
       PasswordsMailer.reset(user).deliver_later
     end
 
