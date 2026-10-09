@@ -27,3 +27,11 @@ The map for the `agents/docs/` tree. Read this first — a doc not listed here i
 - `specs/invoice-print-styling.md` — print/PDF styling review + prioritized implementation plan (fonts, money precision, localization, `.addresses` grid).
 - `specs/line-item-selection-options.md` — line-item select-or-create combobox direction.
 - `specs/ubl-invoice-generation.md` — UBL 2.1 / EN 16931 XML builder: profile decision, BT mapping, category mapping, money handling, known gaps.
+
+## Plans
+
+- `DEPLOY-PLAN.md` — portfolio-demo deploy plan: blockers, demo account, Fix 1 (numbering), Fix 2 (money), README, secrets scan.
+
+## Notes (deep-dive explainers — read when you need to *understand*, not just follow)
+
+- `notes/audit-findings.md` — the deploy audit's hard-won details: SQLite has no row locks (`with_lock`/`lock!` is a no-op but `BEGIN IMMEDIATE` serializes writes anyway), EN 16931 VAT rounds per *rate category* (BR-CO-14/17), gapless numbering means drafts must not consume numbers, and the deferred Solid stack + the `SOLID_QUEUE_IN_PUMA` boot bug.

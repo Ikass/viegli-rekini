@@ -11,7 +11,7 @@ Coding agent context for the Viegli-Rēķini e-invoicing Rails app. Read this be
 
 A focused Rails 8 e-invoicing SaaS for Latvian small businesses. Multi-tenant at the `Account` level (one company per account). SQLite3.
 
-Today each account has a single user; multi-user and multi-location are the near-term target (see `ARCHITECTURE.md` §"Phase 1B target"). Production domain: `vieglirekini.lv`.
+Today each account has a single user; multi-user and multi-location are the near-term target (see `ARCHITECTURE.md` §"Phase 1B target"). Production domain: `viegli-rekini.lv`.
 
 Portfolio project — code quality and architectural clarity matter as much as feature completeness.
 
@@ -24,7 +24,7 @@ Portfolio project — code quality and architectural clarity matter as much as f
 - **Hotwire** — Turbo + Stimulus
 - **Custom vanilla CSS** (CUBE CSS) — OKLCH color tokens, Every Layout primitives, logical properties
 - **Minitest** — model, service, and system tests
-- **Hetzner + Kamal 2** — deployment target; domain `vieglirekini.lv`; Litestream → Cloudflare R2 backups planned (hosting not started yet)
+- **OVHCloud + Kamal 2** — deployment target; domain `viegli-rekini.lv`; Litestream → Cloudflare R2 backups planned (hosting not started yet)
 
 ---
 

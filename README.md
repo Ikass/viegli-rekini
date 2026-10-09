@@ -4,7 +4,7 @@
 
 > **Full implementation plan → [PLAN.md](PLAN.md)** — includes regulatory background, data model, phased feature roadmap, and technical decisions.
 
-This is the first working version of what will eventually become [vieglirekini.lv](https://vieglirekini.lv) — a simple, no-nonsense invoicing tool for Latvian freelancers and small businesses.
+This is the first working version of what will eventually become [viegli-rekini.lv](https://viegli-rekini.lv) — a simple, no-nonsense invoicing tool for Latvian freelancers and small businesses.
 
 I'm building this for two reasons: (1) it's a real product I want to exist, and (2) it's my primary Rails learning project. I'm documenting my architectural decisions here as notes to my future self — the reasoning behind each choice, not just what was chosen.
 
@@ -34,7 +34,7 @@ I'm building this for two reasons: (1) it's a real product I want to exist, and 
 | CSS | Custom vanilla (CUBE CSS) | CUBE CSS methodology with Every Layout primitives, OKLCH color tokens, logical properties |
 | Frontend | Hotwire (Turbo) | Rails default — SPA-feel without writing JS |
 | Testing | Minitest | Rails default; system tests + model/service unit tests |
-| Deployment | Hetzner + Kamal 2 | Docker-based deploy; Litestream → Cloudflare R2 backups planned (hosting not started) |
+| Deployment | OVHCloud + Kamal 2 | Docker-based deploy; Litestream → Cloudflare R2 backups planned (hosting not started) |
 
 ---
 
@@ -185,8 +185,8 @@ Invalid transitions are rejected at the service layer. You cannot go from `draft
 **Prerequisites:** Ruby 3.3+, SQLite3 (included with Rails).
 
 ```bash
-git clone https://github.com/Ikass/e-rekini-mvp
-cd e-rekini-mvp
+git clone https://github.com/Ikass/viegli-rekini
+cd viegli-rekini
 bin/setup
 bin/dev
 ```
@@ -244,4 +244,3 @@ These are planned for later versions (PDF download was originally listed here bu
 - *Sustainable Web Development with Ruby on Rails* — David Bryant Copeland (architecture patterns)
 - *Agile Web Development with Rails 8* — Sam Ruby et al. (Rails fundamentals)
 - [guides.rubyonrails.org](https://guides.rubyonrails.org) — official Rails guides
-- [render.com/docs](https://render.com/docs) — deployment

@@ -2,6 +2,13 @@
 
 > **Status:** decided direction, not yet built. Reach for this the next time invoice
 > numbering is touched (multi-location, ecommerce store, or a concurrency bug report).
+>
+> **As built (2026-10-09):** point 1 below overstates the race. Verified against Rails 8.1.3.1:
+> `lock!`/`FOR UPDATE` is dropped by SQLite's Arel visitor (a no-op), but Rails' SQLite
+> transactions are `BEGIN IMMEDIATE`, so the whole create transaction (including the max-read in
+> `before_validation`) serializes against other writers — the duplicate-number race does **not**
+> actually fire on SQLite. The counter table is still the right call for O(1), digit-prefix
+> correctness, and explicit intent. Full reasoning: `notes/audit-findings.md` §1.
 
 ## Why this exists
 

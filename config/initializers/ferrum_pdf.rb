@@ -6,7 +6,7 @@ FerrumPdf.configure do |config|
   config.pdf_options.prefer_css_page_size = true
   config.pdf_options.print_background = true
 
-  # Production (Kamal/Hetzner) will need Chromium installed and the sandbox
+  # Production (Kamal/OVHCloud) will need Chromium installed and the sandbox
   # disabled inside the container — deferred to the deploy session:
   #
   #   config.browser_path = "/usr/bin/chromium"
