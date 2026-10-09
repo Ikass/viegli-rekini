@@ -35,3 +35,4 @@ The map for the `agents/docs/` tree. Read this first — a doc not listed here i
 ## Notes (deep-dive explainers — read when you need to *understand*, not just follow)
 
 - `notes/audit-findings.md` — the deploy audit's hard-won details: SQLite has no row locks (`with_lock`/`lock!` is a no-op but `BEGIN IMMEDIATE` serializes writes anyway), EN 16931 VAT rounds per *rate category* (BR-CO-14/17), gapless numbering means drafts must not consume numbers, and the deferred Solid stack + the `SOLID_QUEUE_IN_PUMA` boot bug.
+- `notes/kamal-ovh-deploy.md` — OVH/Kamal deploy runbook: one-time prerequisites, commands, and the three gotchas that each cost a deploy iteration (empty `env/clear`, health-check host authorization, no backups).

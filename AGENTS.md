@@ -24,7 +24,7 @@ Portfolio project — code quality and architectural clarity matter as much as f
 - **Hotwire** — Turbo + Stimulus
 - **Custom vanilla CSS** (CUBE CSS) — OKLCH color tokens, Every Layout primitives, logical properties
 - **Minitest** — model, service, and system tests
-- **OVHCloud + Kamal 2** — deployment target; domain `viegli-rekini.lv`; Litestream → Cloudflare R2 backups planned (hosting not started yet)
+- **OVHCloud + Kamal 2** — deployment target; domain `viegli-rekini.lv` (live); Litestream → Cloudflare R2 backups planned. Deploy runbook: `agents/docs/notes/kamal-ovh-deploy.md`
 
 ---
 
@@ -50,6 +50,7 @@ Portfolio project — code quality and architectural clarity matter as much as f
 | System tests | `bin/rails test:system` |
 | Security scan | `bin/brakeman --quiet --no-pager` |
 | Style check | `bin/rubocop` |
+| Deploy | `bin/kamal deploy` (see `agents/docs/notes/kamal-ovh-deploy.md`) |
 
 `bin/ci` runs: setup → rubocop → bundler-audit → importmap audit → brakeman → `bin/rails test` → seed replant → system tests.
 
