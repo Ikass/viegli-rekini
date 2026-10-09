@@ -37,26 +37,12 @@ registry:
     - KAMAL_REGISTRY_PASSWORD
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
+# NOTE: Solid Queue is not yet in the bundle. When it is re-enabled, add a
+# `clear:` hash here (e.g. SOLID_QUEUE_IN_PUMA: true) and flip the adapters in
+# production.rb. Do NOT set SOLID_QUEUE_IN_PUMA until then — Puma will fail to boot.
 env:
   secret:
     - RAILS_MASTER_KEY
-  clear:
-    # NOTE: Solid Queue is not yet in the bundle. When it is re-enabled, set
-    # SOLID_QUEUE_IN_PUMA: true here and flip the adapters in production.rb.
-    # Do NOT set SOLID_QUEUE_IN_PUMA until then — Puma will fail to boot.
-
-    # Set number of processes dedicated to Solid Queue (default: 1)
-    # JOB_CONCURRENCY: 3
-
-    # Set number of cores available to the application on each server (default: 1).
-    # WEB_CONCURRENCY: 2
-
-    # Match this to any external database server to configure Active Record correctly
-    # Use viegli_rekini-db for a db accessory server on same machine via local kamal docker network.
-    # DB_HOST: 192.168.0.2
-
-    # Log everything from Rails
-    # RAILS_LOG_LEVEL: debug
 
 # Aliases are triggered with "bin/kamal <alias>". You can overwrite arguments on invocation:
 # "bin/kamal logs -r job" will tail logs from the first server in the job section.
