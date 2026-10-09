@@ -78,6 +78,10 @@ bin/kamal app exec -i bin/rails db:seed   # seed the demo tenant (idempotent) �
    `config.host_authorization = { exclude: ->(request) { request.path == "/up" } }`.
 3. **Backups are not set up.** Litestream → R2 is still planned. Interim: `sqlite3 .backup`
    or `VACUUM INTO` — never `tar` the live SQLite file.
+4. **`.kamal/secrets` is parsed by dotenv, not bash.** It supports `$(command)` and `$VAR`,
+   but **not** `${VAR:-default}` — a `${VAR:-…}` line resolves to a mangled value (empty
+   password → `denied: denied` at `docker login`). Keep secrets to plain `$(cat …)` /
+   `$VAR`.
 
 ## Rollback / diagnose
 
