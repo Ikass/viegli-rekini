@@ -83,7 +83,9 @@ Rails.application.configure do
     "viegli-rekini.lv",
     /.*\.viegli-rekini\.lv/
   ]
-  #
-  # Skip DNS rebinding protection for the default health check endpoint.
-  # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
+
+  # Skip DNS rebinding protection for the default health check endpoint — Kamal's
+  # health check hits /up with the container's internal Host header, which is
+  # not (and should not be) in config.hosts.
+  config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
 end
