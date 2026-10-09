@@ -17,10 +17,36 @@
    (or `newgrp docker`). Otherwise `docker buildx` fails with "permission denied …
    /var/run/docker.sock".
 3. **Local Docker daemon running:** `sudo systemctl start docker`.
-4. **GHCR classic PAT** exported: `export KAMAL_REGISTRY_PASSWORD=ghp_…` — a *classic* token
-   with `write:packages` (fine-grained tokens are not accepted by GHCR).
+4. **GHCR classic PAT** — a *classic* token with `write:packages` (fine-grained tokens are
+   not accepted by GHCR), kept in a per-machine file. See "New machine setup" below.
 5. **DNS:** `A` record `viegli-rekini.lv → 51.89.149.82` (needed for Let's Encrypt via the
    Kamal proxy).
+
+## New machine setup — recreate the two secrets
+
+Deploying from a fresh machine needs two files that are deliberately **not** in git (the
+committed `.kamal/secrets` is only a *loader* that reads them at deploy time — no secret
+value ever enters the repo):
+
+1. **Rails master key** — `config/master.key` (gitignored). Keep the 32-byte value in your
+   password manager; copy it into the repo on each machine:
+
+   ```bash
+   printf '%s\n' "<32-byte-master-key>" > config/master.key
+   chmod 600 config/master.key
+   ```
+
+2. **GHCR token** — a classic PAT with `write:packages`
+   (GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)):
+
+   ```bash
+   mkdir -p "$HOME/.config/viegli-rekini"
+   printf '%s\n' "ghp_..." > "$HOME/.config/viegli-rekini/ghcr-token"
+   chmod 600 "$HOME/.config/viegli-rekini/ghcr-token"
+   ```
+
+   (Or `export KAMAL_REGISTRY_PASSWORD=ghp_...` as a one-off override — the loader prefers
+   the env var over the file.)
 
 ## Commands
 
