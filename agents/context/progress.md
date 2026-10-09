@@ -2,31 +2,31 @@
 
 ## Built
 
-- Registration (Account + User in a transaction, auto-login) on Rails 8 built-in auth (session cookies, passwords, `Current.user`).
-- Clients: full CRUD scoped through `Current.user.account`; address fields, `delivery_channel`, `vat_regime`, `registration_number`, `e_adrese_id`, `iban`, `is_budget_institution`.
-- Products: full CRUD — virtual `default_price` attribute, cents-based storage, UN/ECE unit + VAT category codes.
-- Invoices + LineItems: nested line-items form, SQL SUM calculations (subtotal/VAT/total), auto invoice numbers (`invoice_prefix` + `invoice_number_padding`, `with_lock`).
-- Status transitions as service objects (`InvoiceSender`, `InvoicePaymentRecorder`, `InvoiceVoider`) + REST resource controllers; `sent_at`/`paid_at`/`voided_at` stamped in services.
-- Status-aware invoice show view (sticky toolbar, badge + number, activity strip); `Invoice#overdue?`/`display_status` (derived, not persisted); draft inline-edit, locked edits for non-drafts.
-- Invoices index grouped by status with group totals; transition buttons show only valid next actions.
-- Print-ready invoice view (`layouts/print.html.erb` + `invoice-doc.css`, scoped `.invoice-doc`); shared `app/views/invoices/_document.html.erb` partial.
-- Account settings page (company details, address, bank info).
-- Custom CUBE CSS design system (OKLCH tokens, Every Layout primitives, forms, tables, badges, buttons); card-section UI pattern across show/edit views.
-- `InvoiceCodes` concern — shared `UNIT_CODES`, `TAX_CATEGORY_CODES`, `SHORT_TAX_CATEGORY_CODES`.
-- Seed file (demo account: clients, products, invoices across all statuses).
-- PDF generation via `ferrum_pdf` (Ferrum/headless Chrome — no Node): `InvoicePdf` service + `get :pdf` member route, rendering the shared print view to a downloadable A4 PDF.
-- UBL 2.1 XML generation via `UblInvoiceBuilder` (Builder::XmlMarkup, EN 16931 profile) + `get :ubl` member route, downloadable per invoice. See `agents/docs/specs/ubl-invoice-generation.md`.
-- `bin/ci`, `bin/setup`, `bin/dev`; system tests (invoice lifecycle + client CRUD).
+- Registration (Account + User in a transaction, auto-login) on Rails 8 built-in auth.
+- Clients / Products / Invoices + LineItems: full CRUD scoped through `Current.user.account`.
+- Status transitions as service objects + REST resource controllers; `sent_at`/`paid_at`/`voided_at`.
+- Status-aware invoice show (sticky toolbar, badge, activity strip); `Invoice#overdue?` derived; draft inline-edit; non-draft locked.
+- Print view (`layouts/print.html.erb` + `invoice-doc.css`); shared `_document.html.erb`.
+- UBL 2.1 XML (`UblInvoiceBuilder`, EN 16931 profile) + PDF (`ferrum_pdf`) — PDF button hidden (no Chromium in Docker).
+- CUBE CSS design system (OKLCH tokens, Every Layout primitives, card-section pattern).
+- `bin/ci`, `bin/setup`, `bin/dev`; system tests.
+- **Deployed live** to OVH VPS via Kamal — `viegli-rekini.lv`, HTTPS, persistent `/rails/storage` volume. Runbook: `agents/docs/notes/kamal-ovh-deploy.md`.
+- One-click "Try the demo" + public signup disabled; demo-user protection; `rake demo:reset`.
+- Brand renamed to Viegli-Rēķini (module `ViegliRekini`); auth pages refactored off inline styles.
+- Dark-mode invoice fix (`.invoice-doc` forced to white paper).
+- Secrets scan (gitleaks) — clean.
 
 ## Known issues
 
-- Dashboard `@overdue_invoices` mislabels draft/sent as "overdue" — revisit with derived-overdue work.
-- PEPPOL/UBL not built yet (was stubbed as a broken `<# if %>` block, now removed).
+- Mobile layouts overflow horizontally; the sidebar doesn't auto-hide on small viewports. Fix next: `overflow-x: hidden` + auto-hide sidebar.
+- Dashboard `@overdue_invoices` mislabels draft/sent as "overdue".
+- Invoice numbering uses `pluck`+`max` (O(n)) with a digit-prefix bug (`n[/\d+/]`); counter-table fix planned.
+- Money/VAT totals use SQL `SUM` (float drift); line/category rounding fix planned (EN 16931 BR-CO-17).
 
 ## Next (planned)
 
-- Invoice download page (PDF + XML + print), mark-as-sent, partial-payment UI (deferred toolbar stubs).
-- PEPPOL BIS 3.0 profile (EndpointID/EAS) once e-adrese data exists (Phase 6).
-- Phase 1B tenancy (Identity/User split, URL-path tenancy, `Location`/`LocationMembership`) — see `ARCHITECTURE.md`.
-- Line-item combobox (select-or-create) — see `agents/docs/specs/line-item-selection-options.md`.
-- Prod: install Chromium in Docker image (`ferrum_pdf` `browser_path`/`no-sandbox`) — deploy session.
+- Mobile layout fix: `overflow-x: hidden` on the app shell + auto-hide sidebar on small viewports.
+- Fix 1 — invoice-numbering counter table (numbers assigned at send, gapless).
+- Fix 2 — `MoneyAmount` VO, VAT per rate/category (BR-CO-17), drop SQL `SUM`.
+- README rewrite (portfolio-facing) before making the repo public.
+- Backups: Litestream → R2 (interim `sqlite3 .backup`).

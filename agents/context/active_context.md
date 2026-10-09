@@ -16,6 +16,7 @@ on `main`. Next: the two fix branches, then the README rewrite before making the
 - Tests: 150 unit + 4 system green. Brakeman 0 warnings. CI present.
 
 ## Next
+- **Mobile layout fix (next session):** `overflow-x: hidden` on the app shell + auto-hide the sidebar on small viewports.
 - Fix 1 (`fix/invoice-numbering`): counter table, numbers assigned at send, gapless.
 - Fix 2 (`fix/money-rounding`): `MoneyAmount` VO, VAT per rate/category (BR-CO-17), delete SQL SUM.
 - README rewrite (portfolio-facing) before repo goes public.
