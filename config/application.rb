@@ -8,10 +8,10 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
-module ERekiniMvp
+module ViegliRekini
   class Application < Rails::Application
-    VERSION = "0.1.0"
-    APP_NAME = "E-Rēķini"
+    VERSION = "0.2.0"
+    APP_NAME = "Viegli-Rēķini"
 
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1

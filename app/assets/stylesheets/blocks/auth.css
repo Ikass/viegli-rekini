@@ -1,7 +1,31 @@
 /* ============================================================
    BLOCK — auth.css
-   Layout for unauthenticated pages (login, sign up, forgot
-   password). Centred card on the cream background.
+   Unauthenticated pages (login, forgot/update password).
+   Centred card on the cream background, with a brand header.
+
+   Structure:
+     <div class="container" data-size="xs">
+       <header class="stack auth-header">
+         <div class="auth-logo">…</div>
+         <h1 class="auth-brand">App name</h1>
+       </header>
+       <article class="card auth-card">
+         <header class="auth-card-header">
+           <h2 class="auth-title">Heading</h2>
+           <p class="auth-subtitle">Subtitle</p>
+         </header>
+         <div class="stack">
+           <form class="stack">
+             <fieldset class="stack auth-fieldset">…</fieldset>
+             <button class="button">Sign in</button>
+           </form>
+           <%# optional secondary action (e.g. "Try the demo") %>
+         </div>
+         <footer class="auth-card-footer">
+           <p class="auth-footer-text">…</p>
+         </footer>
+       </article>
+     </div>
    ============================================================ */
 
 .auth-page {
@@ -11,6 +35,18 @@
   min-height: 100dvh;
   background-color: var(--color-surface-base);
   padding: var(--space-m);
+}
+
+/* ── Brand header (logo + app name) ─────────────────────── */
+
+.auth-header {
+  --stack-gap: var(--space-2xs);
+  text-align: center;
+}
+
+.auth-brand {
+  font-size: var(--step-2);
+  font-weight: var(--font-weight-bold);
 }
 
 .auth-logo {
@@ -29,4 +65,44 @@
   color: white;
   font-size: var(--step-2);
   font-weight: var(--font-weight-bold);
+}
+
+/* ── Card ───────────────────────────────────────────────── */
+
+.auth-card {
+  margin-block-start: var(--space-l);
+}
+
+.auth-card-header {
+  text-align: center;
+}
+
+.auth-card-header .auth-title {
+  font-size: var(--step-3);
+}
+
+.auth-subtitle {
+  font-size: var(--step--1);
+  color: var(--color-text-subtle);
+}
+
+/* ── Form ───────────────────────────────────────────────── */
+
+/* Bare fieldset — the bordered base fieldset is noise inside a card */
+.auth-fieldset {
+  --stack-gap: var(--space-s);
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ── Card footer ────────────────────────────────────────── */
+
+.auth-card-footer {
+  justify-content: center;
+}
+
+.auth-footer-text {
+  font-size: var(--step--1);
+  color: var(--color-text-muted);
 }

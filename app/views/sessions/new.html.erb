@@ -1,43 +1,43 @@
 <div class="container" data-size="xs">
 
-  <header class="stack" style="--stack-gap: var(--space-2xs); text-align: center;">
+  <header class="stack auth-header">
     <div class="auth-logo">
       <span class="auth-logo-icon" aria-hidden="true">
         <%= tabler_icon("file-invoice", data: { size: "sm" }) %>
       </span>
     </div>
-    <h1 style="font-size: var(--step-2); font-weight: var(--font-weight-bold);">Viegli-Rēķini</h1>
+    <h1 class="auth-brand"><%= ViegliRekini::Application::APP_NAME %></h1>
   </header>
 
-  <article class="card" style="margin-block-start: var(--space-l);">
-    <header style="text-align: center; padding: var(--space-m) var(--space-m) 0;">
-      <h2 style="font-size: var(--step-3);">Welcome back</h2>
-      <p style="font-size: var(--step--1); color: var(--color-text-subtle);">Sign in to continue</p>
+  <article class="card auth-card">
+    <header class="auth-card-header">
+      <h2 class="auth-title">Welcome back</h2>
+      <p class="auth-subtitle">Sign in to continue</p>
     </header>
 
-    <%= form_with url: session_path, html: { class: "stack", style: "padding: var(--space-m);" } do |form| %>
-      <fieldset style="border: none; padding: 0; margin: 0;">
-        <div class="field">
-          <%= form.label :email_address, "Email" %>
-          <%= form.email_field :email_address, required: true, autofocus: true,
-              autocomplete: "username", placeholder: "name@company.com",
-              value: params[:email_address] %>
-        </div>
+    <div class="stack">
+      <%= form_with url: session_path, html: { class: "stack" } do |form| %>
+        <fieldset class="stack auth-fieldset">
+          <div class="field">
+            <%= form.label :email_address, "Email" %>
+            <%= form.email_field :email_address, required: true, autofocus: true,
+                autocomplete: "username", placeholder: "name@company.com",
+                value: params[:email_address] %>
+          </div>
 
-        <div class="field" style="margin-block-start: var(--space-s);">
-          <%= form.label :password, "Password" %>
-          <%= form.password_field :password, required: true,
-              autocomplete: "current-password", placeholder: "••••••••••", maxlength: 72 %>
-        </div>
-      </fieldset>
+          <div class="field">
+            <%= form.label :password, "Password" %>
+            <%= form.password_field :password, required: true,
+                autocomplete: "current-password", placeholder: "••••••••••", maxlength: 72 %>
+          </div>
+        </fieldset>
 
-      <%= form.submit "Sign in", class: "button",
-          data: { variant: "primary", width: "full" } %>
-    <% end %>
+        <%= form.button "Sign in", class: "button",
+            data: { variant: "primary", width: "full" } %>
+      <% end %>
 
-    <div style="padding: 0 var(--space-m) var(--space-m);">
       <%= button_to "Try the demo", demo_session_path, class: "button",
-          data: { variant: "primary", width: "full" } %>
+          data: { variant: "secondary", width: "full" } %>
     </div>
   </article>
 

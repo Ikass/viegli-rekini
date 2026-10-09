@@ -4,42 +4,44 @@
 
 <div class="container" data-size="xs">
 
-  <header class="stack" style="--stack-gap: var(--space-2xs); text-align: center;">
+  <header class="stack auth-header">
     <div class="auth-logo">
       <span class="auth-logo-icon" aria-hidden="true">
         <%= tabler_icon("file-invoice", data: { size: "sm" }) %>
       </span>
     </div>
-    <h1 style="font-size: var(--step-2); font-weight: var(--font-weight-bold);">E-Rēķini</h1>
+    <h1 class="auth-brand"><%= ViegliRekini::Application::APP_NAME %></h1>
   </header>
 
-  <article class="card" style="margin-block-start: var(--space-l);">
-    <header style="text-align: center; padding: var(--space-m) var(--space-m) 0;">
-      <h2 style="font-size: var(--step-3);">Update your password</h2>
+  <article class="card auth-card">
+    <header class="auth-card-header">
+      <h2 class="auth-title">Update your password</h2>
     </header>
 
-    <%= form_with url: password_path(params[:token]), method: :put,
-        html: { class: "stack", style: "padding: var(--space-m);" } do |form| %>
-      <fieldset style="border: none; padding: 0; margin: 0;">
-        <div class="field">
-          <%= form.label :password, "New password" %>
-          <%= form.password_field :password, required: true,
-              autocomplete: "new-password", placeholder: "Enter new password", maxlength: 72 %>
-        </div>
+    <div class="stack">
+      <%= form_with url: password_path(params[:token]), method: :put,
+          html: { class: "stack" } do |form| %>
+        <fieldset class="stack auth-fieldset">
+          <div class="field">
+            <%= form.label :password, "New password" %>
+            <%= form.password_field :password, required: true,
+                autocomplete: "new-password", placeholder: "Enter new password", maxlength: 72 %>
+          </div>
 
-        <div class="field" style="margin-block-start: var(--space-s);">
-          <%= form.label :password_confirmation, "Confirm new password" %>
-          <%= form.password_field :password_confirmation, required: true,
-              autocomplete: "new-password", placeholder: "Repeat new password", maxlength: 72 %>
-        </div>
-      </fieldset>
+          <div class="field">
+            <%= form.label :password_confirmation, "Confirm new password" %>
+            <%= form.password_field :password_confirmation, required: true,
+                autocomplete: "new-password", placeholder: "Repeat new password", maxlength: 72 %>
+          </div>
+        </fieldset>
 
-      <%= form.submit "Update password", class: "button",
-          data: { variant: "primary", width: "full" }, style: "margin-block-start: var(--space-m);" %>
-    <% end %>
+        <%= form.button "Update password", class: "button",
+            data: { variant: "primary", width: "full" } %>
+      <% end %>
+    </div>
 
-    <footer style="text-align: center; border-block-start: 1px solid var(--color-border); padding: var(--space-s) var(--space-m);">
-      <p style="font-size: var(--step--1); color: var(--color-text-muted);">
+    <footer class="auth-card-footer">
+      <p class="auth-footer-text">
         <%= link_to "Back to sign in", new_session_path %>
       </p>
     </footer>

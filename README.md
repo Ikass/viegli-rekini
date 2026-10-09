@@ -1,4 +1,4 @@
-# E-Rekini — Simple Invoicing for Latvian Small Businesses
+# Viegli-Rēķini — Simple Invoicing for Latvian Small Businesses
 
 **Status: MVP v0.1 — work in progress**
 
