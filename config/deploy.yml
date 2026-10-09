@@ -8,7 +8,7 @@ image: ghcr.io/ikass/viegli-rekini
 # Deploy to these servers.
 servers:
   web:
-    - REPLACE_WITH_OVH_SERVER_IP
+    - 51.89.149.82
   # job:
   #   hosts:
   #     - REPLACE_WITH_OVH_SERVER_IP
@@ -90,9 +90,9 @@ builder:
   #   - GITHUB_TOKEN
   #   - RAILS_MASTER_KEY
 
-# Use a different ssh user than root
-# ssh:
-#   user: app
+# OVH Ubuntu VPSs disable root SSH — use the provided "ubuntu" user.
+ssh:
+  user: ubuntu
 
 # Use accessory services (secrets come from .kamal/secrets).
 # accessories:
