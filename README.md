@@ -1,136 +1,84 @@
-# Viegli-Rēķini — Simple Invoicing for Latvian Small Businesses
+# Viegli-Rēķini
 
-**Status: MVP v0.1 — work in progress**
+A focused e-invoicing SaaS for Latvian small businesses. Multi-tenant at the account level, built with Rails 8, SQLite, Hotwire and custom CUBE CSS, deployed to a single OVH VPS with Kamal 2.
 
-> **Full implementation plan → [PLAN.md](PLAN.md)** — includes regulatory background, data model, phased feature roadmap, and technical decisions.
+**Live at [viegli-rekini.lv](https://viegli-rekini.lv)** · demo tenant: `demo@example.com` / `password`
 
-This is the first working version of what will eventually become [viegli-rekini.lv](https://viegli-rekini.lv) — a simple, no-nonsense invoicing tool for Latvian freelancers and small businesses.
-
-I'm building this for two reasons: (1) it's a real product I want to exist, and (2) it's my primary Rails learning project. I'm documenting my architectural decisions here as notes to my future self — the reasoning behind each choice, not just what was chosen.
+> Deeper context lives in [`ARCHITECTURE.md`](ARCHITECTURE.md) (the *why*), [`PLAN.md`](PLAN.md) (the roadmap and regulatory background), and [`agents/docs/`](agents/docs/index.md) (contracts, recipes, and session notes).
 
 ---
 
-## What it does (v0.1)
+## What it does
 
-- Manage clients with full address and VAT number fields
-- Manage reusable products with default prices and VAT rates
-- Create invoices with multiple line items and a product picker
-- Automatic calculations — subtotal, VAT, total
-- Sequential invoice numbers (INV-0001, INV-0002, …)
-- Invoice lifecycle: `draft → sent → paid`, with `void` as an escape hatch
-- Print-ready invoice layout (HTML + print CSS) and downloadable PDF (ferrum_pdf / headless Chrome)
-- Account settings for company details, address, and bank information
-- Single user per account for now; multi-user and multi-location are near-term (data model ready)
+- Clients with full address, VAT number and VAT regime (standard / reverse charge / export).
+- Reusable products with default price and VAT rate.
+- Invoices with multiple line items and a "add from product" picker.
+- Automatic subtotal / VAT / total — computed in Ruby over integer cents, VAT rounded **once per category** (EN 16931 BR-CO-17).
+- Gapless, sequential invoice numbers (`INV-0001`, …) allocated from a per-account counter table **at send** — drafts carry no number, so deleting a draft never leaves a gap.
+- Invoice lifecycle `draft → sent → paid`, with `void` as an escape hatch; transitions are service objects, not controller branches.
+- Print-ready invoice layout (shared HTML + print CSS) and UBL 2.1 XML export for the EN 16931 semantic model.
+- Account settings for company details, address, bank, and invoice-number prefix/padding.
+- One-click demo tenant; public signup disabled.
 
 ---
 
 ## Tech stack
 
-| Layer | Choice | Why |
-|-------|--------|-----|
-| Framework | Rails 8 | Learning Rails properly; using latest stable |
-| Database | SQLite3 | Right choice for this stage — simple, zero-config; Litestream backups planned |
-| Auth | Rails 8 built-in | New in Rails 8 — no Devise needed for simple cases |
-| CSS | Custom vanilla (CUBE CSS) | CUBE CSS methodology with Every Layout primitives, OKLCH color tokens, logical properties |
-| Frontend | Hotwire (Turbo) | Rails default — SPA-feel without writing JS |
-| Testing | Minitest | Rails default; system tests + model/service unit tests |
-| Deployment | OVHCloud + Kamal 2 | Docker-based deploy; Litestream → Cloudflare R2 backups planned (hosting not started) |
+| Layer | Choice | Notes |
+|---|---|---|
+| Language / framework | Ruby 3.4 · Rails 8.1 | `params.expect` strong parameters, modern idioms |
+| Database | SQLite3 | Single file, WAL mode; Litestream → R2 backups planned |
+| Auth | Rails 8 built-in | `has_secure_password` + signed cookie sessions, no Devise |
+| Frontend | Hotwire (Turbo + Stimulus) | Progressive enhancement, no JS framework |
+| CSS | Custom vanilla (CUBE CSS) | OKLCH tokens, Every Layout primitives, logical properties, `data-*` variants |
+| Testing | Minitest + Capybara/Selenium | 162 unit/controller/service + 4 system tests |
+| Deployment | Kamal 2 + OVH VPS | Docker image to GHCR, HTTPS via kamal-proxy |
 
 ---
 
 ## Architecture decisions and why
 
-### Why SQLite3
+### Account-based multi-tenancy, enforced in every controller
 
-SQLite3 is the database for this project. For a single-user invoicing app at MVP stage, it's the pragmatic choice:
+A `Client`, `Product` and `Invoice` all belong to an `Account`. Controllers resolve records **through `Current.user.account`** — never `Invoice.all` — and foreign keys submitted in params are re-resolved against the account rather than trusted verbatim. There are tests proving one account cannot read another's data.
 
-- **Zero configuration** — no server process to manage, no credentials, no connection pooling. The database is a single file.
-- **Litestream backups (planned)** — continuous replication to Cloudflare R2, not configured yet. In the event of server failure, the database can be restored to the exact point of failure.
-- **Production-tested** — SQLite3 handles concurrency well for low-write workloads. Rails 8's `RETURNING` clause support and WAL mode make it a solid production database for this use case.
-- **Scale when needed** — if the app outgrows SQLite3, the data can be migrated to PostgreSQL. But that day is not today.
+Single user per account today; multi-user and multi-location are the near-term target and the data model is ready for them.
 
-### Schema format: `schema.rb`
+### Money as integer cents, VAT rounded per category
 
-The app uses `config.active_record.schema_format = :ruby` (`config/application.rb`), so `db/schema.rb` is the source of truth. Rails 8.1's `schema.rb` preserves DB check constraints (see `invoices_status_check`, `clients_vat_regime_check` in the schema), so the earlier idea of switching to `structure.sql` turned out to be unnecessary. If a future feature needs something `schema.rb` can't express (custom functions, partial indexes), revisit `schema_format = :sql` then.
+Prices are stored as integer cents (`unit_price_cents`) — floating point is unsafe for money. `quantity` and `vat_rate` are decimal columns cast to `BigDecimal` in Ruby, so all totals are exact.
 
-**Reference:** Sustainable Web Development with Ruby on Rails, Ch. 14
+VAT is computed **once per tax category** (`round(Σ line net × rate / 100)`), not summed from per-line rounding — the difference is a cent, and EN 16931's fatal rules (BR-CO-14/17) reconcile to the cent. `Invoice#vat_breakdown` is the single source of truth that both the UBL XML and the print view read from.
 
-### Database constraints vs. Rails validations — both, for different reasons
+### Gapless numbering via a counter table
 
-They serve different purposes:
+Numbers come from `InvoiceSequence` — a `(account, scope)` row bumped by an atomic `INSERT … ON CONFLICT … RETURNING` in the **same transaction** as the status flip. Assigning at send (not at draft) means deleting a draft consumes nothing. No `MAX()` scan, no digit-parsing of a formatted number, no lock.
 
-- **Validations** (`validates :name, presence: true`) — these run in Ruby before saving. They produce user-friendly error messages. But they can be bypassed: `invoice.update_column(:status, "nonsense")` skips validations entirely.
-- **Database constraints** (`null: false`, `foreign_key: true`, check constraints) — these live in the database and cannot be bypassed. They're the last line of defence for data integrity.
+### Business logic lives in `app/services/`, not models or controllers
 
-So the rule is: use validations for UX (error messages), use database constraints for correctness. Both are needed.
+- **Models** — relationships, validations, and pure calculations (`total`, `overdue?`). No writes, no side effects.
+- **Controllers** — find the record, call a service, redirect/render. One instance variable per action.
+- **Services** — state transitions and anything multi-step. `InvoiceSender`, `InvoicePaymentRecorder`, `InvoiceVoider` each return a `Result` struct, so callers always know whether it succeeded.
 
-In practice: every required column has `null: false` in the migration. Every `references` column has `foreign_key: true`. The `status` enum has a check constraint so the database will reject any value that isn't in the allowed list, even if someone bypasses Rails entirely.
+### State transitions as REST resources
 
-**Reference:** Sustainable Web Development with Ruby on Rails, Ch. 14 + Ch. 16
-
-### Business logic lives in `app/services/`, not in models or controllers
-
-This is the pattern I'm trying to be disciplined about. The rule is:
-
-- **Models** — relationships, validations, scopes, and pure calculation methods (like `total`). No writes, no side effects.
-- **Controllers** — receive a request, find the right record, call a service, redirect or render. One instance variable per action. No logic.
-- **Services** — everything else. State transitions, any operation that involves multiple steps or side effects.
-
-For invoice state transitions, each transition is its own service class (`InvoiceSender`, `InvoicePaymentRecorder`, `InvoiceVoider`). Each returns a `Result` struct so the caller always knows explicitly whether it succeeded.
-
-The reason for this separation: models that contain business logic become fragile. When the business rule changes, you're editing a class that other parts of the app depend on heavily. Service objects are easy to change, easy to test in isolation, and easy to reason about.
-
-**Reference:** Sustainable Web Development with Ruby on Rails, Ch. 5 + Ch. 15
-
-### Status transitions as REST resources, not custom controller actions
-
-When you need a non-standard action (like "send this invoice"), the tempting approach is to add a custom controller action:
+"Send this invoice" isn't a custom controller action; the transition *is* a resource:
 
 ```ruby
-# Tempting but wrong
-POST /invoices/:id/send
+resources :invoice_sends, only: [:create]
+resources :invoice_payments, only: [:create]
+resources :invoice_voids, only: [:create]
 ```
 
-The Rails-idiomatic approach is to model the *transition itself* as a resource:
+Rails' seven standard actions are universally understood; a custom `POST /invoices/:id/send` is not.
 
-```ruby
-# Correct
-POST /invoice_sends        # body contains invoice_id
-POST /invoice_payments
-POST /invoice_voids
-```
+### Database constraints *and* validations — both, for different reasons
 
-Because Rails' seven standard actions (`index`, `show`, `new`, `create`, `edit`, `update`, `destroy`) are universally understood. Every Rails developer knows what a `create` action does. Custom action names (`send`, `mark_paid`) are unique to your app and require explanation.
+Validations produce friendly error messages but can be bypassed (`update_column`). Database constraints can't. So every required column is `null: false`, every `references` has `foreign_key: true`, and the `status` enum has a check constraint as the last line of defence. Tests assert the *constraints* directly by bypassing validations.
 
-It also forces cleaner thinking: "sending an invoice" is a thing that happens, not a property of the invoice.
+### UBL 2.1 XML, EN 16931 profile
 
-**Reference:** Sustainable Web Development with Ruby on Rails, Ch. 6
-
-### Multi-tenancy foundation (not yet built, but planned)
-
-Every `Client` and `Invoice` has an `account_id` foreign key. All queries in controllers go through `current_user.account` rather than the model directly:
-
-```ruby
-# This, always:
-@invoices = current_user.account.invoices
-
-# Never this:
-@invoices = Invoice.all
-```
-
-Right now there's only one account (the demo user's). But the data model is correct for multi-tenancy from day one. Adding a second tenant later requires no schema changes — just account creation and proper session handling.
-
-This is one of those things that's cheap to do at the start and expensive to retrofit later.
-
-### Storing money as integers (cents), not decimals
-
-`unit_price` and `quantity` are stored as follows:
-- `unit_price_cents` — integer, in euro cents (e.g., 5000 = €50.00)
-- `quantity` — decimal (you might invoice for 1.5 hours)
-
-Why cents? Floating point arithmetic is not reliable for money. `0.1 + 0.2` in a computer does not equal `0.3` exactly. Storing prices as integers and dividing by 100 for display eliminates an entire class of subtle bugs. Financial software should always do this.
-
-**To learn more:** search "floating point money representation" — it's a classic problem.
+`UblInvoiceBuilder` renders the invoice as UBL 2.1 XML targeting `urn:cen.eu:en16931:2017`. PEPPOL BIS 3.0 is **not** implemented yet — it requires seller/buyer `cbc:EndpointID` + EAS scheme IDs that the app doesn't collect yet. Output is generated with `Builder::XmlMarkup` (auto-escaping), not an `.xml.erb` template.
 
 ---
 
@@ -138,37 +86,25 @@ Why cents? Floating point arithmetic is not reliable for money. `0.1 + 0.2` in a
 
 ```
 Account
-  └── has_many :users
-  └── has_many :clients
-  └── has_many :products
-  └── has_many :invoices
-  └── Fields: name, company_name, vat_number, company_reg,
-              address, city, postal_code, country,
-              bank_name, bank_account, bank_swift
+  ├── has_many :users, :clients, :products, :invoices, :invoice_sequences
+  └── name, company_name, registration_number, vat_number,
+      address, city, postal_code, country,
+      bank_name, bank_account, bank_swift, payment_terms,
+      invoice_prefix, invoice_number_padding
 
-User
-  └── belongs_to :account
-
-Client (belongs_to :account)
-  └── has_many :invoices
-  └── Fields: name, company_name, email, vat_number,
-              address, city, postal_code, country
-
-Product (belongs_to :account)
-  └── Fields: name, description, unit_price_cents, vat_rate
-
-Invoice (belongs_to :account, belongs_to :client)
-  └── has_many :line_items
-  └── status: draft | sent | paid | void
-  └── Calculated: subtotal, vat_total, total (not stored)
-
-LineItem (belongs_to :invoice)
-  └── description, quantity, unit_price_cents, vat_rate, position
+User        belongs_to :account
+Client      belongs_to :account, has_many :invoices
+Product     belongs_to :account
+Invoice     belongs_to :account, :client; has_many :line_items
+InvoiceSequence  belongs_to :account   # (account_id, scope) → last_number
+LineItem    belongs_to :invoice
+              description, quantity, unit_price_cents, vat_rate,
+              tax_category_code, unit_code, position
 ```
 
 ---
 
-## Invoice status lifecycle
+## Invoice lifecycle
 
 ```
 draft ──→ sent ──→ paid
@@ -176,71 +112,57 @@ draft ──→ sent ──→ paid
   └──────────┴────────┴──→ void
 ```
 
-Invalid transitions are rejected at the service layer. You cannot go from `draft` directly to `paid`. You cannot un-void an invoice.
+Invalid transitions are rejected at the service layer: no `draft → paid`, no un-voiding. `overdue` is derived (`sent? && due_on < today`), not persisted.
 
 ---
 
-## Development setup
+## Development
 
-**Prerequisites:** Ruby 3.3+, SQLite3 (included with Rails).
+**Prerequisites:** Ruby 3.4, SQLite3.
 
 ```bash
 git clone https://github.com/Ikass/viegli-rekini
 cd viegli-rekini
-bin/setup
-bin/dev
+bin/setup          # installs gems, creates + migrates + seeds the DB
+bin/dev            # starts the server
 ```
 
-`bin/setup` installs gems, creates and migrates the database, and seeds a demo account with sample clients, products, and invoices.
+`bin/setup` seeds a demo account with sample clients, products and invoices. Log in at `http://localhost:3000` with `demo@example.com` / `password`.
 
-Log in at `http://localhost:3000` with `demo@example.com` / `password`.
-
----
-
-## Running tests
+## Tests & CI
 
 ```bash
-bin/ci
-```
-
-Runs the full suite: model tests, service tests, system tests, `brakeman` security scan, `bundler-audit` dependency check.
-
-Individual test files:
-
-```bash
-bin/rails test test/models/invoice_test.rb
-bin/rails test test/services/
+bin/ci             # rubocop → bundler-audit → importmap audit → brakeman → tests → system tests
+bin/rails test     # model + service + controller tests
 bin/rails test:system
 ```
 
----
+GitHub Actions runs rubocop, Brakeman, gem/JS dependency audits, the test suite and system tests on every push.
 
-## What's intentionally out of scope for v0.1
+## Deployment
 
-These are planned for later versions (PDF download was originally listed here but is now shipped via `ferrum_pdf`):
-
-| Feature | Version |
-|---------|---------|
-| Email delivery (send invoice to client) | v0.2 |
-| Multi-user accounts (invite team members) | v0.2 |
-| Latvian/English bilingual UI | v0.2 |
-| Overdue reminders and background jobs | v0.3 |
-| Subscription billing | v1.0 |
-| Latvian e-invoice standard (eFaktura) | v1.0 |
+Deployed to an OVH VPS via Kamal 2 — Docker image built locally, pushed to GHCR, pulled and booted on the server behind kamal-proxy (HTTPS via Let's Encrypt). The SQLite file lives on a persistent Docker volume. **Backups (Litestream → Cloudflare R2) are planned but not yet configured.**
 
 ---
 
-## What I'd do differently with more time
+## Deliberately not built yet
 
-- Add `pagy` for pagination on the invoices index — right now it lists everything
-- Extract a `MoneyAmount` value object instead of raw cents arithmetic scattered in views
-- Add Lograge for structured production logging
-- Set up Sentry for error tracking from day one
+Kept out on purpose — not implied by anything here:
+
+| Feature | Status |
+|---|---|
+| PEPPOL BIS 3.0 / e-adrese transmission | not built (EN 16931 XML export only) |
+| Credit notes | not built |
+| Email delivery (send invoice / password reset SMTP) | not built (no SMTP configured) |
+| Latvian UI | English-only today |
+| Multi-user / roles | single user per account |
+| PDF download in production | generated via FerrumPdf, button hidden (no Chromium in the Docker image yet) |
+| Subscription billing, pagination | out of scope |
 
 ---
 
-## Learning resources used
+## Learning resources
 
-- *Sustainable Web Development with Ruby on Rails* — David Bryant Copeland (architecture patterns)
-- *Agile Web Development with Rails 8* — Sam Ruby et al. (Rails fundamentals)
-- [guides.rubyonrails.org](https://guides.rubyonrails.org) — official Rails guides
+- *Sustainable Web Development with Ruby on Rails* — David Bryant Copeland
+- *Agile Web Development with Rails 8* — Sam Ruby et al.
+- [guides.rubyonrails.org](https://guides.rubyonrails.org)

@@ -1,9 +1,9 @@
 # Active Context — Viegli-Rēķini
 
 ## Current work
-Both CV-critical fixes (VAT rounding + invoice numbering) and the flaky system-test hardening are
-done, committed, and pushed — GitHub CI is fully green (test, system-test, lint, scan_ruby, scan_js).
-Next: README rewrite (portfolio-facing) before making the repo public.
+Both CV-critical fixes (VAT rounding + invoice numbering), the flaky system-test hardening, and the
+portfolio-facing README rewrite are done, committed, and pushed — GitHub CI is fully green (test,
+system-test, lint, scan_ruby, scan_js). Next: Litestream → R2 backups, then repo public.
 
 ## State
 - Live: HTTPS via Kamal proxy, `/up` healthy, unauth → login. Demo tenant seeded.
@@ -15,8 +15,8 @@ Next: README rewrite (portfolio-facing) before making the repo public.
 
 ## Next
 - `MoneyAmount` VO (optional cleanup; per-category VAT + Ruby sum already shipped).
-- README rewrite (portfolio-facing) before repo goes public.
 - Backups (Litestream → R2) still pending.
+- Make the repo public (README + CI green).
 
 ## Decisions locked
 - Domain: **`viegli-rekini.lv`**. Image/registry: `ghcr.io/ikass/viegli-rekini` (classic PAT).

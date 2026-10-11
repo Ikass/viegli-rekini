@@ -25,6 +25,7 @@
   assigned **at send** (drafts unnumbered → gapless), O(1), no digit-prefix parsing.
 - System-test hardening: `send_invoice_via_js` replaces the flaky `click_button "Send invoice"`
   (Turbo interception), status asserted via `data-status`; GitHub CI fully green.
+- Portfolio-facing README rewrite (live product framing, honest "not built" table).
 
 ## Known issues
 
@@ -33,5 +34,5 @@
 ## Next (planned)
 
 - `MoneyAmount` VO (optional; per-category VAT + Ruby sum done).
-- README rewrite (portfolio-facing) before making the repo public.
 - Backups: Litestream → R2 (interim `sqlite3 .backup`).
+- Make the repo public.
