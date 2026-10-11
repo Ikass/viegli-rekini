@@ -112,7 +112,7 @@ Client (belongs_to :account)
   - default_scope { order(:name) }  # alphabetical sort only, not a tenant filter
 
 Invoice (belongs_to :account, :client)
-  - invoice_number: string, null: false, unique per account (index [account_id, invoice_number])
+  - invoice_number: string, null: true (nil for drafts; assigned at send), unique per account (index [account_id, invoice_number])
   - issued_on: date, null: false
   - due_on: date, null: false
   - status: enum (draft, sent, paid, void), null: false, default: draft
@@ -140,7 +140,7 @@ Product (belongs_to :account)
 
 **Calculated on Invoice (no DB columns):**
 - `subtotal` — sum of line item subtotals
-- `vat_total` — sum of line item VAT amounts
+- `vat_total` — VAT rounded once per category (EN 16931 BR-CO-17), summed across categories
 - `total` — subtotal + vat_total
 
 **Derived (not persisted):**

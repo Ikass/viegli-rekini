@@ -12,7 +12,7 @@
 
 The target user is a solo operator or micro-business that wants to issue compliant invoices without the overhead of a full accounting suite.
 
-**Tech stack:** Rails 8, SQLite3, Hotwire (Turbo + Stimulus), vanilla CSS, Kamal 2 on Hetzner, Litestream → Cloudflare R2 backups, MailerSend for email.
+**Tech stack:** Rails 8, SQLite3, Hotwire (Turbo + Stimulus), vanilla CSS, Kamal 2 on OVH (live), Litestream → Cloudflare R2 backups (planned), MailerSend for email (planned).
 
 ---
 
@@ -93,7 +93,7 @@ The following is already built:
 - **Account + User** — registration creates an Account (company profile with address, bank details, VAT info, registration number) and a User (login credentials) in a single transaction. Rails 8 session-based auth.
 - **Clients** — CRUD for invoice recipients (name, company name, email, address, city, postal code, country, VAT number)
 - **Products** — reusable line item templates (name, description, default price in cents, default VAT rate)
-- **Invoices** — create invoice with nested line items via Stimulus form controller, pick from products or enter manually, auto-calculate subtotal + VAT + total via SQL SUM
+- **Invoices** — create invoice with nested line items via Stimulus form controller, pick from products or enter manually, auto-calculate subtotal + VAT + total in Ruby (integer cents, VAT rounded once per category)
 - **Status transitions** — dedicated service objects for each transition (InvoiceSender, InvoicePaymentRecorder, InvoiceVoider), exposed as REST resources (not custom member actions)
 - **Account settings** — company details, address, bank info (bank name, IBAN, SWIFT) on a single edit/update page
 - **Print view** — browser-printable invoice layout showing seller/buyer addresses, line items, totals, bank details, and notes
@@ -158,7 +158,7 @@ LineItem
 **Calculated on Invoice (no DB columns):**
 
 - `subtotal` — sum of line item subtotals
-- `vat_total` — sum of line item VAT amounts
+- `vat_total` — VAT rounded once per category (EN 16931 BR-CO-17), summed across categories
 - `total` — subtotal + vat_total
 
 **Status lifecycle:**
@@ -645,7 +645,7 @@ Register with VID as an e-invoice service provider. Requires direct API integrat
 #### 7.1 Deployment
 
 ```bash
-# Hetzner CX23 (2 vCPU, 4GB RAM), Helsinki or Falkenstein DC
+# OVH VPS (deployed; see agents/docs/notes/kamal-ovh-deploy.md)
 kamal setup
 kamal deploy
 
@@ -713,7 +713,7 @@ The 5-business-day VID submission deadline requires skipping weekends and Latvia
 
 ### Invoice number format
 
-Configurable prefix + sequential counter per account (per location in Phase 1B). Examples: `2026-001`, `INV-0042`, `RIGA-2026-001`. Counter derived from existing invoices per scope at generation time, using `with_lock` to prevent race conditions.
+Configurable prefix + sequential counter per account (per location in Phase 1B). Examples: `2026-001`, `INV-0042`, `RIGA-2026-001`. Counter from a per-account `invoice_sequences` table, bumped atomically (`INSERT … ON CONFLICT … RETURNING`); the number is assigned at send.
 
 ### Multi-tenancy: Identity/User split
 
@@ -889,7 +889,7 @@ Full list: https://docs.peppol.eu/poacc/billing/3.0/codelist/UNECERec20/
 | 4     | Reminders, credit notes, dashboard                                                                           | ⬜      |
 | 5     | e-adrese delivery channel                                                                                    | ⬜      |
 | 6     | PEPPOL operator integration                                                                                  | ⬜      |
-| 7     | Deploy to Hetzner, Kamal, Litestream                                                                         | ⬜      |
+| 7     | Deploy to OVH, Kamal, Litestream                                                                         | ⬜      |
 
 ---
 

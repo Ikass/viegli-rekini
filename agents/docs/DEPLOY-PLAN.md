@@ -1,7 +1,10 @@
 # Deploy Plan — Viegli-Rēķini (portfolio demo)
 
-> **Status:** planned 2026-10-09 (Phase 1 audit complete). Goal: a deployed, working
-> Viegli-Rēķini as a portfolio piece within days — a public demo, **not** the v1 launch.
+> **Status:** planned 2026-10-09, **executed** (live at `viegli-rekini.lv`; runbook:
+> `notes/kamal-ovh-deploy.md`). Kept as the historical record of the deploy; details below
+> predate the deploy and a few are now done/superseded (e.g. the repo was renamed, the
+> `postgresql-client`/`libpq-dev` packages were dropped, and the counter table shipped as
+> `last_number` with `prefix`/`padding` on `Account`).
 
 **Domain:** `viegli-rekini.lv` (owned). `vieglirekini.lv` is a possible later redirect only.
 **Image / registry:** `ghcr.io/ikass/viegli-rekini` (lowercase — GHCR requirement).

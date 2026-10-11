@@ -42,6 +42,9 @@ An account may therefore hold any number of sequences, each advancing independen
 
 ## Data model sketch
 
+> **As shipped:** the column is `last_number` (not `next_number`), and `prefix`/`padding` stayed
+> on `Account` rather than moving onto the sequence row. The sketch below is the original proposal.
+
 ```ruby
 # db/migrate/xxx_create_invoice_sequences.rb
 create_table :invoice_sequences do |t|
@@ -87,12 +90,11 @@ Seed one `default` sequence per existing account from its current max invoice nu
 switchover doesn't reset numbering. `generate_invoice_number` then reads the sequence instead of
 `pluck`-ing.
 
-## When this becomes relevant
+## Built, and what remains
 
-- Building multi-location support (invoices gain `location_id`; `scope` derives from it).
-- Adding an ecommerce store sequence.
-- Any report of duplicate invoice numbers or a `RecordNotUnique` 500.
+Built (2026-10-11): the `invoice_sequences` table + `InvoiceSequence.next_for!` ship; numbers are
+assigned at send and drafts are unnumbered. Remaining refinements:
 
-Until then, the current `max_by` approach is acceptable for single-server SQLite with low write
-concurrency — this recipe exists so the eventual replacement follows one documented shape rather
-than a fresh invention.
+- Wire `scope` to multi-location (invoices gain `location_id`).
+- Add a separate ecommerce sequence (already supported via `scope`).
+- Move `prefix`/`padding` onto the sequence row if a location needs its own formatting.

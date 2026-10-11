@@ -18,8 +18,8 @@ The map for the `agents/docs/` tree. Read this first — a doc not listed here i
 
 - `recipes/audit-events.md` — explicit, service-side audit trail for sensitive operations. Not built yet.
 - `recipes/entitlements-lite.md` — Entitlements / Limits split sized for "no billing yet". Not built yet.
-- `recipes/invoice-number-sequences.md` — dedicated counter table, multiple sequences per account (location + ecommerce). Decided direction, not built.
-- `recipes/money-calculations.md` — consolidate on Ruby BigDecimal + `MoneyAmount` value object; drop SQL SUM. Decided direction, not built.
+- `recipes/invoice-number-sequences.md` — dedicated counter table, multiple sequences per account (location + ecommerce). **Built (2026-10-11).**
+- `recipes/money-calculations.md` — consolidate on Ruby BigDecimal + `MoneyAmount` value object; drop SQL SUM. **Built (2026-10-11)**; `MoneyAmount` VO still deferred.
 
 ## Specs (proposals / recorded decisions)
 
