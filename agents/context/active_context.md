@@ -1,12 +1,13 @@
 # Active Context — Viegli-Rēķini
 
 ## Current work
-Both CV-critical fixes (VAT rounding + invoice numbering), the flaky system-test hardening, and the
-portfolio-facing README rewrite are done, committed, and pushed — GitHub CI is fully green (test,
-system-test, lint, scan_ruby, scan_js). Next: Litestream → R2 backups, then repo public.
+CV-critical fixes (VAT rounding + invoice numbering), mobile/UI polish, system-test hardening, and
+the README rewrite are shipped and **live** — re-deployed to `viegli-rekini.lv` 2026-10-11. CI fully
+green. Next: Litestream → R2 backups, then make the repo public.
 
 ## State
-- Live: HTTPS via Kamal proxy, `/up` healthy, unauth → login. Demo tenant seeded.
+- Live: HTTPS via Kamal proxy, `/up` healthy, unauth → login. Demo tenant seeded. Re-deployed
+  2026-10-11 with the VAT/numbering/UI fixes.
 - Repo: GitHub `Ikass/viegli-rekini`; local `/home/reinis/Projects/viegli-rekini`.
 - Secrets: GHCR classic PAT at `~/.config/viegli-rekini/ghcr-token`; master key + PAT in
   Bitwarden (both recreated on this machine 2026-10-11). `.kamal/secrets` reads via `$(cat …)`.

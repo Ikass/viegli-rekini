@@ -1,7 +1,7 @@
 # Deploying to OVH with Kamal
 
-> **As built (2026-10-09):** first successful deploy. Read this before touching
-> deployment again — three of the gotchas below each cost a full deploy iteration.
+> **As built (2026-10-09), re-deployed (2026-10-11):** read this before touching
+> deployment — the gotchas below each cost a full deploy iteration.
 
 ## Server
 
