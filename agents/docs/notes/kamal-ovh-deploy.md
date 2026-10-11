@@ -87,6 +87,10 @@ bin/kamal app exec -i bin/rails db:seed   # seed the demo tenant (idempotent) �
    but **not** `${VAR:-default}` — a `${VAR:-…}` line resolves to a mangled value (empty
    password → `denied: denied` at `docker login`). Keep secrets to plain `$(cat …)` /
    `$VAR`.
+5. **Don't put the host in `image:`.** Kamal prepends `registry.server` to `image`, so
+   `image: ghcr.io/ikass/viegli-rekini` + `server: ghcr.io` builds
+   `ghcr.io/ghcr.io/ikass/viegli-rekini` (doubled) and the push 403s. Use
+   `image: ikass/viegli-rekini` — see "OVH-specific config".
 
 ## Rollback / diagnose
 
