@@ -114,3 +114,18 @@ categories. Summing per-line-rounded VAT drifts a cent, which a validator reject
 **Why it matters:** structured e-invoices reconcile the VAT breakdown to the cent. Round at the
 aggregate (category) level and make that breakdown the single source both the XML and the print
 view read from.
+
+### Counter table for gapless, atomic numbering
+Sequential invoice numbers come from a dedicated counter table with an atomic
+`INSERT … ON CONFLICT DO UPDATE … RETURNING`, bumped in the same transaction as the invoice save
+(and only at issue, so a deleted draft never leaves a gap).
+**Why it matters:** don't derive the next number from `MAX(existing)` — that's O(n), fragile under
+concurrency, and parsing digits out of a formatted number is a bug waiting to happen. A single
+atomic statement is correct by construction.
+
+### Rails `select_value` breaks UPSERT `RETURNING` on SQLite
+`select_value`/`select_all` mis-handle an `INSERT … ON CONFLICT … RETURNING` on the SQLite adapter
+— they return the stale value and don't apply the increment. `exec_query` does it correctly.
+**Why it matters:** before trusting that a raw SQL statement returns what the driver returns, test
+it through the adapter you're actually calling; the query-cache/write-detection path can silently
+divert write statements.

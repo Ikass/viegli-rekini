@@ -55,7 +55,7 @@ class InvoicesTest < ApplicationSystemTestCase
 
     submit_via_native_form
     assert_text "Invoice created"
-    assert_text "INV-"
+    assert_text "Draft"
     assert_text "System Test Client"
     assert_text "€181.50"
 

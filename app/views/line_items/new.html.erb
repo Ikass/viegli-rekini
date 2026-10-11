@@ -1,6 +1,6 @@
 <h1>Add Line Item</h1>
 
-<p>Invoice: <%= @invoice.invoice_number %></p>
+<p>Invoice: <%= invoice_number_or_draft(@invoice) %></p>
 
 <%= render "form", line_item: @line_item, url: invoice_line_items_path(@invoice) %>
 

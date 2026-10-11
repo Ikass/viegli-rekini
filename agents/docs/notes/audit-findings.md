@@ -8,6 +8,12 @@
 
 ## 1. SQLite has no row locks — `with_lock` / `lock!` is a no-op (but the "race" still doesn't fire)
 
+> **As built (2026-10-11):** numbering moved to a dedicated `invoice_sequences` counter table with
+> an atomic `INSERT … ON CONFLICT (account_id, scope) DO UPDATE … RETURNING` (see
+> `recipes/invoice-number-sequences.md`). One catch worth knowing: `select_value`/`select_all`
+> mis-handle an UPSERT's `RETURNING` and return the stale value without incrementing — use
+> `exec_query`, not `select_value`.
+
 ### What the code does
 
 `Invoice#generate_invoice_number` (a `before_validation :on => :create`) does:
@@ -132,6 +138,11 @@ has the same bug, plus it groups by `vat_rate` only while the builder groups by 
 ---
 
 ## 3. Gapless numbering means drafts must not consume numbers
+
+> **As built (2026-10-11):** numbers are now assigned at send, not draft — `InvoiceSender` allocates
+> via `InvoiceSequence.next_for!` inside the invoice's own transaction, and `invoice_number` is
+> nullable with a conditional `presence` validation (`unless: :draft?`). Deleting a draft consumes
+> nothing; the counter bump and the status flip commit/roll back together.
 
 ### The conflict
 

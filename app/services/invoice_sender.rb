@@ -17,7 +17,11 @@ class InvoiceSender
       return Result.new(success: false, invoice: invoice, error: "Cannot send invoice — missing: #{missing.join(", ")}.")
     end
 
-    invoice.update!(status: :sent, sent_at: Time.current)
+    invoice.transaction do
+      number = invoice.invoice_number || InvoiceSequence.next_for!(invoice.account)
+      invoice.update!(invoice_number: number, status: :sent, sent_at: Time.current)
+    end
+
     Result.new(success: true, invoice: invoice)
   end
 

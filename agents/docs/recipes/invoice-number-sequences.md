@@ -1,7 +1,9 @@
 # Invoice number sequences (recipe)
 
-> **Status:** decided direction, not yet built. Reach for this the next time invoice
-> numbering is touched (multi-location, ecommerce store, or a concurrency bug report).
+> **Status:** decided direction, **built (2026-10-11)**. See also the `As built` note below.
+> The counter table shipped: `invoice_sequences` (account + scope), `InvoiceSequence.next_for!`,
+> numbers assigned at send (`InvoiceSender`), drafts unnumbered. Prefix/padding still live on
+> `Account` (moving them per-sequence is a later refinement).
 >
 > **As built (2026-10-09):** point 1 below overstates the race. Verified against Rails 8.1.3.1:
 > `lock!`/`FOR UPDATE` is dropped by SQLite's Arel visitor (a no-op), but Rails' SQLite

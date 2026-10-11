@@ -31,7 +31,7 @@
       <h1>Invoice</h1>
       <dl class="invoice-meta">
         <dt>No.:</dt>
-        <dd><%= invoice.invoice_number %></dd>
+        <dd><%= invoice_number_or_draft(invoice) %></dd>
         <dt>Issued:</dt>
         <dd><%= invoice.issued_on %></dd>
         <dt>Due:</dt>

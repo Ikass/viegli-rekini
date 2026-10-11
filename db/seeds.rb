@@ -85,7 +85,8 @@ ActiveRecord::Base.transaction do
       issued_on: today - data[:days_ago],
       due_on: today + data[:due_days],
       status: data[:status],
-      notes: data[:notes]
+      notes: data[:notes],
+      invoice_number: (data[:status] == :draft ? nil : InvoiceSequence.next_for!(account))
     )
 
     data[:items].each_with_index do |item_data, idx|

@@ -28,7 +28,7 @@
           <tbody>
             <% group.each do |invoice| %>
               <tr>
-                <td><%= link_to invoice.invoice_number, invoice_path(invoice) %></td>
+                <td><%= link_to invoice_number_or_draft(invoice), invoice_path(invoice) %></td>
                 <td><%= invoice.client.name %></td>
                 <td class="hide-mobile"><%= invoice.issued_on %></td>
                 <td class="hide-mobile"><%= invoice.due_on %></td>

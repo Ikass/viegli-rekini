@@ -30,6 +30,35 @@ class InvoiceSenderTest < ActiveSupport::TestCase
     assert_not_nil @invoice.sent_at
   end
 
+  test "assigns the next number to a draft without one" do
+    invoice = @account.invoices.create!(client: @client, issued_on: Date.current, due_on: Date.current + 14.days)
+    invoice.line_items.create!(description: "Work", quantity: 1, unit_code: "C62", unit_price_cents: 1000, tax_category_code: "S", vat_rate: 21)
+
+    result = InvoiceSender.new.send_invoice(invoice: invoice)
+
+    assert result.success?
+    assert_equal "INV-0001", invoice.reload.invoice_number
+  end
+
+  test "preserves an existing invoice number on send" do
+    result = InvoiceSender.new.send_invoice(invoice: @invoice)
+
+    assert result.success?
+    assert_equal "INV-S1", @invoice.reload.invoice_number
+  end
+
+  test "does not consume a number when send fails" do
+    invoice = @account.invoices.create!(client: @client, issued_on: Date.current, due_on: Date.current + 14.days)
+    invoice.line_items.create!(description: "Work", quantity: 1, unit_code: "C62", unit_price_cents: 1000, tax_category_code: "S", vat_rate: 21)
+    @account.update!(company_name: nil)
+
+    result = InvoiceSender.new.send_invoice(invoice: invoice)
+
+    assert_not result.success?
+    assert_nil invoice.reload.invoice_number
+    assert_equal "INV-0001", InvoiceSequence.next_for!(@account)
+  end
+
   test "fails for non-draft invoices" do
     @invoice.update!(status: :sent)
 

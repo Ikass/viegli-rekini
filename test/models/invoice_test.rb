@@ -3,7 +3,7 @@
 require "test_helper"
 
 class InvoiceTest < ActiveSupport::TestCase
-  test "generates invoice number on create using account prefix and padding" do
+  test "draft invoice has no number until sent" do
     account = accounts(:one)
     client = clients(:one)
     invoice = account.invoices.create!(
@@ -12,27 +12,7 @@ class InvoiceTest < ActiveSupport::TestCase
       due_on: Date.current + 30
     )
 
-    assert_equal "INV-0001", invoice.invoice_number
-  end
-
-  test "increments invoice number sequentially" do
-    account = accounts(:one)
-    client = clients(:one)
-
-    first = account.invoices.create!(
-      client: client,
-      issued_on: Date.current,
-      due_on: Date.current + 30
-    )
-
-    second = account.invoices.create!(
-      client: client,
-      issued_on: Date.current,
-      due_on: Date.current + 30
-    )
-
-    assert_equal "INV-0001", first.invoice_number
-    assert_equal "INV-0002", second.invoice_number
+    assert_nil invoice.invoice_number
   end
 
   test "computes subtotal, vat_total and total from line items" do
@@ -134,7 +114,8 @@ class InvoiceTest < ActiveSupport::TestCase
       client: clients(:one),
       issued_on: Date.current - 30,
       due_on: Date.current - 1,
-      status: :sent
+      status: :sent,
+      invoice_number: "INV-0001"
     )
 
     assert invoice.overdue?
@@ -146,7 +127,8 @@ class InvoiceTest < ActiveSupport::TestCase
       client: clients(:one),
       issued_on: Date.current,
       due_on: Date.current + 30,
-      status: :sent
+      status: :sent,
+      invoice_number: "INV-0002"
     )
 
     assert_not invoice.overdue?
@@ -155,7 +137,7 @@ class InvoiceTest < ActiveSupport::TestCase
 
   test "overdue? is false for draft and paid invoices regardless of due date" do
     draft = accounts(:one).invoices.create!(client: clients(:one), issued_on: Date.current - 30, due_on: Date.current - 1, status: :draft)
-    paid = accounts(:one).invoices.create!(client: clients(:one), issued_on: Date.current - 30, due_on: Date.current - 1, status: :paid)
+    paid = accounts(:one).invoices.create!(client: clients(:one), issued_on: Date.current - 30, due_on: Date.current - 1, status: :paid, invoice_number: "INV-0003")
 
     assert_not draft.overdue?
     assert_not paid.overdue?

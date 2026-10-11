@@ -55,7 +55,7 @@
     </header>
 
     <div class="invoice-heading">
-      <h1><%= @invoice.invoice_number %></h1>
+      <h1><%= invoice_number_or_draft(@invoice) %></h1>
       <span class="badge" data-status="<%= @invoice.display_status %>"><%= @invoice.display_status.humanize %></span>
     </div>
 

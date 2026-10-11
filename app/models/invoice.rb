@@ -12,12 +12,12 @@ class Invoice < ApplicationRecord
 
   enum :status, { draft: 0, sent: 1, paid: 2, void: 3 }, default: :draft
 
-  validates :invoice_number, presence: true
+  # Drafts carry no number until sent (so deleting a draft can't leave a gap);
+  # sent/paid/void invoices must have one. Assigned in InvoiceSender.
+  validates :invoice_number, presence: true, unless: :draft?
   validates :issued_on, presence: true
   validates :due_on, presence: true
   validate :client_belongs_to_account
-
-  before_validation :generate_invoice_number, on: :create
 
   # Pure calculation methods — no DB writes. Computed in Ruby over the line
   # items (not SQL SUM), so amounts reconcile to the cent exactly. SQLite has no
@@ -71,24 +71,5 @@ class Invoice < ApplicationRecord
   def client_belongs_to_account
     return unless client && account_id
     errors.add(:client, "must belong to your account") unless client.account_id == account_id
-  end
-
-  def generate_invoice_number
-    return if invoice_number.present?
-
-    account.with_lock do
-      last_number = account.invoices
-        .pluck(:invoice_number)
-        .compact
-        .max_by { |n| n[/\d+/].to_i }
-
-      next_sequence = if last_number
-        last_number[/\d+/].to_i + 1
-      else
-        1
-      end
-
-      self.invoice_number = "#{account.invoice_prefix}-#{next_sequence.to_s.rjust(account.invoice_number_padding, "0")}"
-    end
   end
 end

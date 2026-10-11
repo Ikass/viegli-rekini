@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_27_121919) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
   create_table "accounts", force: :cascade do |t|
     t.string "address"
     t.string "bank_account"
@@ -54,12 +54,22 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_121919) do
     t.check_constraint "vat_regime IN (0, 1, 2)", name: "clients_vat_regime_check"
   end
 
+  create_table "invoice_sequences", force: :cascade do |t|
+    t.integer "account_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "last_number", default: 1, null: false
+    t.string "scope", default: "default", null: false
+    t.datetime "updated_at", null: false
+    t.index ["account_id", "scope"], name: "index_invoice_sequences_on_account_id_and_scope", unique: true
+    t.index ["account_id"], name: "index_invoice_sequences_on_account_id"
+  end
+
   create_table "invoices", force: :cascade do |t|
     t.integer "account_id", null: false
     t.integer "client_id", null: false
     t.datetime "created_at", null: false
     t.date "due_on", null: false
-    t.string "invoice_number", null: false
+    t.string "invoice_number"
     t.date "issued_on", null: false
     t.text "notes"
     t.datetime "paid_at"
@@ -120,6 +130,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_27_121919) do
   end
 
   add_foreign_key "clients", "accounts"
+  add_foreign_key "invoice_sequences", "accounts"
   add_foreign_key "invoices", "accounts"
   add_foreign_key "invoices", "clients"
   add_foreign_key "line_items", "invoices"

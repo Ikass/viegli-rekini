@@ -21,15 +21,15 @@
 - Repo + local folder renamed to `viegli-rekini`.
 - VAT/money correctness: per-category VAT (EN 16931 BR-CO-17), Ruby/BigDecimal totals (no SQL
   `SUM`), line net rounds half-up; `Invoice#vat_breakdown` single source for UBL + print.
+- Invoice numbering: dedicated `InvoiceSequence` counter table (atomic upsert `RETURNING`), numbers
+  assigned **at send** (drafts unnumbered → gapless), O(1), no digit-prefix parsing.
 
 ## Known issues
 
 - Dashboard `@overdue_invoices` mislabels draft/sent as "overdue".
-- Invoice numbering uses `pluck`+`max` (O(n)) with a digit-prefix bug (`n[/\d+/]`); counter-table fix planned.
 
 ## Next (planned)
 
-- Fix 1 — invoice-numbering counter table (numbers assigned at send, gapless).
 - `MoneyAmount` VO (optional; per-category VAT + Ruby sum done).
 - README rewrite (portfolio-facing) before making the repo public.
 - Backups: Litestream → R2 (interim `sqlite3 .backup`).
