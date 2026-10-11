@@ -1,9 +1,9 @@
 # Active Context — Viegli-Rēķini
 
 ## Current work
-Invoice-numbering fix done on `main` (dedicated `InvoiceSequence` counter table, numbers assigned
-**at send** — drafts unnumbered → gapless; see `recipes/invoice-number-sequences.md`). Both
-CV-critical fixes (money rounding + numbering) now shipped. Next: README rewrite before going public.
+Both CV-critical fixes (VAT rounding + invoice numbering) and the flaky system-test hardening are
+done, committed, and pushed — GitHub CI is fully green (test, system-test, lint, scan_ruby, scan_js).
+Next: README rewrite (portfolio-facing) before making the repo public.
 
 ## State
 - Live: HTTPS via Kamal proxy, `/up` healthy, unauth → login. Demo tenant seeded.
@@ -11,7 +11,7 @@ CV-critical fixes (money rounding + numbering) now shipped. Next: README rewrite
 - Secrets: GHCR classic PAT at `~/.config/viegli-rekini/ghcr-token`; master key + PAT in
   Bitwarden (both recreated on this machine 2026-10-11). `.kamal/secrets` reads via `$(cat …)`.
 - Deploy runbook: `agents/docs/notes/kamal-ovh-deploy.md`. Recurring command: `bin/kamal deploy`.
-- Tests: 162 unit + 4 system green; Brakeman 0; bundler-audit + importmap audit clean.
+- Tests: 162 unit + 4 system green; Brakeman 0; bundler-audit + importmap audit clean; CI green on main.
 
 ## Next
 - `MoneyAmount` VO (optional cleanup; per-category VAT + Ruby sum already shipped).

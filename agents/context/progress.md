@@ -23,6 +23,8 @@
   `SUM`), line net rounds half-up; `Invoice#vat_breakdown` single source for UBL + print.
 - Invoice numbering: dedicated `InvoiceSequence` counter table (atomic upsert `RETURNING`), numbers
   assigned **at send** (drafts unnumbered → gapless), O(1), no digit-prefix parsing.
+- System-test hardening: `send_invoice_via_js` replaces the flaky `click_button "Send invoice"`
+  (Turbo interception), status asserted via `data-status`; GitHub CI fully green.
 
 ## Known issues
 

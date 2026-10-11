@@ -66,6 +66,15 @@ replacement before you hit it mid-session.
 **Why it matters:** Stimulus elements can carry multiple controllers; exact-match selectors
 silently target nothing.
 
+### `form.submit()` skips Turbo's interceptor in system tests
+Turbo's form interceptor listens for the `submit` event, but the legacy `HTMLFormElement#submit()`
+doesn't fire it — so JS `form.submit()` navigates natively and is reliable in headless Chrome,
+where `click_button` + Turbo fetch flake. Also: don't assert on CSS-`text-transform`ed text
+(`assert_text "SENT"` when the DOM says "Sent"); assert on a `data-status` attribute instead.
+**Why it matters:** in Rails system tests, submit forms via `form.submit()` in `execute_script`
+(with any `commit` param injected as a hidden input), and drive assertions off real attributes
+rather than CSS-presentation text.
+
 ## Frontend & CSS
 
 ### Unlayered CSS beats the layered design system
