@@ -50,8 +50,9 @@
 - **A1** *(S)* Remove `SOLID_QUEUE_IN_PUMA: true` from `config/deploy.yml`; comment out the
   `plugin :solid_queue` line in `config/puma.rb`. Without this, Puma fails to boot (the gem is
   not in the bundle). **Done:** `bin/docker-entrypoint` boots Puma in a fresh container.
-- **A2** *(S)* Configure `config/deploy.yml`: real server IP, `image: ghcr.io/ikass/viegli-rekini`,
-  GHCR registry + `KAMAL_REGISTRY_PASSWORD` secret, keep `volumes: viegli_rekini_storage:/rails/storage`,
+- **A2** *(S)* Configure `config/deploy.yml`: real server IP, `image: ikass/viegli-rekini` (no host —
+  Kamal prefixes `registry.server`), GHCR registry + `KAMAL_REGISTRY_PASSWORD` secret,
+  keep `volumes: viegli_rekini_storage:/rails/storage`,
   `RAILS_MASTER_KEY`, `proxy: { ssl: true, host: viegli-rekini.lv }`. **Done:** `kamal setup` succeeds.
 - **A3** *(S)* `config/environments/production.rb`: set `config.hosts = ["viegli-rekini.lv"]`,
   `config.assume_ssl = true`, `config.force_ssl = true` (exclude `/up`). **Done:** HTTPS works.

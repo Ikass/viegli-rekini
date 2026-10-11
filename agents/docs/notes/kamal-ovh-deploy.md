@@ -66,7 +66,9 @@ bin/kamal app exec -i bin/rails db:seed   # seed the demo tenant (idempotent) �
 `config/deploy.yml`:
 
 - `ssh: { user: ubuntu }` — OVH Ubuntu VPSs disable root SSH.
-- `image: ghcr.io/ikass/viegli-rekini` (lowercase), registry `ghcr.io`, user `Ikass`.
+- `image: ikass/viegli-rekini` (lowercase, no host), registry `ghcr.io`, user `Ikass`.
+  Kamal builds `<server>/<image>` = `ghcr.io/ikass/viegli-rekini`. Putting the host in `image:`
+  doubles it to `ghcr.io/ghcr.io/…`.
 - `proxy: { ssl: true, host: viegli-rekini.lv }` — HTTPS via kamal-proxy / Let's Encrypt.
 - `volumes: ["viegli_rekini_storage:/rails/storage"]` — this volume is where
   `storage/production.sqlite3` lives, so **the DB persists across deploys**.

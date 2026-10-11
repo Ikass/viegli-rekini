@@ -1,9 +1,10 @@
 # Name of your application. Used to uniquely configure containers.
 service: viegli_rekini
 
-# Name of the container image (use your-user/app-name on external registries).
-# GHCR requires the full lowercase path.
-image: ghcr.io/ikass/viegli-rekini
+# Name of the container image. Kamal prefixes this with `registry.server`,
+# so give just `user/repo` (no host) — a host here produces a doubled
+# `ghcr.io/ghcr.io/...` path.
+image: ikass/viegli-rekini
 
 # Deploy to these servers.
 servers:
