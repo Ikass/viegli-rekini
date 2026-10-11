@@ -1,7 +1,9 @@
 # Money calculations (recipe)
 
-> **Status:** decided direction, not yet built. Do this when building the UBL 2.1 e-invoice XML
-> (exact cents become a hard requirement), not as isolated churn today.
+> **Status:** decided direction. **As built (2026-10-11):** the consolidation and per-category
+> VAT rounding shipped (see `notes/audit-findings.md` §2/§5) — `Invoice` computes totals in Ruby
+> (`vat_breakdown`, `subtotal`, `vat_total`, `total`), and `UblInvoiceBuilder` + `_document.html.erb`
+> read from it. The `MoneyAmount` value object (item 3 below) is still deferred.
 
 ## Why this exists
 

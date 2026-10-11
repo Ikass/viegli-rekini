@@ -203,6 +203,18 @@ class LineItemTest < ActiveSupport::TestCase
     assert_equal 15_000, item.subtotal
   end
 
+  test "subtotal rounds fractional cents half-up" do
+    item = @invoice.line_items.create!(
+      description: "Test",
+      quantity: 1.5,
+      unit_code: "C62",
+      unit_price_cents: 333,
+      tax_category_code: "S",
+      vat_rate: 21
+    )
+    assert_equal 500, item.subtotal
+  end
+
   test "vat_amount calculates subtotal × vat_rate / 100" do
     item = @invoice.line_items.create!(
       description: "Test",

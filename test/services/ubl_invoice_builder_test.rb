@@ -97,6 +97,28 @@ class UblInvoiceBuilderTest < ActiveSupport::TestCase
     assert_equal "233.00", text("//LegalMonetaryTotal/PayableAmount")
   end
 
+  test "rounds VAT once per category, not per line" do
+    invoice = @account.invoices.create!(
+      client: @client,
+      invoice_number: "INV-UBL2",
+      issued_on: Date.new(2026, 10, 1),
+      due_on: Date.new(2026, 10, 15)
+    )
+    3.times do
+      invoice.line_items.create!(description: "1c line", quantity: 1, unit_code: "C62", unit_price_cents: 1, tax_category_code: "S", vat_rate: 21)
+    end
+
+    builder = UblInvoiceBuilder.new(invoice)
+    doc = Nokogiri::XML(builder.to_xml)
+    doc.remove_namespaces!
+
+    assert_equal "0.03", doc.at_xpath("//TaxSubtotal/TaxableAmount").text
+    assert_equal "0.01", doc.at_xpath("//TaxSubtotal/TaxAmount").text
+    assert_equal "0.01", doc.at_xpath("//TaxTotal/TaxAmount").text
+    assert_equal "0.04", doc.at_xpath("//LegalMonetaryTotal/TaxInclusiveAmount").text
+    assert_equal "0.04", doc.at_xpath("//LegalMonetaryTotal/PayableAmount").text
+  end
+
   test "separates the VATable amounts by rate" do
     subtotals = nodes("//TaxSubtotal")
 

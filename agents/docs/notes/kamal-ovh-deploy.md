@@ -50,6 +50,9 @@ value ever enters the repo):
 
 ## Commands
 
+> After the one-time setup below, `bin/kamal deploy` is the **only** command you run per deploy.
+> The secrets, docker group, and daemon are one-time per machine — nothing else needs re-running.
+
 ```bash
 bin/kamal setup    # first time only — installs Docker on server, creates volume, loads secrets
 bin/kamal deploy   # build locally → push to ghcr.io → pull + boot on server

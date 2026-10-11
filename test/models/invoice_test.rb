@@ -35,6 +35,45 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "INV-0002", second.invoice_number
   end
 
+  test "computes subtotal, vat_total and total from line items" do
+    invoice = accounts(:one).invoices.create!(client: clients(:one), issued_on: Date.current, due_on: Date.current + 30)
+    invoice.line_items.create!(description: "A", quantity: 2, unit_code: "C62", unit_price_cents: 10_000, tax_category_code: "S", vat_rate: 21)
+    invoice.line_items.create!(description: "B", quantity: 1, unit_code: "C62", unit_price_cents: 5_000, tax_category_code: "S", vat_rate: 21)
+
+    assert_equal 25_000, invoice.subtotal
+    assert_equal 5_250, invoice.vat_total
+    assert_equal 30_250, invoice.total
+  end
+
+  test "rounds VAT once per category, not per line" do
+    invoice = accounts(:one).invoices.create!(client: clients(:one), issued_on: Date.current, due_on: Date.current + 30)
+    3.times do
+      invoice.line_items.create!(description: "1c line", quantity: 1, unit_code: "C62", unit_price_cents: 1, tax_category_code: "S", vat_rate: 21)
+    end
+
+    # Per-line VAT would be round(1 * 0.21) = 0 three times = 0; EN 16931 rounds
+    # the category total once: round(3 * 0.21) = 1.
+    assert_equal 3, invoice.subtotal
+    assert_equal 1, invoice.vat_total
+    assert_equal 4, invoice.total
+  end
+
+  test "breaks down VAT by category and rate, mapping reduced rates to S" do
+    invoice = accounts(:one).invoices.create!(client: clients(:one), issued_on: Date.current, due_on: Date.current + 30)
+    invoice.line_items.create!(description: "Standard", quantity: 1, unit_code: "C62", unit_price_cents: 10_000, tax_category_code: "S", vat_rate: 21)
+    invoice.line_items.create!(description: "Reduced", quantity: 1, unit_code: "C62", unit_price_cents: 10_000, tax_category_code: "S12", vat_rate: 12)
+
+    breakdown = invoice.vat_breakdown
+
+    assert_equal 2, breakdown.size
+    assert_equal %w[S S], breakdown.keys.map(&:first)
+    assert_equal [ 10_000, 10_000 ], breakdown.values.map { |g| g[:taxable_cents] }
+    assert_equal [ 2100, 1200 ], breakdown.values.map { |g| g[:vat_cents] }
+    assert_equal 20_000, invoice.subtotal
+    assert_equal 3300, invoice.vat_total
+    assert_equal 23_300, invoice.total
+  end
+
   test "vat_regime_note returns nil when issuer has no VAT number" do
     account = accounts(:one)
     client = clients(:one)

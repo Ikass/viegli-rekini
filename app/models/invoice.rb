@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class Invoice < ApplicationRecord
+  include InvoiceCodes
+  include MoneyRounding
+
   belongs_to :account
   belongs_to :client
   has_many :line_items, -> { order(:position) }, dependent: :destroy
@@ -16,18 +19,34 @@ class Invoice < ApplicationRecord
 
   before_validation :generate_invoice_number, on: :create
 
-  # Pure calculation methods — no DB writes.
-  # Use SQL SUM so calculations happen in the database, not in Ruby.
+  # Pure calculation methods — no DB writes. Computed in Ruby over the line
+  # items (not SQL SUM), so amounts reconcile to the cent exactly. SQLite has no
+  # true decimal type, so SQL SUM/ROUND would be floating-point; Ruby/BigDecimal
+  # is exact. Accepts loading line items per invoice (not throughput-bound).
   def subtotal
-    line_items.sum("quantity * unit_price_cents")
+    line_items.sum(&:subtotal)
   end
 
   def vat_total
-    line_items.sum("ROUND(quantity * unit_price_cents * vat_rate / 100)")
+    vat_breakdown.values.sum { |group| group[:vat_cents] }
   end
 
   def total
     subtotal + vat_total
+  end
+
+  # EN 16931 VAT breakdown: one group per [tax_category (mapped UNCL5305), rate].
+  # VAT is rounded ONCE per category (round(Σ line net × rate / 100)), never
+  # summed from per-line rounding — that would drift a cent (BR-CO-17/14).
+  # Returns { [category, rate] => { taxable_cents:, vat_cents: } }.
+  def vat_breakdown
+    line_items.select { |item| item.vat_rate.present? }
+      .group_by { |item| [ tax_category_for(item.tax_category_code), item.vat_rate ] }
+      .to_h do |(category, rate), items|
+        taxable_cents = items.sum(&:subtotal)
+        vat_cents = round_half_up_to_cent(taxable_cents * rate / 100)
+        [ [ category, rate ], { taxable_cents: taxable_cents, vat_cents: vat_cents } ]
+      end
   end
 
   def vat_regime_note

@@ -2,7 +2,7 @@
 
 <% account = invoice.account %>
 <% client = invoice.client %>
-<% items_by_rate = invoice.line_items.group_by(&:vat_rate) %>
+<% vat_breakdown = invoice.vat_breakdown %>
 
 <div class="invoice-doc">
   <div class="invoice-header">
@@ -85,11 +85,11 @@
   </table>
 
   <dl class="totals">
-    <% items_by_rate.each do |rate, items| %>
+    <% vat_breakdown.each do |(_category, rate), group| %>
       <dt>Taxable (VAT <%= vat_rate_percentage(rate) %>)</dt>
-      <dd class="numeric"><%= number_to_currency(items.sum(&:subtotal) / 100.0, unit: "€") %></dd>
+      <dd class="numeric"><%= number_to_currency(group[:taxable_cents] / 100.0, unit: "€") %></dd>
       <dt>VAT <%= vat_rate_percentage(rate) %></dt>
-      <dd class="numeric"><%= number_to_currency(items.sum(&:vat_amount) / 100.0, unit: "€") %></dd>
+      <dd class="numeric"><%= number_to_currency(group[:vat_cents] / 100.0, unit: "€") %></dd>
     <% end %>
     <dt class="total-row">Total</dt>
     <dd class="total-row numeric"><%= number_to_currency(invoice.total / 100.0, unit: "€") %></dd>

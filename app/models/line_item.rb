@@ -2,6 +2,7 @@
 
 class LineItem < ApplicationRecord
   include InvoiceCodes
+  include MoneyRounding
 
   belongs_to :invoice
 
@@ -30,14 +31,22 @@ class LineItem < ApplicationRecord
     end
   end
 
-  # Subtotal in cents: quantity × unit price.
+  # Line net in cents: quantity × unit price, rounded half-up to the nearest
+  # cent (EN 16931 rounds line net to two decimals). quantity is decimal, so a
+  # fractional quantity × an odd price can produce a fractional cent.
+  # Returns 0 for an incomplete (unsaved) line item so form renders don't blow up.
   def subtotal
-    (quantity * unit_price_cents).to_i
+    return 0 if quantity.nil? || unit_price_cents.nil?
+
+    round_half_up_to_cent(quantity * unit_price_cents)
   end
 
-  # VAT amount in cents.
+  # VAT amount in cents, per line. Display-only: the invoice-level VAT is
+  # computed once per category (see Invoice#vat_breakdown), not summed from this.
   def vat_amount
-    (subtotal * vat_rate / 100).round
+    return 0 if vat_rate.nil?
+
+    round_half_up_to_cent(subtotal * vat_rate / 100)
   end
 
   # Line total including VAT.

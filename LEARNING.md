@@ -107,3 +107,10 @@ Output targets `CustomizationID urn:cen.eu:en16931:2017`. PEPPOL BIS 3.0 makes s
 `cbc:EndpointID` + EAS `@schemeID` mandatory (fatal rule `PEPPOL-EN16931-R010`).
 **Why it matters:** don't emit a profile your data can't satisfy. Ship the achievable profile;
 add the stricter one when the data exists.
+
+### Round VAT once per category, not per line
+EN 16931 (BR-CO-17/14) defines VAT per category: `round(Σ line net × rate / 100)`, summed across
+categories. Summing per-line-rounded VAT drifts a cent, which a validator rejects.
+**Why it matters:** structured e-invoices reconcile the VAT breakdown to the cent. Round at the
+aggregate (category) level and make that breakdown the single source both the XML and the print
+view read from.

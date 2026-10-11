@@ -30,15 +30,7 @@ class UblInvoiceBuilder
   # Internal tax-category codes → UNCL5305 codes. The app uses "S12"/"S5" as
   # internal reduced-rate markers; UNCL5305 calls all of these "S", carrying the
   # actual rate in Percent (BT-118).
-  TAX_CATEGORY_MAP = {
-    "S" => "S",
-    "S12" => "S",
-    "S5" => "S",
-    "Z" => "Z",
-    "E" => "E",
-    "AE" => "AE",
-    "G" => "G"
-  }.freeze
+  # Mapping now lives in InvoiceCodes#tax_category_for (single source of truth).
 
   def initialize(invoice)
     @invoice = invoice
@@ -180,12 +172,12 @@ class UblInvoiceBuilder
 
   def tax_total(xml)
     xml.tag!("cac:TaxTotal") do
-      xml.tag!("cbc:TaxAmount", amount(vat_total_cents), "currencyID" => CURRENCY)
+      xml.tag!("cbc:TaxAmount", amount(@invoice.vat_total), "currencyID" => CURRENCY)
 
-      tax_groups.each do |(category, rate), items|
+      @invoice.vat_breakdown.each do |(category, rate), group|
         xml.tag!("cac:TaxSubtotal") do
-          xml.tag!("cbc:TaxableAmount", amount(items.sum(&:subtotal)), "currencyID" => CURRENCY)
-          xml.tag!("cbc:TaxAmount", amount(items.sum(&:vat_amount)), "currencyID" => CURRENCY)
+          xml.tag!("cbc:TaxableAmount", amount(group[:taxable_cents]), "currencyID" => CURRENCY)
+          xml.tag!("cbc:TaxAmount", amount(group[:vat_cents]), "currencyID" => CURRENCY)
           xml.tag!("cac:TaxCategory") do
             xml.tag!("cbc:ID", category)
             xml.tag!("cbc:Percent", decimal(rate))
@@ -198,10 +190,10 @@ class UblInvoiceBuilder
 
   def legal_monetary_total(xml)
     xml.tag!("cac:LegalMonetaryTotal") do
-      xml.tag!("cbc:LineExtensionAmount", amount(subtotal_cents), "currencyID" => CURRENCY)
-      xml.tag!("cbc:TaxExclusiveAmount", amount(subtotal_cents), "currencyID" => CURRENCY)
-      xml.tag!("cbc:TaxInclusiveAmount", amount(total_cents), "currencyID" => CURRENCY)
-      xml.tag!("cbc:PayableAmount", amount(total_cents), "currencyID" => CURRENCY)
+      xml.tag!("cbc:LineExtensionAmount", amount(@invoice.subtotal), "currencyID" => CURRENCY)
+      xml.tag!("cbc:TaxExclusiveAmount", amount(@invoice.subtotal), "currencyID" => CURRENCY)
+      xml.tag!("cbc:TaxInclusiveAmount", amount(@invoice.total), "currencyID" => CURRENCY)
+      xml.tag!("cbc:PayableAmount", amount(@invoice.total), "currencyID" => CURRENCY)
     end
   end
 
@@ -214,7 +206,7 @@ class UblInvoiceBuilder
       xml.tag!("cac:Item") do
         xml.tag!("cbc:Name", item.description)
         xml.tag!("cac:ClassifiedTaxCategory") do
-          xml.tag!("cbc:ID", tax_category_for(item))
+          xml.tag!("cbc:ID", InvoiceCodes.tax_category_for(item.tax_category_code))
           xml.tag!("cbc:Percent", decimal(item.vat_rate))
           tax_scheme(xml)
         end
@@ -232,29 +224,9 @@ class UblInvoiceBuilder
     end
   end
 
-  def tax_groups
-    @invoice.line_items.group_by { |item| [ tax_category_for(item), item.vat_rate ] }
-  end
-
-  def tax_category_for(item)
-    TAX_CATEGORY_MAP.fetch(item.tax_category_code, item.tax_category_code)
-  end
-
-  # Amounts are derived from the line items in Ruby (integer cents), not the
-  # SQL-SUM path on Invoice — floating-point SQLite arithmetic is not exact
-  # enough for a document that must reconcile to the cent.
-  # See agents/docs/recipes/money-calculations.md.
-  def subtotal_cents
-    @invoice.line_items.sum(&:subtotal)
-  end
-
-  def vat_total_cents
-    @invoice.line_items.sum(&:vat_amount)
-  end
-
-  def total_cents
-    subtotal_cents + vat_total_cents
-  end
+  # Amounts are read from Invoice#subtotal/vat_total/total, which compute in
+  # Ruby over the line items (integer cents) — the single source of truth. See
+  # agents/docs/recipes/money-calculations.md.
 
   # Integer cents → exact decimal string ("123.45"), never float arithmetic.
   def amount(cents)

@@ -39,4 +39,24 @@ module InvoiceCodes
     "AE" => "0% (AE)",
     "G" => "0% (G)"
   }.freeze
+
+  # Internal tax-category codes → UNCL5305 codes. The app uses "S12"/"S5" as
+  # internal reduced-rate markers; UNCL5305 calls all of these "S", carrying the
+  # actual rate in Percent. Single source of truth for the UBL builder and the
+  # invoice-level VAT breakdown.
+  TAX_CATEGORY_MAP = {
+    "S" => "S",
+    "S12" => "S",
+    "S5" => "S",
+    "Z" => "Z",
+    "E" => "E",
+    "AE" => "AE",
+    "G" => "G"
+  }.freeze
+
+  module_function
+
+  def tax_category_for(code)
+    TAX_CATEGORY_MAP.fetch(code, code)
+  end
 end

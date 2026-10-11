@@ -1,24 +1,22 @@
 # Active Context — Viegli-Rēķini
 
 ## Current work
-Deploy phase — **live at https://viegli-rekini.lv** (first deploy 2026-10-09). Deploy blockers,
-repo rename, demo account, brand rename, dark-mode invoice fix, and the secrets scan are all done
-on `main`. Next: the two fix branches, then the README rewrite before making the repo public.
+VAT/money rounding fix done on `main` (per-category VAT per EN 16931 BR-CO-17, single Ruby
+source of truth — see `notes/audit-findings.md` §2/§5 and `recipes/money-calculations.md`).
+Repo + local folder renamed to `viegli-rekini`; deployed live. Next: invoice-numbering fix,
+then the README rewrite before going public.
 
 ## State
-- Live: HTTPS via Kamal proxy, `/up` healthy, unauth → login. Demo tenant seeded (run
-  `bin/kamal app exec -i bin/rails db:seed` if resetting).
-- Secrets: GHCR classic PAT at `~/.config/viegli-rekini/ghcr-token` (per-machine, out of repo);
-  master key + PAT in Bitwarden. `.kamal/secrets` reads the token via `$(cat …)` — dotenv, so no
-  `${VAR:-default}`.
-- Secrets scan (gitleaks): clean — no leaks across full git history; no rewrite needed.
-- Deploy runbook: `agents/docs/notes/kamal-ovh-deploy.md`.
-- Tests: 150 unit + 4 system green. Brakeman 0 warnings. CI present.
+- Live: HTTPS via Kamal proxy, `/up` healthy, unauth → login. Demo tenant seeded.
+- Repo: GitHub `Ikass/viegli-rekini`; local `/home/reinis/Projects/viegli-rekini`.
+- Secrets: GHCR classic PAT at `~/.config/viegli-rekini/ghcr-token`; master key + PAT in
+  Bitwarden (both recreated on this machine 2026-10-11). `.kamal/secrets` reads via `$(cat …)`.
+- Deploy runbook: `agents/docs/notes/kamal-ovh-deploy.md`. Recurring command: `bin/kamal deploy`.
+- Tests: 155 unit + 4 system green; Brakeman 0; bundler-audit + importmap audit clean.
 
 ## Next
-- **Mobile layout fix (next session):** `overflow-x: hidden` on the app shell + auto-hide the sidebar on small viewports.
 - Fix 1 (`fix/invoice-numbering`): counter table, numbers assigned at send, gapless.
-- Fix 2 (`fix/money-rounding`): `MoneyAmount` VO, VAT per rate/category (BR-CO-17), delete SQL SUM.
+- `MoneyAmount` VO (optional cleanup; per-category VAT + Ruby sum already shipped).
 - README rewrite (portfolio-facing) before repo goes public.
 - Backups (Litestream → R2) still pending.
 
@@ -28,5 +26,6 @@ on `main`. Next: the two fix branches, then the README rewrite before making the
 - PDF deferred (print view only, button hidden); email off (forgot-password hidden).
 - Numbering: number assigned **at send**, not draft (drafts unnumbered → gapless); counter table
   = robustness refactor, not "fixing a race" (SQLite has no row locks — `notes/audit-findings.md`).
-- Money/VAT: **per rate/category, rounded once** (EN 16931 BR-CO-17), not sum-of-per-line.
+- Money/VAT: **per category, rounded once** (EN 16931 BR-CO-17) — done; `LineItem#subtotal` rounds
+  half-up; `Invoice#vat_breakdown` is the single source for UBL + print.
 - Solid Queue/Cache still deferred; prod `:async` + `:memory_store`.

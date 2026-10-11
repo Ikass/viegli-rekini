@@ -87,6 +87,10 @@ Say "robustness refactor", never "fixing a race".
 
 ## 2. EN 16931 VAT rounding is per *rate category*, not per line
 
+> **As built (2026-10-11):** `Invoice#vat_breakdown` now rounds VAT once per category and
+> `UblInvoiceBuilder` + `_document.html.erb` read from it; the SQL `SUM`/`ROUND` path is gone and
+> `LineItem#subtotal` rounds half-up. The `MoneyAmount` VO remains deferred.
+
 ### What I got wrong
 
 I initially said "line-level round-half-up, then sum" matches EN 16931. It does **not** — for VAT
@@ -179,6 +183,9 @@ independent of all the other "boring config" work. Fix: remove the env line and/
 ---
 
 ## 5. Money columns — where the float actually lives
+
+> **As built (2026-10-11):** the SQL `SUM`/`ROUND` float path is gone — `Invoice` computes in Ruby
+> over `LineItem` (BigDecimal/integer cents). Column types unchanged.
 
 - Prices are **integer cents** (`unit_price_cents`, `default_price_cents`) — exact, no problem.
 - `quantity` is `decimal(10,2)` and `vat_rate` is `decimal(5,2)`. SQLite has no true decimal type
