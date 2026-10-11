@@ -60,13 +60,13 @@ class InvoicesTest < ApplicationSystemTestCase
     assert_text "€181.50"
 
     # --- Send the invoice ---
-    click_button "Send invoice"
-    assert_text "SENT"
+    send_invoice_via_js
+    assert_selector "span.badge[data-status='sent']"
     assert_text "Record payment"
 
     # --- Record payment ---
     page.execute_script("document.querySelector('form.button_to[action*=\"invoice_payments\"]')?.submit()")
-    assert_text "PAID"
+    assert_selector "span.badge[data-status='paid']"
 
     # --- Visit print view ---
     click_link "Print"
@@ -87,10 +87,10 @@ class InvoicesTest < ApplicationSystemTestCase
     submit_via_native_form
     assert_text "Invoice created"
 
-    click_button "Send invoice"
-    assert_text "SENT"
+    send_invoice_via_js
+    assert_selector "span.badge[data-status='sent']"
 
     page.execute_script("document.querySelector('form.button_to[action*=\"invoice_voids\"]')?.submit()")
-    assert_text "VOID"
+    assert_selector "span.badge[data-status='void']"
   end
 end
