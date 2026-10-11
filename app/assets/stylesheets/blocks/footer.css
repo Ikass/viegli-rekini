@@ -10,6 +10,13 @@ footer {
   padding-block: var(--space-m);
 }
 
+/* Dev-facing footer sits under the fixed bottom tab bar on mobile */
+@media (width < 40rem) {
+  footer {
+    display: none;
+  }
+}
+
 footer .container {
   display: flex;
   align-items: center;

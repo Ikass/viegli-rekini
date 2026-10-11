@@ -92,4 +92,24 @@
     display: contents;
 }
 
+/* ── Mobile — smaller chrome, icon-only brand, wrap actions ── */
+
+@media (width < 40rem) {
+    .top-bar nav ul {
+        flex-wrap: wrap;
+    }
+
+    /* Icon-only brand: hide the wordmark, keep the icon as a link */
+    .top-bar-brand-text {
+        display: none;
+    }
+
+    /* Slightly smaller, tighter top-bar buttons */
+    .top-bar .button {
+        font-size: var(--step--2);
+        padding: var(--space-3xs) var(--space-xs);
+        gap: var(--space-2xs);
+    }
+}
+
 

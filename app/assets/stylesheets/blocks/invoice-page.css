@@ -40,6 +40,23 @@
   border-block-end: 1px solid var(--color-border);
 }
 
+/* ── Back link ─────────────────────────────────────────── */
+/* Inline-flex so the arrow icon and label centre on a shared
+   line instead of the icon sitting on the text baseline.    */
+
+.invoice-toolbar-back {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-size: var(--step--1);
+  color: var(--color-text-muted);
+  text-decoration: none;
+}
+
+.invoice-toolbar-back:hover {
+  color: var(--color-text);
+}
+
 /* ── Status heading ────────────────────────────────────── */
 /* Invoice number + status badge on one line.                */
 

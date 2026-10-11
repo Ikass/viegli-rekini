@@ -22,9 +22,9 @@
       <nav>
         <ul>
           <li class="top-bar-brand">
-            <strong><%= link_to root_path do %>
+            <strong><%= link_to root_path, aria: { label: ViegliRekini::Application::APP_NAME } do %>
               <%= tabler_icon("file-invoice", data: { size: "lg" }) %>
-              Viegli-Rēķini
+              <span class="top-bar-brand-text"><%= ViegliRekini::Application::APP_NAME %></span>
             <% end %></strong>
           </li>
           <% if authenticated? %>

@@ -135,3 +135,14 @@
   padding: var(--space-2xl);
   font-size: var(--step-0);
 }
+
+/* ── Responsive columns ─────────────────────────────────── */
+/* Mark low-priority <th>/<td> with .hide-mobile to drop them
+   below the mobile breakpoint so the table fits without
+   horizontal scrolling. Breakpoint matches layouts/grid.css. */
+
+@media (width < 40rem) {
+  .table .hide-mobile {
+    display: none;
+  }
+}

@@ -85,3 +85,42 @@
     min-width: 0;
     padding-block: var(--space-l);
 }
+
+/* ── Mobile — sidebar becomes a fixed bottom tab bar ─────── */
+/* Breakpoint matches layouts/grid.css (40rem = 640px).      */
+
+@media (width < 40rem) {
+    .app-layout {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        position: fixed;
+        inset-inline: 0;
+        inset-block-end: 0;
+        z-index: 90; /* below the top bar's z-100 */
+        flex: none;
+        border-inline-end: none;
+        border-block-start: 1px solid var(--color-border);
+        padding: var(--space-2xs) 0;
+        padding-block-end: calc(var(--space-2xs) + env(safe-area-inset-bottom));
+    }
+
+    .sidebar nav ul {
+        flex-direction: row;
+        justify-content: space-around;
+        gap: 0;
+    }
+
+    .sidebar nav a {
+        flex-direction: column;
+        gap: var(--space-3xs);
+        padding: var(--space-2xs) var(--space-s);
+        font-size: var(--step--2);
+    }
+
+    /* Keep content clear of the fixed bar */
+    .app-layout main {
+        padding-block-end: calc(var(--space-2xl) + env(safe-area-inset-bottom));
+    }
+}

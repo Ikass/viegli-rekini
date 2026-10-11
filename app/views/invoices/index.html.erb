@@ -19,8 +19,8 @@
             <tr>
               <th>Number</th>
               <th>Client</th>
-              <th>Issued</th>
-              <th>Due</th>
+              <th class="hide-mobile">Issued</th>
+              <th class="hide-mobile">Due</th>
               <th class="col-numeric">Total</th>
               <th>Status</th>
             </tr>
@@ -30,8 +30,8 @@
               <tr>
                 <td><%= link_to invoice.invoice_number, invoice_path(invoice) %></td>
                 <td><%= invoice.client.name %></td>
-                <td><%= invoice.issued_on %></td>
-                <td><%= invoice.due_on %></td>
+                <td class="hide-mobile"><%= invoice.issued_on %></td>
+                <td class="hide-mobile"><%= invoice.due_on %></td>
                 <td class="col-numeric"><%= number_to_currency(invoice.total / 100.0, unit: "€") %></td>
                 <td>
                   <span class="badge" data-status="<%= invoice.status %>">

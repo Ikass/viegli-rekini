@@ -14,9 +14,9 @@
       <thead>
         <tr>
           <th>Name</th>
-          <th>Company</th>
-          <th>Email</th>
-          <th>VAT number</th>
+          <th class="hide-mobile">Company</th>
+          <th class="hide-mobile">Email</th>
+          <th class="hide-mobile">VAT number</th>
           <th class="col-actions"></th>
         </tr>
       </thead>
@@ -24,9 +24,9 @@
         <% @clients.each do |client| %>
           <tr>
             <td><%= link_to client.name, client %></td>
-            <td><%= client.company_name %></td>
-            <td><%= client.email %></td>
-            <td><%= client.vat_number %></td>
+            <td class="hide-mobile"><%= client.company_name %></td>
+            <td class="hide-mobile"><%= client.email %></td>
+            <td class="hide-mobile"><%= client.vat_number %></td>
             <td class="col-actions">
               <%= link_to edit_client_path(client), class: "button", data: { size: "sm" } do %>
                 <%= tabler_icon("edit") %>

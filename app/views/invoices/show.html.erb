@@ -8,43 +8,42 @@
 
       <div class="cluster">
         <% unless @invoice.paid? || @invoice.void? %>
-          <%= link_to print_invoice_path(@invoice), target: "_blank", class: "button" do %>
+          <%= link_to print_invoice_path(@invoice), target: "_blank", class: "button", data: { size: "xs" } do %>
             <%= tabler_icon("printer") %>
             Print
           <% end %>
         <% end %>
 
         <% if @invoice.draft? %>
-          <%= button_tag name: "commit", value: "send", type: "submit", form: "invoice_form", class: "button", data: { variant: "primary" } do %>
+          <%= button_tag name: "commit", value: "send", type: "submit", form: "invoice_form", class: "button", data: { variant: "primary", size: "xs" } do %>
             <%= tabler_icon("send") %>
             Send invoice
           <% end %>
         <% elsif @invoice.sent? %>
-          <%= button_to invoice_invoice_payments_path(@invoice), method: :post, class: "button", data: { variant: "primary" } do %>
+          <%= button_to invoice_invoice_payments_path(@invoice), method: :post, class: "button", data: { variant: "primary", size: "xs" } do %>
             <%= tabler_icon("check") %>
             Record payment
           <% end %>
         <% else %>
-          <%= link_to print_invoice_path(@invoice), target: "_blank", class: "button", data: { variant: "primary" } do %>
+          <%= link_to print_invoice_path(@invoice), target: "_blank", class: "button", data: { variant: "primary", size: "xs" } do %>
             <%= tabler_icon("printer") %>
             Print
           <% end %>
         <% end %>
 
         <% unless @invoice.void? %>
-          <details class="overflow-menu">
-            <summary class="button">
+          <details class="overflow-menu" data-controller="overflow-menu" data-action="click@window->overflow-menu#close keydown@window->overflow-menu#closeOnEscape">
+            <summary class="button" data-size="xs" title="More" aria-label="More">
               <%= tabler_icon("dots-vertical") %>
-              More
             </summary>
             <div class="overflow-menu-content">
               <% if @invoice.draft? %>
-                <%= button_to invoice_path(@invoice), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Delete this draft? This cannot be undone." } } do %>
+                <%= button_to invoice_path(@invoice), method: :delete, class: "button", data: { variant: "danger", size: "xs" }, form: { data: { turbo_confirm: "Delete this draft? This cannot be undone." } } do %>
                   <%= tabler_icon("trash") %>
                   Delete draft
                 <% end %>
               <% else %>
-                <%= button_to invoice_invoice_voids_path(@invoice), method: :post, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Voiding keeps this invoice number reserved but marks it as cancelled. This can't be undone." } } do %>
+                <%= button_to invoice_invoice_voids_path(@invoice), method: :post, class: "button", data: { variant: "danger", size: "xs" }, form: { data: { turbo_confirm: "Voiding keeps this invoice number reserved but marks it as cancelled. This can't be undone." } } do %>
                   <%= tabler_icon("ban") %>
                   Void invoice
                 <% end %>
