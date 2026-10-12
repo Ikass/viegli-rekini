@@ -4,21 +4,21 @@
   <article class="card">
     <div class="kpi">
       <span class="kpi-label">Outstanding</span>
-      <span class="kpi-value"><%= number_to_currency(@outstanding_total / 100.0, unit: "€") %></span>
+      <span class="kpi-value" data-testid="kpi-outstanding"><%= number_to_currency(@outstanding_total / 100.0, unit: "€") %></span>
     </div>
   </article>
 
   <article class="card" data-variant="tinted" data-status="error">
     <div class="kpi">
       <span class="kpi-label">Overdue</span>
-      <span class="kpi-value"><%= number_to_currency(@overdue_total / 100.0, unit: "€") %></span>
+      <span class="kpi-value" data-testid="kpi-overdue"><%= number_to_currency(@overdue_total / 100.0, unit: "€") %></span>
     </div>
   </article>
 
   <article class="card">
     <div class="kpi">
       <span class="kpi-label">Paid (this month)</span>
-      <span class="kpi-value"><%= number_to_currency(@paid_total / 100.0, unit: "€") %></span>
+      <span class="kpi-value" data-testid="kpi-paid"><%= number_to_currency(@paid_total / 100.0, unit: "€") %></span>
     </div>
   </article>
 </div>
@@ -52,7 +52,7 @@
             <strong><%= invoice.client.name %></strong>
             <span>#<%= invoice.invoice_number %> · <%= number_to_currency(invoice.total / 100.0, unit: "€") %></span>
           </div>
-          <span class="badge" data-status="<%= invoice.status %>"><%= invoice.status.humanize %></span>
+          <span class="badge" data-status="<%= invoice.display_status %>"><%= invoice.display_status.humanize %></span>
         <% end %>
       <% end %>
     </div>

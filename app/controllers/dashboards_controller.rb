@@ -4,11 +4,12 @@ class DashboardsController < ApplicationController
   def show
     invoices = Current.user.account.invoices
 
-    @outstanding_total = invoices.where(status: [ :draft, :sent ])
+    # Outstanding = issued but unpaid (sent). Drafts aren't owed yet, so they
+    # don't count here or as overdue (mirrors Invoice#overdue?).
+    @outstanding_total = invoices.sent
                                  .sum { |invoice| invoice.total }
 
-    @overdue_invoices = invoices.where(status: [ :draft, :sent ])
-                                .where("due_on < ?", Date.current)
+    @overdue_invoices = invoices.overdue
     @overdue_count = @overdue_invoices.count
     @overdue_total = @overdue_invoices.sum(&:total)
 

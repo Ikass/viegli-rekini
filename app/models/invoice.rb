@@ -60,6 +60,9 @@ class Invoice < ApplicationRecord
     sent? && due_on < Date.current
   end
 
+  # DB-side mirror of #overdue? for querying (dashboard KPIs, future filters).
+  scope :overdue, -> { sent.where("due_on < ?", Date.current) }
+
   # The status to surface in the UI, collapsing the derived "overdue" condition
   # into the same vocabulary as the persisted enum (draft/sent/overdue/paid/void).
   def display_status

@@ -34,8 +34,8 @@
                 <td class="hide-mobile"><%= invoice.due_on %></td>
                 <td class="col-numeric"><%= number_to_currency(invoice.total / 100.0, unit: "€") %></td>
                 <td>
-                  <span class="badge" data-status="<%= invoice.status %>">
-                    <%= invoice.status.humanize %>
+                  <span class="badge" data-status="<%= invoice.display_status %>">
+                    <%= invoice.display_status.humanize %>
                   </span>
                 </td>
               </tr>

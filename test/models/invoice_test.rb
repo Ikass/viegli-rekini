@@ -144,4 +144,20 @@ class InvoiceTest < ActiveSupport::TestCase
     assert_equal "draft", draft.display_status
     assert_equal "paid", paid.display_status
   end
+
+  test "overdue scope includes sent past-due invoices only" do
+    sent_overdue = accounts(:one).invoices.create!(
+      client: clients(:one), issued_on: Date.current - 30, due_on: Date.current - 1,
+      status: :sent, invoice_number: "INV-0100"
+    )
+    accounts(:one).invoices.create!(
+      client: clients(:one), issued_on: Date.current - 30, due_on: Date.current - 1
+    ) # past-due draft must be excluded
+    accounts(:one).invoices.create!(
+      client: clients(:one), issued_on: Date.current, due_on: Date.current + 30,
+      status: :sent, invoice_number: "INV-0101"
+    ) # sent but not yet due
+
+    assert_equal [ sent_overdue ], accounts(:one).invoices.overdue.to_a
+  end
 end
