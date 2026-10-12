@@ -1,0 +1,7 @@
+<% token = Rails.application.credentials.dig(:cloudflare, :web_analytics_token) %>
+<% if Rails.env.production? && token.present? %>
+  <script type="module"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token": "<%= token %>"}'
+          data-turbo-eval="false"></script>
+<% end %>

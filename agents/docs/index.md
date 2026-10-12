@@ -31,8 +31,10 @@ The map for the `agents/docs/` tree. Read this first — a doc not listed here i
 ## Plans
 
 - `DEPLOY-PLAN.md` — portfolio-demo deploy plan: blockers, demo account, Fix 1 (numbering), Fix 2 (money), README, secrets scan.
+- `ANALYTICS-PLAN.md` — analytics/monitoring strategy: Cloudflare Web Analytics (built), Ahoy + Blazer, Sentry/GlitchTip, Mission Control, Uptime, Umami fallback, RentForge crossover.
 
 ## Notes (deep-dive explainers — read when you need to *understand*, not just follow)
 
 - `notes/audit-findings.md` — the deploy audit's hard-won details: SQLite has no row locks (`with_lock`/`lock!` is a no-op but `BEGIN IMMEDIATE` serializes writes anyway), EN 16931 VAT rounds per *rate category* (BR-CO-14/17), gapless numbering means drafts must not consume numbers, and the deferred Solid stack + the `SOLID_QUEUE_IN_PUMA` boot bug.
 - `notes/kamal-ovh-deploy.md` — OVH/Kamal deploy runbook: one-time prerequisites, commands, and the three gotchas that each cost a deploy iteration (empty `env/clear`, health-check host authorization, no backups).
+- `notes/cloudflare-web-analytics-setup.md` — Cloudflare Web Analytics beacon on the public login page only: where the snippet lives, why the `auth` layout isn't used, the credentials key, and the CSP/referrer caveats if CSP is ever enabled.

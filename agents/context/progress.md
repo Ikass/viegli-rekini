@@ -26,6 +26,8 @@
 - System-test hardening: `send_invoice_via_js` replaces the flaky `click_button "Send invoice"`
   (Turbo interception), status asserted via `data-status`; GitHub CI fully green.
 - Portfolio-facing README rewrite (live product framing, honest "not built" table).
+- Cloudflare Web Analytics on the public login page only (`/session/new`); strategy + follow-ups in
+  `agents/docs/ANALYTICS-PLAN.md`.
 
 ## Known issues
 
@@ -35,4 +37,5 @@
 
 - `MoneyAmount` VO (optional; per-category VAT + Ruby sum done).
 - Backups: Litestream → R2 (interim `sqlite3 .backup`).
+- Uptime check on `/up`; Ahoy + Blazer for in-app events (see `agents/docs/ANALYTICS-PLAN.md`).
 - Make the repo public.

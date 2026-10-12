@@ -1,0 +1,134 @@
+# Analytics & Monitoring Plan — Viegli-Rēķini
+
+> **Status:** planned 2026-10-12. Keep it simple: cookie-less, first-party where possible, no
+> invoice data in third-party tools. The Cloudflare Web Analytics layer is **built** (2026-10-12 —
+> see `notes/cloudflare-web-analytics-setup.md`); everything else below is planned.
+
+DNS is at nic.lv, so Cloudflare runs in manual-snippet mode with no DNS change.
+
+## Decisions
+
+| Layer | Tool | Where | Status |
+| --- | --- | --- | --- |
+| Public page traffic | Cloudflare Web Analytics (manual JS snippet) | Public/marketing layout only | **Built 2026-10-12** (see `notes/cloudflare-web-analytics-setup.md`) |
+| In-app product events | Ahoy + Blazer | Inside the app, primary SQLite DB | Next |
+| Error tracking | Sentry (EU region) or GlitchTip | App-wide | Next |
+| Background jobs | `mission_control-jobs` | `/admin`, behind admin auth | When PDF/XML generation moves to jobs |
+| Uptime | UptimeRobot or Better Stack on `/up` | External | Do now (5 minutes) |
+| Public page traffic (alternative) | Umami self-hosted via Kamal | Accessory on the VPS | Only if Cloudflare proves too limited |
+
+## 1. Cloudflare Web Analytics (public pages)
+
+- Free, no personal data collected, no hosting needed.
+- Currently fires on the public entry point only (`/session/new`), not the authenticated app.
+- Limits: no custom events, no UTM or query-string tracking, blocked by ad blockers, unsampled
+  data for 7 days then aggregated to about 10%, 6 months of history.
+- Implementation details are in `notes/cloudflare-web-analytics-setup.md`.
+
+## 2. Ahoy + Blazer (in-app product analytics)
+
+Purpose: measure activation, i.e. how fast a new user gets to a sent invoice. This is the evidence
+for the "ease of creating invoices" positioning and for the per-invoice pricing decision.
+
+Setup:
+- Gems: `ahoy_matey`, `blazer`. Run `rails g ahoy:install` and `rails g blazer:install`, then migrate.
+- `config/initializers/ahoy.rb`:
+  ```ruby
+  Ahoy.api = false
+  Ahoy.cookies = :none
+  Ahoy.mask_ips = true
+  Ahoy.server_side_visits = :when_needed
+  ```
+- Keep it in the primary SQLite DB at first so Blazer can join events to `users` and `invoices`.
+  Split to a second database (`connects_to` on `Ahoy::Visit` and `Ahoy::Event`) only if the table
+  grows large.
+- Mount Blazer at `/admin/blazer` behind the admin check or basic auth from env vars.
+
+Events (server-side, `ahoy.track "name", id: record.id`):
+- `signed_up`
+- `client_created`
+- `catalog_item_created`
+- `invoice_created`
+- `invoice_pdf_downloaded`
+- `invoice_sent`
+- `einvoice_xml_generated`
+
+Rules: IDs only in properties. No amounts, names, IBANs or VAT numbers.
+
+Starter Blazer queries:
+```sql
+-- Activation funnel, last 30 days
+SELECT name, COUNT(DISTINCT user_id) AS users
+FROM ahoy_events
+WHERE time > date('now','-30 days')
+GROUP BY name ORDER BY users DESC;
+
+-- Hours from signup to first invoice
+SELECT u.id,
+  ROUND((julianday(MIN(e.time)) - julianday(u.created_at)) * 24, 1) AS hours
+FROM users u
+JOIN ahoy_events e ON e.user_id = u.id AND e.name = 'invoice_created'
+GROUP BY u.id;
+```
+
+Privacy: mention first-party product analytics in the privacy policy.
+
+## 3. Error tracking
+
+- Sentry cloud (free tier, EU region) with `sentry-ruby` and `sentry-rails`.
+- Set `send_default_pii = false` and add parameter filtering so invoice data (IBANs, VAT numbers,
+  client names) never reaches error reports.
+- GlitchTip (self-hosted) is the alternative, but it means running another service.
+
+## 4. Solid Queue dashboard
+
+- Add `mission_control-jobs`, mounted under the admin namespace with auth.
+- Useful once PDF and XML generation run in the background and failed jobs need to be visible.
+
+## 5. Uptime
+
+- Free UptimeRobot or Better Stack check on Rails' `/up` endpoint, with email alerts.
+
+## 6. Umami (parked alternative)
+
+Use only if Cloudflare Web Analytics turns out too limited for the public pages.
+
+- Needs Postgres, so two Kamal accessories (`umami-db`, `umami`).
+- Sketch for `config/deploy.yml`:
+  ```yaml
+  accessories:
+    umami-db:
+      image: postgres:16
+      host: <VPS IP>
+      env:
+        clear:
+          POSTGRES_DB: umami
+          POSTGRES_USER: umami
+        secret:
+          - POSTGRES_PASSWORD
+      directories:
+        - umami-db:/var/lib/postgresql/data
+    umami:
+      image: ghcr.io/umami-software/umami:postgresql-latest
+      host: <VPS IP>
+      env:
+        secret:
+          - DATABASE_URL   # postgresql://umami:PASS@<service>-umami-db:5432/umami
+          - APP_SECRET
+      proxy:
+        host: stats.viegli-rekini.lv
+        app_port: 3000
+        ssl: true
+  ```
+- Add a DNS A record for `stats.viegli-rekini.lv` at nic.lv. Boot with
+  `kamal accessory boot umami-db umami`. Accessory `proxy:` needs a recent Kamal 2.x.
+- Change the default admin password immediately.
+- Check VPS RAM first: Umami plus Postgres needs roughly 300-500 MB.
+
+## Later: RentForge
+
+- RentForge's planned analytics (tied to form submissions, leads and scoring) can eventually replace
+  the public-page tracker, with viegli-rekini's landing page as a first real tenant. Swapping is a
+  one-line script change.
+- Uptime monitoring is also on the RentForge roadmap.
+- Ahoy/Blazer, error tracking and Mission Control stay per-app and are not RentForge features.
