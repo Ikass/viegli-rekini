@@ -30,6 +30,11 @@
         </div>
 
         <div class="field" style="margin-block-start: var(--space-s);">
+          <%= form.label :buyer_reference, "Buyer reference" %>
+          <%= form.text_field :buyer_reference, placeholder: "e.g. purchase order number (optional)" %>
+        </div>
+
+        <div class="field" style="margin-block-start: var(--space-s);">
           <%= form.label :notes %>
           <%= form.text_area :notes, rows: 3 %>
         </div>

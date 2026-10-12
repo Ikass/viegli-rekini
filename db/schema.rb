@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_12_120000) do
   create_table "accounts", force: :cascade do |t|
     t.string "address"
     t.string "bank_account"
@@ -66,6 +66,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_11_120000) do
 
   create_table "invoices", force: :cascade do |t|
     t.integer "account_id", null: false
+    t.string "buyer_reference"
     t.integer "client_id", null: false
     t.datetime "created_at", null: false
     t.date "due_on", null: false

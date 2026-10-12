@@ -7,7 +7,9 @@
 - Status transitions as service objects + REST resource controllers; `sent_at`/`paid_at`/`voided_at`.
 - Status-aware invoice show (sticky toolbar, badge, activity strip); `Invoice#overdue?` derived; draft inline-edit; non-draft locked.
 - Print view (`layouts/print.html.erb` + `invoice-doc.css`); shared `_document.html.erb`.
-- UBL 2.1 XML (`UblInvoiceBuilder`, EN 16931 profile) + PDF (`ferrum_pdf`) — PDF button hidden (no Chromium in Docker).
+- UBL 2.1 XML (`UblInvoiceBuilder`) + PDF (`ferrum_pdf`) — PDF button hidden (no Chromium in Docker).
+  XML targets **Peppol BIS Billing 3.0** (2026-10-12): seller/buyer `EndpointID` (`9939`/`0218`),
+  `BuyerReference` (`N/A` fallback), `PartyLegalEntity/CompanyID@schemeID`, seller-VAT guard.
 - CUBE CSS design system (OKLCH tokens, Every Layout primitives, card-section pattern).
 - `bin/ci`, `bin/setup`, `bin/dev`; system tests.
 - **Deployed live** to OVH VPS via Kamal — `viegli-rekini.lv`, HTTPS, persistent `/rails/storage` volume. Runbook: `agents/docs/notes/kamal-ovh-deploy.md`.
@@ -28,14 +30,17 @@
 - Portfolio-facing README rewrite (live product framing, honest "not built" table).
 - Cloudflare Web Analytics on the public login page only (`/session/new`); strategy + follow-ups in
   `agents/docs/ANALYTICS-PLAN.md`.
+- Dashboard correctness: "Outstanding" and "Overdue" now count **sent-only** via the new
+  `Invoice.overdue` scope (mirrors `#overdue?`); drafts no longer inflate either KPI. Overdue badges
+  now use `display_status` on the dashboard and invoice index.
+- "Download XML" as a normal button (sent/paid) + XML export to Peppol BIS 3.0.
 
 ## Known issues
 
-- Dashboard `@overdue_invoices` mislabels draft/sent as "overdue".
+- None open.
 
 ## Next (planned)
 
 - `MoneyAmount` VO (optional; per-category VAT + Ruby sum done).
 - Backups: Litestream → R2 (interim `sqlite3 .backup`).
 - Uptime check on `/up`; Ahoy + Blazer for in-app events (see `agents/docs/ANALYTICS-PLAN.md`).
-- Make the repo public.

@@ -25,7 +25,16 @@ class InvoicesController < ApplicationController
   end
 
   def ubl
+    if @invoice.account.vat_number.blank?
+      redirect_to @invoice, alert: "A VAT number is required in your account settings before an XML can be exported."
+      return
+    end
+
     builder = UblInvoiceBuilder.new(@invoice)
+    if builder.buyer_endpoint_id.nil?
+      redirect_to @invoice, alert: "This buyer needs a VAT number or registration number before an XML can be exported."
+      return
+    end
 
     send_data builder.to_xml,
       filename: builder.filename,
@@ -120,7 +129,7 @@ class InvoicesController < ApplicationController
     # client_id is deliberately NOT permitted here — it is resolved through
     # Current.user.account (see tenancy.md §"Foreign keys in params").
     params.expect(invoice: [
-      :issued_on, :due_on, :notes,
+      :issued_on, :due_on, :notes, :buyer_reference,
       line_items_attributes: {}
     ])
   end

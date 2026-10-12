@@ -187,6 +187,7 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "ubl renders a downloadable UBL XML document" do
+    @user.account.update!(vat_number: "LV40001234567", registration_number: "40001234567")
     invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0008", issued_on: Date.current, due_on: Date.current + 14.days)
     invoice.line_items.create!(description: "Consulting", quantity: 1, unit_code: "C62", unit_price_cents: 10_000, tax_category_code: "S", vat_rate: 21, position: 0)
 
@@ -197,5 +198,25 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     assert_match "attachment", response.headers["Content-Disposition"]
     assert_match "INV-0008.xml", response.headers["Content-Disposition"]
     assert_includes response.body, "urn:cen.eu:en16931:2017"
+  end
+
+  test "ubl blocks export when the seller has no VAT number" do
+    invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0009", issued_on: Date.current, due_on: Date.current + 14.days)
+
+    get ubl_invoice_path(invoice)
+
+    assert_redirected_to invoice_path(invoice)
+    assert_match /VAT number/, flash[:alert]
+  end
+
+  test "ubl blocks export when the buyer has no business identifier" do
+    @user.account.update!(vat_number: "LV40001234567")
+    private_client = @user.account.clients.create!(name: "Privatpersona", email: "person@example.com")
+    invoice = @user.account.invoices.create!(client: private_client, invoice_number: "INV-0010", issued_on: Date.current, due_on: Date.current + 14.days)
+
+    get ubl_invoice_path(invoice)
+
+    assert_redirected_to invoice_path(invoice)
+    assert_match /VAT number or registration number/, flash[:alert]
   end
 end

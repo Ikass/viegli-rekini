@@ -42,11 +42,11 @@ class UblInvoiceBuilderTest < ActiveSupport::TestCase
     @invoice.line_items.create!(description: "Printing", quantity: 1, unit_code: "C62", unit_price_cents: 10_000, tax_category_code: "S12", vat_rate: 12, position: 1)
   end
 
-  test "produces well-formed XML with the EN 16931 customization id" do
+  test "produces well-formed XML with the Peppol BIS 3.0 customization id" do
     document = Nokogiri::XML(build)
 
     assert_empty document.errors
-    assert_equal "urn:cen.eu:en16931:2017", document.at_xpath("//*[local-name()='CustomizationID']").text
+    assert_equal "urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0", document.at_xpath("//*[local-name()='CustomizationID']").text
     assert_equal "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0", document.at_xpath("//*[local-name()='ProfileID']").text
   end
 
@@ -77,8 +77,70 @@ class UblInvoiceBuilderTest < ActiveSupport::TestCase
   test "renders payment means and terms" do
     assert_equal "30", text("//PaymentMeans/PaymentMeansCode")
     assert_equal "LV12HABA0001234567890", text("//PayeeFinancialAccount/ID")
+    assert_equal "SIA Test", text("//PayeeFinancialAccount/Name")
     assert_equal "HABALV22", text("//FinancialInstitutionBranch/ID")
     assert_equal "Payment within 14 days", text("//PaymentTerms/Note")
+  end
+
+  test "does not emit PaymentDueDate inside PaymentMeans" do
+    assert_nil document.at_xpath("//PaymentDueDate")
+  end
+
+  test "emits seller and buyer EndpointID as the first Party child with the correct schemeID" do
+    seller_party = document.at_xpath("//AccountingSupplierParty//Party")
+    assert_equal "EndpointID", seller_party.element_children.first.name
+    assert_equal "LV40001234567", seller_party.at_xpath("./EndpointID").text
+    assert_equal "9939", seller_party.at_xpath("./EndpointID").attribute("schemeID").value
+
+    buyer_party = document.at_xpath("//AccountingCustomerParty//Party")
+    assert_equal "EndpointID", buyer_party.element_children.first.name
+    assert_equal "LV40007654321", buyer_party.at_xpath("./EndpointID").text
+    assert_equal "9939", buyer_party.at_xpath("./EndpointID").attribute("schemeID").value
+  end
+
+  test "falls back to the registration number for the buyer endpoint when there is no VAT number" do
+    @client.update!(vat_number: nil, registration_number: "40007654321")
+
+    buyer_party = document.at_xpath("//AccountingCustomerParty//Party")
+    assert_equal "40007654321", buyer_party.at_xpath("./EndpointID").text
+    assert_equal "0218", buyer_party.at_xpath("./EndpointID").attribute("schemeID").value
+  end
+
+  test "returns nil buyer endpoint when the buyer has neither VAT nor registration number" do
+    @client.update!(vat_number: nil, registration_number: nil)
+
+    assert_nil UblInvoiceBuilder.new(@invoice).buyer_endpoint_id
+  end
+
+  test "adds the Latvian registration schemeID to PartyLegalEntity CompanyID" do
+    seller_legal = document.at_xpath("//AccountingSupplierParty//PartyLegalEntity/CompanyID")
+    assert_equal "40001234567", seller_legal.text
+    assert_equal "0218", seller_legal.attribute("schemeID").value
+  end
+
+  test "emits the buyer reference, falling back to N/A when blank" do
+    assert_equal "N/A", stripped.at_xpath("//BuyerReference").text
+
+    @invoice.update!(buyer_reference: "PO-1234")
+
+    assert_equal "PO-1234", stripped.at_xpath("//BuyerReference").text
+  end
+
+  test "reconciles totals computed from the XML itself" do
+    doc = stripped
+
+    line_total = doc.xpath("//InvoiceLine/LineExtensionAmount").sum { |n| BigDecimal(n.text) }
+    subtotal_sum = doc.xpath("//TaxSubtotal/TaxAmount").sum { |n| BigDecimal(n.text) }
+    tax_total = BigDecimal(doc.at_xpath("//TaxTotal/TaxAmount").text)
+    line_extension_total = BigDecimal(doc.at_xpath("//LegalMonetaryTotal/LineExtensionAmount").text)
+    tax_exclusive = BigDecimal(doc.at_xpath("//LegalMonetaryTotal/TaxExclusiveAmount").text)
+    tax_inclusive = BigDecimal(doc.at_xpath("//LegalMonetaryTotal/TaxInclusiveAmount").text)
+    payable = BigDecimal(doc.at_xpath("//LegalMonetaryTotal/PayableAmount").text)
+
+    assert_equal line_extension_total, line_total
+    assert_equal tax_total, subtotal_sum
+    assert_equal tax_exclusive + tax_total, tax_inclusive
+    assert_equal tax_inclusive, payable
   end
 
   test "groups tax subtotals by mapped UNCL5305 category and rate" do
@@ -171,6 +233,14 @@ class UblInvoiceBuilderTest < ActiveSupport::TestCase
       doc.remove_namespaces!
       doc
     end
+  end
+
+  # Fresh namespace-stripped document (not memoized) — for tests that mutate the
+  # invoice mid-test and need to re-read the XML.
+  def stripped
+    doc = Nokogiri::XML(build)
+    doc.remove_namespaces!
+    doc
   end
 
   def nodes(xpath)

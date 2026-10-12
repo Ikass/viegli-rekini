@@ -76,9 +76,9 @@ Rails' seven standard actions are universally understood; a custom `POST /invoic
 
 Validations produce friendly error messages but can be bypassed (`update_column`). Database constraints can't. So every required column is `null: false`, every `references` has `foreign_key: true`, and the `status` enum has a check constraint as the last line of defence. Tests assert the *constraints* directly by bypassing validations.
 
-### UBL 2.1 XML, EN 16931 profile
+### UBL 2.1 XML, Peppol BIS Billing 3.0
 
-`UblInvoiceBuilder` renders the invoice as UBL 2.1 XML targeting `urn:cen.eu:en16931:2017`. PEPPOL BIS 3.0 is **not** implemented yet — it requires seller/buyer `cbc:EndpointID` + EAS scheme IDs that the app doesn't collect yet. Output is generated with `Builder::XmlMarkup` (auto-escaping), not an `.xml.erb` template.
+`UblInvoiceBuilder` renders the invoice as UBL 2.1 XML targeting Peppol BIS Billing 3.0 (`urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0`) — the practical format for Latvian B2G/B2B. Emits seller/buyer `cbc:EndpointID` (Latvia VAT `9939` / registration `0218` schemes), `cbc:BuyerReference` (`N/A` when blank), and requires a VAT-registered seller. Output is generated with `Builder::XmlMarkup` (auto-escaping), not an `.xml.erb` template. See `agents/docs/specs/ubl-invoice-generation.md`.
 
 ---
 
@@ -139,6 +139,8 @@ bin/rails test:system
 
 GitHub Actions runs rubocop, Brakeman, gem/JS dependency audits, the test suite and system tests on every push.
 
+**Manual Peppol validation** (not automated — the EC validator covers EN 16931 base rules only, not Peppol BIS 3.0): generate the XML for a *test* invoice, then check it with a Peppol-capable web validator (econnect.eu, or the EC validator at itb.ec.europa.eu/invoice). See the procedure in `agents/docs/specs/ubl-invoice-generation.md`.
+
 ## Deployment
 
 Deployed to an OVH VPS via Kamal 2 — Docker image built locally, pushed to GHCR, pulled and booted on the server behind kamal-proxy (HTTPS via Let's Encrypt). The SQLite file lives on a persistent Docker volume. **Backups (Litestream → Cloudflare R2) are planned but not yet configured.**
@@ -151,7 +153,7 @@ Kept out on purpose — not implied by anything here:
 
 | Feature | Status |
 |---|---|
-| PEPPOL BIS 3.0 / e-adrese transmission | not built (EN 16931 XML export only) |
+| PEPPOL BIS 3.0 transmission / e-adrese | not built (XML export is Peppol BIS 3.0; sending via an access point not implemented) |
 | Credit notes | not built |
 | Email delivery (send invoice / password reset SMTP) | not built (no SMTP configured) |
 | Latvian UI | English-only today |

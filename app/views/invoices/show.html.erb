@@ -31,6 +31,13 @@
           <% end %>
         <% end %>
 
+        <% if @invoice.sent? || @invoice.paid? %>
+          <%= link_to ubl_invoice_path(@invoice), class: "button", data: { size: "xs" } do %>
+            <%= tabler_icon("download") %>
+            Download XML
+          <% end %>
+        <% end %>
+
         <% unless @invoice.void? %>
           <details class="overflow-menu" data-controller="overflow-menu" data-action="click@window->overflow-menu#close keydown@window->overflow-menu#closeOnEscape">
             <summary class="button" data-size="xs" title="More" aria-label="More">

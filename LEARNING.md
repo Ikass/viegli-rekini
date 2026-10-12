@@ -112,6 +112,11 @@ Rails auto-escapes only `.html.erb`; `.xml.erb` does not. `UblInvoiceBuilder` us
 generator that escapes by construction for any structured-output format.
 
 ### EN 16931 first, PEPPOL profile when endpoint data exists
+> **Superseded (2026-10-12):** the app now targets Peppol BIS Billing 3.0 — `CustomizationID
+> urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0`, with seller/buyer
+> `cbc:EndpointID` (Latvia VAT `9939` / registration `0218`). See
+> `agents/docs/specs/ubl-invoice-generation.md`.
+
 Output targets `CustomizationID urn:cen.eu:en16931:2017`. PEPPOL BIS 3.0 makes seller/buyer
 `cbc:EndpointID` + EAS `@schemeID` mandatory (fatal rule `PEPPOL-EN16931-R010`).
 **Why it matters:** don't emit a profile your data can't satisfy. Ship the achievable profile;
