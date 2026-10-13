@@ -90,7 +90,7 @@ Account  (tenant — one per company)
   - payment_terms: text
   - invoice_prefix: string, default: "INV"
   - invoice_number_padding: integer, default: 4
-  - has_many :users, :clients, :products, :invoices
+  - has_many :users, :clients, :products, :invoices, :invoice_sequences
 
 User (belongs_to :account)
   - email_address: string, null: false, unique
@@ -118,7 +118,13 @@ Invoice (belongs_to :account, :client)
   - status: enum (draft, sent, paid, void), null: false, default: draft
   - sent_at, paid_at, voided_at: datetime  # set by transition services
   - notes: text
+  - buyer_reference: string  # Peppol BIS 3.0 BuyerReference (N/A when blank)
   - has_many :line_items
+
+InvoiceSequence (belongs_to :account)
+  - scope: string, null: false, default: "default"
+  - last_number: integer, null: false, default: 1
+  - unique index [account_id, scope]
 
 LineItem (belongs_to :invoice)
   - description: string, null: false

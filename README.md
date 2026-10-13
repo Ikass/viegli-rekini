@@ -31,7 +31,7 @@ A focused e-invoicing SaaS for Latvian small businesses. Multi-tenant at the acc
 | Auth | Rails 8 built-in | `has_secure_password` + signed cookie sessions, no Devise |
 | Frontend | Hotwire (Turbo + Stimulus) | Progressive enhancement, no JS framework |
 | CSS | Custom vanilla (CUBE CSS) | OKLCH tokens, Every Layout primitives, logical properties, `data-*` variants |
-| Testing | Minitest + Capybara/Selenium | 162 unit/controller/service + 4 system tests |
+| Testing | Minitest + Capybara/Selenium | 174 unit/controller/service + 4 system tests |
 | Deployment | Kamal 2 + OVH VPS | Docker image to GHCR, HTTPS via kamal-proxy |
 
 ---

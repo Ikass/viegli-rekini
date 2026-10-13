@@ -1,6 +1,7 @@
 # opencode task brief — Make the UBL XML export a valid Peppol BIS Billing 3.0 invoice
 
-> **Status:** received 2026-10-12 — active. Supersedes the earlier `opencode-xml-validation.md`
+> **Status:** superseded — built + tested 2026-10-12 (awaiting manual Peppol web validation); the
+> finished implementation is documented in `agents/docs/specs/ubl-invoice-generation.md`. Supersedes the earlier `opencode-xml-validation.md`
 > (that brief was never implemented; we only reached plan stage before the scope changed to
 > Peppol BIS 3.0). Where the two disagree, this file wins (notably: `ProfileID` is kept, not removed).
 

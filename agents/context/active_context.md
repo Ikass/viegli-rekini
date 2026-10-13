@@ -14,7 +14,7 @@ tested 2026-10-12; awaiting a manual Peppol web validation. Next: Litestream →
 - Secrets: GHCR classic PAT at `~/.config/viegli-rekini/ghcr-token`; master key + PAT in
   Bitwarden (both recreated on this machine 2026-10-11). `.kamal/secrets` reads via `$(cat …)`.
 - Deploy runbook: `agents/docs/notes/kamal-ovh-deploy.md`. Recurring command: `bin/kamal deploy`.
-- Tests: 168 unit + 4 system green; Brakeman 0; bundler-audit + importmap audit clean; CI green on main.
+- Tests: 174 unit + 4 system green; Brakeman 0; bundler-audit + importmap audit clean; CI green on main.
 - Analytics: Cloudflare Web Analytics beacon on `/session/new` only (token in credentials
   `cloudflare.web_analytics_token`); strategy in `agents/docs/ANALYTICS-PLAN.md`.
 - XML export: Peppol BIS Billing 3.0 (EN 16931 + BIS 3.0 `CustomizationID`); EndpointID schemes

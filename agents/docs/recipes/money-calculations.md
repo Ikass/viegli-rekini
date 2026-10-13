@@ -51,7 +51,7 @@ Concretely:
 2. **Per-rate grouping in Ruby.** The per-VAT-rate breakdown (`_document.html.erb`) and the grand
    total must be derived from the *same* line-level values, so `breakdown.sum == total` by
    construction — no independent round-of-sum vs sum-of-round paths.
-3. **`MoneyAmount` value object** (already named in `README.md` §"What I'd do differently"):
+3. **`MoneyAmount` value object**:
    owns cents as `Integer`, `+`, `-`, `*`, rounding, and `to_s`/formatting. Both `Invoice` and
    `LineItem` delegate to it so the `n / 100.0` and `number_to_currency` calls stop scattering
    through views.

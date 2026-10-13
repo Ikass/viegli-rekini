@@ -183,7 +183,7 @@ end
 - Prefer explicit over clever
 - `bin/ci` must pass before considering anything shippable
 - Commit messages: imperative mood, present tense ("Add invoice number generation")
-- Maintain `LEARNING.md` (repo root) — durable decisions/lessons promoted from `agents/logs/`; updated by `/session-log` (per-session) and `/log-catchup` (reconciles git history after a gap)
+- Maintain `LEARNING.md` (repo root) — durable decisions/lessons promoted from `agents/logs/`; updated by `/sync` (per-session and after a gap)
 
 ---
 

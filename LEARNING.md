@@ -1,7 +1,7 @@
 # Learning Log — Viegli-Rēķini
 
 A curated guide to *how and why* this app was built. Grows over time: durable decisions and
-lessons from `agents/logs/` get promoted here (by `/session-log` or `/log-catchup`), so this
+lessons from `agents/logs/` get promoted here (by `/sync`), so this
 stays a readable trail of the architectural choices rather than a raw journal.
 
 Read this alongside `ARCHITECTURE.md` — that file explains the *current* shape; this one explains
