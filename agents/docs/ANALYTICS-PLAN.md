@@ -2,7 +2,8 @@
 
 > **Status:** planned 2026-10-12. Keep it simple: cookie-less, first-party where possible, no
 > invoice data in third-party tools. The Cloudflare Web Analytics layer is **built** (2026-10-12 —
-> see `notes/cloudflare-web-analytics-setup.md`); everything else below is planned.
+> see `notes/cloudflare-web-analytics-setup.md`) and error tracking is **built** (2026-10-14 — see
+> §3); everything else below is planned.
 
 DNS is at nic.lv, so Cloudflare runs in manual-snippet mode with no DNS change.
 
@@ -12,7 +13,7 @@ DNS is at nic.lv, so Cloudflare runs in manual-snippet mode with no DNS change.
 | --- | --- | --- | --- |
 | Public page traffic | Cloudflare Web Analytics (manual JS snippet) | Public/marketing layout only | **Built 2026-10-12** (see `notes/cloudflare-web-analytics-setup.md`) |
 | In-app product events | Ahoy + Blazer | Inside the app, primary SQLite DB | Next |
-| Error tracking | Sentry (EU region) or GlitchTip | App-wide | Next |
+| Error tracking | Sentry (EU region) | App-wide | **Built 2026-10-14** |
 | Background jobs | `mission_control-jobs` | `/admin`, behind admin auth | When PDF/XML generation moves to jobs |
 | Uptime | UptimeRobot or Better Stack on `/up` | External | Do now (5 minutes) |
 | Public page traffic (alternative) | Umami self-hosted via Kamal | Accessory on the VPS | Only if Cloudflare proves too limited |
@@ -75,10 +76,22 @@ Privacy: mention first-party product analytics in the privacy policy.
 
 ## 3. Error tracking
 
-- Sentry cloud (free tier, EU region) with `sentry-ruby` and `sentry-rails`.
-- Set `send_default_pii = false` and add parameter filtering so invoice data (IBANs, VAT numbers,
-  client names) never reaches error reports.
-- GlitchTip (self-hosted) is the alternative, but it means running another service.
+> **As built (2026-10-14):** Sentry cloud (EU region — DSN host is `…ingest.de.sentry.io`) with
+> `sentry-ruby` 7.x + `sentry-rails` 7.x.
+
+- `config/initializers/sentry.rb`: DSN read from credentials (`sentry.dsn`), `send_default_pii = false`,
+  `traces_sample_rate = 0.0` (error tracking only, no performance tracing), `enabled_environments`
+  limited to `production`, and a `before_send` hook → `ScrubInvoiceData`.
+- `lib/scrub_invoice_data.rb`: strips IBANs, VAT numbers, bank details, client/company names and
+  contact PII from `extra`, breadcrumbs, query strings, and exception messages before send.
+- `config/initializers/filter_parameter_logging.rb` also filters those invoice fields from request
+  params (covers Rails logs and Sentry request data alike).
+- GlitchTip (self-hosted) remains the fallback if the free tier or EU residency ever becomes a
+  constraint, but it means running another service.
+
+**Deploy + verify:** `bin/kamal deploy`, then
+`bin/kamal app exec --reuse "bin/rails runner 'Sentry.capture_message(\"test message\")'"` and
+confirm the event lands in the Sentry project (EU region).
 
 ## 4. Solid Queue dashboard
 

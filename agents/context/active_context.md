@@ -5,7 +5,9 @@ CV-critical fixes, mobile/UI polish, system-test hardening, and the README rewri
 (re-deployed 2026-10-11). Cloudflare Web Analytics shipped on the login page (2026-10-12). Latest:
 the UBL XML export now targets **Peppol BIS Billing 3.0** — seller/buyer `EndpointID` (Latvia VAT
 `9939` / registration `0218`), `BuyerReference` (`N/A` fallback), and a seller-VAT guard. Built +
-tested 2026-10-12; awaiting a manual Peppol web validation. Next: Litestream → R2 backups.
+tested 2026-10-12; awaiting a manual Peppol web validation. Sentry error tracking built 2026-10-14
+(`sentry-ruby`/`sentry-rails`, EU DSN in credentials, `send_default_pii=false`, `ScrubInvoiceData`
+PII scrubber) — code done, deploy pending. Next: Litestream → R2 backups.
 
 ## State
 - Live: HTTPS via Kamal proxy, `/up` healthy, unauth → login. Demo tenant seeded. Re-deployed
@@ -16,11 +18,13 @@ tested 2026-10-12; awaiting a manual Peppol web validation. Next: Litestream →
 - Deploy runbook: `agents/docs/notes/kamal-ovh-deploy.md`. Recurring command: `bin/kamal deploy`.
 - Tests: 174 unit + 4 system green; Brakeman 0; bundler-audit + importmap audit clean; CI green on main.
 - Analytics: Cloudflare Web Analytics beacon on `/session/new` only (token in credentials
-  `cloudflare.web_analytics_token`); strategy in `agents/docs/ANALYTICS-PLAN.md`.
+  `cloudflare.web_analytics_token`); strategy in `agents/docs/ANALYTICS-PLAN.md`. Sentry error
+  tracking wired (EU DSN, `send_default_pii=false`, `ScrubInvoiceData` scrubber); not yet deployed.
 - XML export: Peppol BIS Billing 3.0 (EN 16931 + BIS 3.0 `CustomizationID`); EndpointID schemes
   `9939`/`0218`; manual validation documented in `agents/docs/specs/ubl-invoice-generation.md`.
 
 ## Next
+- Deploy Sentry wiring and verify one test event lands (EU region).
 - `MoneyAmount` VO (optional cleanup; per-category VAT + Ruby sum already shipped).
 - Backups (Litestream → R2) still pending.
 - Uptime check on `/up` (UptimeRobot/Better Stack); then Ahoy + Blazer for in-app events.
