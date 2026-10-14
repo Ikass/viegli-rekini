@@ -91,6 +91,12 @@ bin/kamal app exec -i bin/rails db:seed   # seed the demo tenant (idempotent) �
    `image: ghcr.io/ikass/viegli-rekini` + `server: ghcr.io` builds
    `ghcr.io/ghcr.io/ikass/viegli-rekini` (doubled) and the push 403s. Use
    `image: ikass/viegli-rekini` — see "OVH-specific config".
+6. **Kamal builds from the committed `HEAD`, not the working tree.** Uncommitted changes are
+   silently dropped from the image (the deploy version is the commit SHA). Symptom: you edit
+   `Gemfile`/`Gemfile.lock` (or any file), deploy, and the change is mysteriously absent — the
+   `COPY Gemfile Gemfile.lock ./` layer shows `CACHED` even though the file changed locally.
+   **Commit before you deploy.** (Caught 2026-10-14: Sentry gems "installed" locally but absent
+   in the image because they were uncommitted.)
 
 ## Rollback / diagnose
 
