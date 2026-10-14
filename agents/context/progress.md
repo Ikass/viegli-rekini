@@ -34,6 +34,9 @@
   `Invoice.overdue` scope (mirrors `#overdue?`); drafts no longer inflate either KPI. Overdue badges
   now use `display_status` on the dashboard and invoice index.
 - "Download XML" as a normal button (sent/paid) + XML export to Peppol BIS 3.0.
+- Sentry error tracking (EU region, `sentry-ruby`/`sentry-rails` 7.x): DSN in credentials,
+  `send_default_pii=false`, `traces_sample_rate=0.0`, `ScrubInvoiceData` before-send scrubber.
+  Deployed + test event captured 2026-10-14.
 
 ## Known issues
 

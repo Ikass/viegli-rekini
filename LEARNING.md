@@ -143,3 +143,14 @@ atomic statement is correct by construction.
 **Why it matters:** before trusting that a raw SQL statement returns what the driver returns, test
 it through the adapter you're actually calling; the query-cache/write-detection path can silently
 divert write statements.
+
+## Monitoring & error tracking
+
+### Error tracking with a PII scrubber, not raw capture
+Sentry (EU region) configured error-tracking-only: `send_default_pii = false`,
+`traces_sample_rate = 0.0`, and a `before_send` hook (`ScrubInvoiceData`) that strips invoice and
+contact PII — IBAN, VAT number, client names — from `extra`, breadcrumbs, query strings, and
+messages.
+**Why it matters:** an error tracker is a third party, and GDPR means the event it receives must
+not carry customer invoice data. Ship error tracking with PII off by default plus an explicit
+scrubber, and leave tracing off until it's actually needed (traces can carry SQL and params).
