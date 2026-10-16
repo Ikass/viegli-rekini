@@ -18,6 +18,13 @@
      </div>
    ============================================================ */
 
+/* ── Group heading — section title above each status group ── */
+
+.invoice-group-heading {
+  font-size: var(--step-1);
+  line-height: var(--leading-snug);
+}
+
 /* ── Wrapper ─────────────────────────────────────────────── */
 
 .table-wrapper {

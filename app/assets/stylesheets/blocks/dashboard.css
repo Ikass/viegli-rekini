@@ -1,0 +1,140 @@
+/* ============================================================
+   BLOCK — dashboard.css
+   Post-login dashboard: page header (title + primary action),
+   summary card (outstanding / overdue / paid), and the
+   recent-activity card header link.
+   ============================================================ */
+
+/* ── Page header — title left, primary action right ──────── */
+
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-s);
+}
+
+/* Mobile: the primary action drops below the title, full width. */
+@media (width < 40rem) {
+  .page-header .button {
+    flex: 1 1 100%;
+  }
+}
+
+/* ── Summary card ────────────────────────────────────────── */
+
+/* The .summary grid owns its own padding, so neutralize the
+   generic .card > div inset. */
+.card > .summary {
+  padding: 0;
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+
+.summary-stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-s);
+  padding: var(--space-s);
+}
+
+/* Hairline separators between stacked rows (mobile). */
+.summary-stat + .summary-stat {
+  border-block-start: 1px solid var(--color-border);
+}
+
+.summary-label {
+  min-width: 0;
+  font-size: var(--step--1);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+}
+
+.summary-count {
+  font-size: var(--step--2);
+  font-weight: var(--font-weight-regular);
+  color: var(--color-text-subtle);
+}
+
+.summary-value-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--space-3xs);
+  flex-shrink: 0;
+}
+
+.summary-value {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  flex-shrink: 0;
+  font-size: var(--step-0);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.1;
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Overdue row — the second guided action. Urgency conveyed by
+   the dark-red amount only; no solid fill. */
+.summary-stat--link {
+  text-decoration: none;
+}
+
+.summary-stat--link .summary-value {
+  color: var(--color-error-text);
+}
+
+.summary-stat--link:hover {
+  background-color: oklch(from var(--color-surface-raised) calc(l - 0.03) c h);
+}
+
+/* Wider screens: three columns inside the same card. */
+@media (width >= 40rem) {
+  .summary {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .summary-stat {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: var(--space-2xs);
+    padding: var(--space-m);
+  }
+
+  .summary-stat + .summary-stat {
+    border-block-start: none;
+    border-inline-start: 1px solid var(--color-border);
+  }
+
+  .summary-value-wrap {
+    align-items: flex-start;
+  }
+}
+
+/* ── Recent activity header — heading left, "View all" right ── */
+
+.recent-activity-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-s);
+}
+
+/* Neutralize the stacked-card-header spacing for the row layout. */
+.recent-activity-header > * + * {
+  margin-block-start: 0;
+}
+
+.view-all-link {
+  font-size: var(--step--1);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}

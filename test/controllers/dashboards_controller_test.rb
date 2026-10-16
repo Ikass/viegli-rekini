@@ -22,16 +22,32 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
     get root_path
 
     assert_response :success
-    assert_select "a.alert-banner", false
+    assert_select "a.summary-stat--link", false
+    assert_select "[data-testid='kpi-overdue']", text: "€0.00"
   end
 
-  test "counts a sent invoice past its due date as overdue" do
+  test "counts a sent invoice past its due date as overdue (singular)" do
     create_invoice(status: :sent, invoice_number: "INV-0001",
                    issued_on: Date.current - 30, due_on: Date.current - 1)
 
     get root_path
 
-    assert_select ".alert-banner .alert-banner-text", text: /1 overdue/
+    assert_response :success
+    assert_select ".summary-count", text: /1 overdue invoice/
+    assert_select "a.summary-stat--link[href=?]", invoices_path(status: "overdue")
+  end
+
+  test "pluralizes overdue text and links to the filtered list" do
+    create_invoice(status: :sent, invoice_number: "INV-0001",
+                   issued_on: Date.current - 30, due_on: Date.current - 1)
+    create_invoice(status: :sent, invoice_number: "INV-0002",
+                   issued_on: Date.current - 30, due_on: Date.current - 2)
+
+    get root_path
+
+    assert_response :success
+    assert_select ".summary-count", text: /2 overdue invoices/
+    assert_select "a.summary-stat--link[href=?]", invoices_path(status: "overdue")
   end
 
   test "does not count drafts towards outstanding" do

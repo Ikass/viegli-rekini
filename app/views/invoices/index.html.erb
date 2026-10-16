@@ -1,54 +1,37 @@
-<h1>Invoices</h1>
-
-<%= link_to new_invoice_path, class: "button", data: { variant: "primary" } do %>
-  <%= tabler_icon("plus") %>
-  New invoice
-<% end %>
+<div class="cluster" data-justify="space-between">
+  <h1>Invoices</h1>
+  <%= link_to new_invoice_path, class: "button", data: { variant: "primary" } do %>
+    <%= tabler_icon("plus") %>
+    New invoice
+  <% end %>
+</div>
 
 <% if @invoices.any? %>
-  <%# Group invoices by status in lifecycle order: draft → sent → paid → void. %>
-  <% { draft: 0, sent: 1, paid: 2, void: 3 }.each do |status, _| %>
-    <% group = @invoices.select { |i| i.status == status.to_s } %>
-    <% next if group.empty? %>
-
+  <% if @status_filter %>
+    <%# Filtered view (e.g. /invoices?status=overdue) — one group. %>
     <section class="flow">
-      <h2><%= status.to_s.titleize %> (<%= group.size %>)</h2>
-      <div class="table-wrapper">
-        <table class="table">
-          <thead>
-            <tr>
-              <th>Number</th>
-              <th>Client</th>
-              <th class="hide-mobile">Issued</th>
-              <th class="hide-mobile">Due</th>
-              <th class="col-numeric">Total</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% group.each do |invoice| %>
-              <tr>
-                <td><%= link_to invoice_number_or_draft(invoice), invoice_path(invoice) %></td>
-                <td><%= invoice.client.name %></td>
-                <td class="hide-mobile"><%= invoice.issued_on %></td>
-                <td class="hide-mobile"><%= invoice.due_on %></td>
-                <td class="col-numeric"><%= number_to_currency(invoice.total / 100.0, unit: "€") %></td>
-                <td>
-                  <span class="badge" data-status="<%= invoice.display_status %>">
-                    <%= invoice.display_status.humanize %>
-                  </span>
-                </td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </div>
-
+      <h2 class="invoice-group-heading"><%= @status_filter.titleize %></h2>
+      <%= render "table", invoices: @invoices %>
       <p>
-        <strong>Group total:</strong>
-        <%= number_to_currency(group.sum(&:total) / 100.0, unit: "€") %>
+        <strong>Total:</strong>
+        <%= number_to_currency(@invoices.sum(&:total) / 100.0, unit: "€") %>
       </p>
     </section>
+  <% else %>
+    <%# Group invoices by status in lifecycle order: draft → sent → paid → void. %>
+    <% { draft: 0, sent: 1, paid: 2, void: 3 }.each do |status, _| %>
+      <% group = @invoices.select { |i| i.status == status.to_s } %>
+      <% next if group.empty? %>
+
+      <section class="flow">
+        <h2 class="invoice-group-heading"><%= status.to_s.titleize %></h2>
+        <%= render "table", invoices: group %>
+        <p>
+          <strong>Group total:</strong>
+          <%= number_to_currency(group.sum(&:total) / 100.0, unit: "€") %>
+        </p>
+      </section>
+    <% end %>
   <% end %>
 <% else %>
   <p>No invoices yet. <%= link_to new_invoice_path, class: "button" do %>

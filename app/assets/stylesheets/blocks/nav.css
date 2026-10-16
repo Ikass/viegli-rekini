@@ -11,10 +11,10 @@
        <nav>
          <ul>
            <li class="top-bar-brand"><a href="/">App</a></li>
-           <li><a href="/account" class="button" data-variant="ghost" data-size="sm">Account</a></li>
+           <li><a href="/account" class="button" data-variant="ghost">Account</a></li>
            <li>
              <%= button_to "Sign out", session_path, method: :delete,
-                 class: "button", data: { variant: "ghost-danger", size: "sm" } %>
+                 class: "button", data: { variant: "ghost-danger" } %>
            </li>
          </ul>
        </nav>

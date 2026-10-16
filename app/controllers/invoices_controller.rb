@@ -5,6 +5,17 @@ class InvoicesController < ApplicationController
 
   def index
     @invoices = Current.user.account.invoices.order(created_at: :desc)
+    @status_filter = params[:status].presence
+
+    return unless STATUS_FILTERS.include?(@status_filter)
+
+    # "overdue" is a derived status (sent + due_on in the past), not a
+    # persisted enum value — resolve it through the overdue scope.
+    @invoices = if @status_filter == "overdue"
+      @invoices.overdue
+    else
+      @invoices.where(status: @status_filter)
+    end
   end
 
   def show
@@ -109,6 +120,8 @@ class InvoicesController < ApplicationController
   end
 
   private
+
+  STATUS_FILTERS = %w[draft sent paid void overdue].freeze
 
   def set_invoice
     @invoice = Current.user.account.invoices.find_by!(id: params[:id])

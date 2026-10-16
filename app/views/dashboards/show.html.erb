@@ -1,49 +1,50 @@
-<h1>Dashboard</h1>
-
-<div class="grid" data-columns="3">
-  <article class="card">
-    <div class="kpi">
-      <span class="kpi-label">Outstanding</span>
-      <span class="kpi-value" data-testid="kpi-outstanding"><%= number_to_currency(@outstanding_total / 100.0, unit: "€") %></span>
-    </div>
-  </article>
-
-  <article class="card" data-variant="tinted" data-status="error">
-    <div class="kpi">
-      <span class="kpi-label">Overdue</span>
-      <span class="kpi-value" data-testid="kpi-overdue"><%= number_to_currency(@overdue_total / 100.0, unit: "€") %></span>
-    </div>
-  </article>
-
-  <article class="card">
-    <div class="kpi">
-      <span class="kpi-label">Paid (this month)</span>
-      <span class="kpi-value" data-testid="kpi-paid"><%= number_to_currency(@paid_total / 100.0, unit: "€") %></span>
-    </div>
-  </article>
-</div>
-
-<%= link_to new_invoice_path, class: "button", data: { variant: "primary", width: "full" } do %>
-  <%= tabler_icon("plus") %>
-  New invoice
-<% end %>
-
-<% if @overdue_count > 0 %>
-  <%= link_to invoices_path, class: "alert-banner" do %>
-    <span class="alert-banner-icon">&#9200;</span>
-    <span class="alert-banner-text"><%= @overdue_count %> overdue invoices — <%= number_to_currency(@overdue_total / 100.0, unit: "€") %></span>
-    <span class="alert-banner-arrow">&rarr;</span>
+<div class="page-header">
+  <h1><%= t("dashboards.title") %></h1>
+  <%= link_to new_invoice_path, class: "button", data: { variant: "primary" } do %>
+    <%= tabler_icon("plus") %>
+    <%= t("dashboards.new_invoice") %>
   <% end %>
-<% end %>
-
-<div style="text-align: center; margin-block: var(--space-l);">
-  <%= link_to "View all invoices", invoices_path %>
 </div>
+
+<section class="card summary-card">
+  <div class="summary">
+    <div class="summary-stat">
+      <span class="summary-label"><%= t("dashboards.summary.outstanding") %></span>
+      <span class="summary-value" data-testid="kpi-outstanding"><%= number_to_currency(@outstanding_total / 100.0, unit: "€") %></span>
+    </div>
+
+    <% if @overdue_count > 0 %>
+      <%= link_to invoices_path(status: "overdue"), class: "summary-stat summary-stat--link" do %>
+        <span class="summary-label"><%= t("dashboards.summary.overdue") %></span>
+        <span class="summary-value-wrap">
+          <span class="summary-value" data-testid="kpi-overdue">
+            <%= number_to_currency(@overdue_total / 100.0, unit: "€") %>
+            <%= tabler_icon("chevron-right", data: { size: "sm" }) %>
+          </span>
+          <span class="summary-count"><%= t("dashboards.summary.overdue_count", count: @overdue_count) %></span>
+        </span>
+      <% end %>
+    <% else %>
+      <div class="summary-stat">
+        <span class="summary-label"><%= t("dashboards.summary.overdue") %></span>
+        <span class="summary-value" data-testid="kpi-overdue"><%= number_to_currency(@overdue_total / 100.0, unit: "€") %></span>
+      </div>
+    <% end %>
+
+    <div class="summary-stat">
+      <span class="summary-label"><%= t("dashboards.summary.paid_this_month") %></span>
+      <span class="summary-value" data-testid="kpi-paid"><%= number_to_currency(@paid_total / 100.0, unit: "€") %></span>
+    </div>
+  </div>
+</section>
 
 <% if @recent_invoices.any? %>
-  <section class="card">
-    <header>
-      <h3>Recent activity</h3>
+  <section class="card recent-activity">
+    <header class="recent-activity-header">
+      <h3><%= t("dashboards.recent_activity") %></h3>
+      <%= link_to invoices_path, class: "view-all-link" do %>
+        <%= t("dashboards.view_all") %> →
+      <% end %>
     </header>
     <div>
       <% @recent_invoices.each do |invoice| %>

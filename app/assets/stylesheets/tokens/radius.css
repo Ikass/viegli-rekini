@@ -1,0 +1,8 @@
+/* ============================================================
+   TOKENS — radius.css
+   Corner-radius tokens. Named by role.
+   ============================================================ */
+
+:root {
+  --radius-card: 0.5rem;  /* cards, panels */
+}

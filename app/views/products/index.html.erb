@@ -27,7 +27,7 @@
             <td class="col-numeric"><%= number_to_currency(product.default_price_cents / 100.0, unit: "€") %></td>
             <td class="hide-mobile"><%= LineItem::UNIT_CODES[product.unit_code] || product.unit_code %></td>
             <td class="col-numeric hide-mobile"><%= vat_rate_percentage(product.default_vat_rate) %></td>
-            <td class="col-actions"><%= link_to edit_product_path(product), class: "button", data: { size: "sm" } do %>
+            <td class="col-actions"><%= link_to edit_product_path(product), class: "button" do %>
               <%= tabler_icon("edit") %>
               Edit
             <% end %></td>

@@ -29,3 +29,15 @@
 
 en:
   hello: "Hello world"
+  dashboards:
+    title: "Dashboard"
+    new_invoice: "New invoice"
+    recent_activity: "Recent activity"
+    view_all: "View all"
+    summary:
+      outstanding: "Outstanding"
+      overdue: "Overdue"
+      paid_this_month: "Paid (this month)"
+      overdue_count:
+        one: "%{count} overdue invoice"
+        other: "%{count} overdue invoices"

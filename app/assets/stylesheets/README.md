@@ -149,8 +149,7 @@ body {
 <button class="button" data-variant="secondary">Secondary</button>
 <button class="button" data-variant="ghost">Ghost</button>
 <button class="button" data-variant="danger">Danger</button>
-<button class="button" data-size="sm">Small</button>
-<button class="button" data-size="lg">Large</button>
+<button class="button" data-size="xs">Extra small</button>
 <button class="button" data-width="full">Full width</button>
 ```
 

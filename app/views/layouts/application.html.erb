@@ -28,16 +28,16 @@
             <% end %></strong>
           </li>
           <% if authenticated? %>
-            <li><%= link_to edit_account_path, class: "button", data: { variant: "ghost", size: "sm" } do %>
+            <li><%= link_to edit_account_path, class: "button", data: { variant: "ghost" } do %>
               <%= tabler_icon("settings") %>
               Account
             <% end %></li>
-            <li><%= button_to session_path, method: :delete, class: "button", data: { variant: "ghost-danger", size: "sm" } do %>
+            <li><%= button_to session_path, method: :delete, class: "button", data: { variant: "ghost-danger" } do %>
               <%= tabler_icon("logout") %>
               Sign out
             <% end %></li>
           <% else %>
-            <li><%= link_to "Sign in", new_session_path, class: "button", data: { variant: "ghost", size: "sm" } %></li>
+            <li><%= link_to "Sign in", new_session_path, class: "button", data: { variant: "ghost" } %></li>
           <% end %>
         </ul>
       </nav>
