@@ -1,0 +1,293 @@
+<%# Landing page — public marketing home. Copy lives in config/locales/landing.en.yml
+    (Latvian follows later). Design reference: agents/designs/Landing page, English draft-html/ %>
+
+<div class="landing-top-strip"><%= t(".top_strip") %></div>
+
+<header class="landing-header">
+  <a href="#top" class="landing-brand"><%= ViegliRekini::Application::APP_NAME %></a>
+  <nav class="landing-nav" aria-label="Main">
+    <a href="#how"><%= t(".nav.how_it_works") %></a>
+    <a href="#pricing"><%= t(".nav.pricing") %></a>
+    <a href="#faq"><%= t(".nav.questions") %></a>
+    <a href="<%= new_session_path %>"><%= t(".nav.log_in") %></a>
+    <a href="#start" class="landing-btn"><%= t(".nav.create_first_invoice") %></a>
+  </nav>
+</header>
+
+<main id="top" class="landing-main">
+
+  <%# ── Hero ─────────────────────────────────────────────────── %>
+  <section id="how" class="landing-hero">
+    <h1><%= t(".hero.title") %></h1>
+    <p class="landing-lead"><%= t(".hero.subtitle") %></p>
+    <div class="landing-hero-cta">
+      <%= button_to t(".hero.cta"), demo_session_path,
+          id: "start", class: "landing-btn landing-btn-lg",
+          form_class: "landing-btn-form" %>
+      <p class="landing-reassurance"><%= t(".hero.reassurance") %></p>
+    </div>
+
+    <div class="landing-screens" role="img" aria-label="<%= t('.hero.screens_label') %>">
+      <%# Step 1 — Pick %>
+      <div class="landing-step">
+        <div class="landing-step-card">
+          <div class="landing-step-head">
+            <span class="landing-step-badge">1</span>
+            <span class="landing-step-label"><%= t(".steps.one.label") %></span>
+          </div>
+          <div class="landing-step-field"><%= t(".steps.one.screen.input") %></div>
+          <div class="landing-step-menu">
+            <div class="landing-step-menu-selected">
+              <%= t(".steps.one.screen.saved_name") %>
+              <span><%= t(".steps.one.screen.saved_tag") %></span>
+            </div>
+            <div class="landing-step-menu-item"><%= t(".steps.one.screen.other") %></div>
+            <div class="landing-step-menu-add"><%= t(".steps.one.screen.add_new") %></div>
+          </div>
+          <p class="landing-step-hint"><%= t(".steps.one.screen.hint") %></p>
+        </div>
+        <p class="landing-step-caption">
+          <strong><%= t(".steps.one.caption_lead") %></strong> <%= t(".steps.one.caption_rest") %>
+        </p>
+      </div>
+
+      <%# Step 2 — Add %>
+      <div class="landing-step">
+        <div class="landing-step-card">
+          <div class="landing-step-head">
+            <span class="landing-step-badge">2</span>
+            <span class="landing-step-label"><%= t(".steps.two.label") %></span>
+          </div>
+          <% t(".steps.two.screen.items").each do |item| %>
+            <div class="landing-step-line">
+              <span><%= item[:name] %><span class="landing-step-line-sub"><%= item[:qty] %></span></span>
+              <strong><%= item[:total] %></strong>
+            </div>
+          <% end %>
+          <div class="landing-step-add"><%= t(".steps.two.screen.add_from_saved") %></div>
+          <div class="landing-step-totals">
+            <div><span><%= t(".steps.two.screen.subtotal_label") %></span><span><%= t(".steps.two.screen.subtotal") %></span></div>
+            <div><span><%= t(".steps.two.screen.vat_label") %></span><span><%= t(".steps.two.screen.vat") %></span></div>
+            <div class="landing-step-total"><span><%= t(".steps.two.screen.total_label") %></span><span><%= t(".steps.two.screen.total") %></span></div>
+          </div>
+        </div>
+        <p class="landing-step-caption">
+          <strong><%= t(".steps.two.caption_lead") %></strong> <%= t(".steps.two.caption_rest") %>
+        </p>
+      </div>
+
+      <%# Step 3 — Send %>
+      <div class="landing-step">
+        <div class="landing-step-card">
+          <div class="landing-step-head">
+            <span class="landing-step-badge">3</span>
+            <span class="landing-step-label"><%= t(".steps.three.label") %></span>
+          </div>
+          <div class="landing-step-summary">
+            <strong><%= t(".steps.three.screen.invoice_label") %></strong>
+            <span><%= t(".steps.three.screen.total") %></span>
+            <span><%= t(".steps.three.screen.customer") %></span>
+          </div>
+          <div class="landing-step-standard">
+            <%= render "landing/check_icon" %>
+            <%= t(".steps.three.screen.standard") %>
+          </div>
+          <div class="landing-step-send"><%= t(".steps.three.screen.send") %></div>
+          <div class="landing-step-formats">
+            <div><%= t(".steps.three.screen.pdf") %></div>
+            <div><%= t(".steps.three.screen.xml") %></div>
+          </div>
+        </div>
+        <p class="landing-step-caption">
+          <strong><%= t(".steps.three.caption_lead") %></strong> <%= t(".steps.three.caption_rest") %>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <%# ── Contrast block ───────────────────────────────────────── %>
+  <section class="landing-contrast">
+    <div class="landing-contrast-inner">
+      <h2><%= t(".contrast.title") %></h2>
+      <p><%= t(".contrast.body") %></p>
+      <p class="landing-contrast-emphasis"><%= t(".contrast.emphasis") %></p>
+    </div>
+  </section>
+
+  <%# ── Founder note ─────────────────────────────────────────── %>
+  <section class="landing-founder">
+    <div class="landing-founder-photo">
+      <%= image_tag "reinis-profile-800w.webp", alt: t(".founder.photo_alt"),
+          width: 180, height: 180, loading: "lazy", decoding: "async" %>
+    </div>
+    <div class="landing-founder-body">
+      <h2><%= t(".founder.title") %></h2>
+      <p><%= t(".founder.para_1") %></p>
+      <p><%= t(".founder.para_2") %></p>
+      <p><%= t(".founder.para_3") %></p>
+      <p class="landing-founder-signature">
+        <%= t(".founder.signature") %> <a href="mailto:<%= t('.founder.email') %>"><%= t(".founder.email") %></a>
+      </p>
+    </div>
+  </section>
+
+  <%# ── What it does ──────────────────────────────────────────── %>
+  <section class="landing-features">
+    <h2><%= t(".features.heading") %></h2>
+    <p class="landing-lead"><%= t(".features.intro") %></p>
+
+    <div class="landing-feature-grid">
+      <%# Home screen %>
+      <div class="landing-feature">
+        <div class="landing-feature-art landing-feature-art--menu" aria-hidden="true">
+          <div class="landing-art-btn landing-art-btn--accent"><%= t(".features.cards.home_screen.menu.new_invoice") %></div>
+          <div class="landing-art-btn"><%= t(".features.cards.home_screen.menu.customers_and_items") %></div>
+          <div class="landing-art-btn"><%= t(".features.cards.home_screen.menu.my_invoices") %></div>
+        </div>
+        <h3><%= t(".features.cards.home_screen.title") %></h3>
+        <p><%= t(".features.cards.home_screen.body") %></p>
+      </div>
+
+      <%# Saved customers and items %>
+      <div class="landing-feature">
+        <div class="landing-feature-art landing-feature-art--pills" aria-hidden="true">
+          <% pill_colors = %w[teal coral coral teal] %>
+          <% t(".features.cards.saved.pills").each_with_index do |pill, i| %>
+            <span class="landing-art-pill landing-art-pill--<%= pill_colors[i] %>"><%= pill %></span>
+          <% end %>
+        </div>
+        <h3><%= t(".features.cards.saved.title") %></h3>
+        <p><%= t(".features.cards.saved.body") %></p>
+      </div>
+
+      <%# Numbering %>
+      <div class="landing-feature">
+        <div class="landing-feature-art landing-feature-art--numbers" aria-hidden="true">
+          <% t(".features.cards.numbering.numbers").each_with_index do |n, i| %>
+            <span class="landing-art-number<%= i == 3 ? " landing-art-number--next" : "" %>"><%= n %></span>
+          <% end %>
+        </div>
+        <h3><%= t(".features.cards.numbering.title") %></h3>
+        <p><%= t(".features.cards.numbering.body") %></p>
+      </div>
+
+      <%# E-invoice standard check %>
+      <div class="landing-feature">
+        <div class="landing-feature-art" aria-hidden="true">
+          <span class="landing-art-check">
+            <%= render "landing/check_icon" %>
+            <%= t(".features.cards.check.standard") %>
+          </span>
+        </div>
+        <h3><%= t(".features.cards.check.title") %></h3>
+        <p><%= t(".features.cards.check.body") %></p>
+      </div>
+
+      <%# PDF + XML %>
+      <div class="landing-feature">
+        <div class="landing-feature-art landing-feature-art--formats" aria-hidden="true">
+          <span class="landing-art-format"><%= t(".steps.three.screen.pdf") %></span>
+          <span class="landing-art-format"><%= t(".steps.three.screen.xml") %></span>
+        </div>
+        <h3><%= t(".features.cards.pdf_xml.title") %></h3>
+        <p><%= t(".features.cards.pdf_xml.body") %></p>
+      </div>
+
+      <%# Saved invoices list %>
+      <div class="landing-feature">
+        <div class="landing-feature-art landing-feature-art--list" aria-hidden="true">
+          <% t(".features.cards.saved_invoices.rows").each do |row| %>
+            <div class="landing-art-row"><span><%= row[:label] %></span><strong><%= row[:amount] %></strong></div>
+          <% end %>
+        </div>
+        <h3><%= t(".features.cards.saved_invoices.title") %></h3>
+        <p><%= t(".features.cards.saved_invoices.body") %></p>
+      </div>
+    </div>
+  </section>
+
+  <%# ── Built around Latvian law ──────────────────────────────── %>
+  <section class="landing-law">
+    <div class="landing-law-card">
+      <h2><%= t(".law.heading") %></h2>
+      <p class="landing-lead"><%= t(".law.intro") %></p>
+      <div class="landing-law-grid">
+        <div>
+          <h3><%= t(".law.columns.fields.title") %></h3>
+          <p><%= t(".law.columns.fields.body") %></p>
+        </div>
+        <div>
+          <h3><%= t(".law.columns.vat.title") %></h3>
+          <p><%= t(".law.columns.vat.body") %></p>
+        </div>
+        <div>
+          <h3><%= t(".law.columns.e_invoice.title") %></h3>
+          <p><%= t(".law.columns.e_invoice.body") %></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%# ── Pricing ───────────────────────────────────────────────── %>
+  <section id="pricing" class="landing-pricing">
+    <h2><%= t(".pricing.heading") %></h2>
+    <p class="landing-lead"><%= t(".pricing.intro") %></p>
+    <div class="landing-pricing-grid">
+      <div class="landing-pricing-card">
+        <div class="landing-pricing-label"><%= t(".pricing.card.label") %></div>
+        <div class="landing-pricing-price"><%= t(".pricing.card.price") %></div>
+        <div class="landing-pricing-unit"><%= t(".pricing.card.unit") %></div>
+        <ul class="landing-pricing-features">
+          <% t(".pricing.card.features").each do |feature| %>
+            <li><%= render("landing/check_icon") %><%= feature %></li>
+          <% end %>
+        </ul>
+        <%= button_to t(".pricing.cta"), demo_session_path,
+            class: "landing-btn landing-btn-block",
+            form_class: "landing-btn-form landing-btn-form--block" %>
+      </div>
+    </div>
+  </section>
+
+  <%# ── FAQ ───────────────────────────────────────────────────── %>
+  <section id="faq" class="landing-faq">
+    <h2><%= t(".faq.heading") %></h2>
+    <p class="landing-lead"><%= t(".faq.intro") %></p>
+
+    <% t(".faq.groups").each do |group_name, group| %>
+      <h3 class="landing-faq-group"><%= group[:label] %></h3>
+      <% group[:items].each_with_index do |item, i| %>
+        <details class="landing-faq-item"<%= i == 0 ? " open" : "" %>>
+          <summary>
+            <%= item[:question] %>
+            <svg class="landing-faq-chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 9l6 6 6-6"></path></svg>
+          </summary>
+          <% Array(item[:answer]).each do |paragraph| %>
+            <p><%= paragraph %></p>
+          <% end %>
+        </details>
+      <% end %>
+    <% end %>
+  </section>
+
+  <%# ── Closing CTA ───────────────────────────────────────────── %>
+  <section class="landing-closing">
+    <div class="landing-closing-inner">
+      <h2><%= t(".closing.title") %></h2>
+      <p><%= t(".closing.body") %></p>
+      <%= button_to t(".closing.cta"), demo_session_path,
+          class: "landing-btn landing-btn-lg",
+          form_class: "landing-btn-form" %>
+    </div>
+  </section>
+
+</main>
+
+<footer class="landing-footer">
+  <div><%= ViegliRekini::Application::APP_NAME %> · Built in Latvia · <%= t(".footer.company") %></div>
+  <div class="landing-footer-links">
+    <a href="#privacy"><%= t(".footer.privacy") %></a>
+    <a href="#terms"><%= t(".footer.terms") %></a>
+    <a href="#contact"><%= t(".footer.contact") %></a>
+  </div>
+</footer>

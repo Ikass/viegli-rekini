@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<%= I18n.locale %>">
   <head>
     <title><%= content_for(:title) || ViegliRekini::Application::APP_NAME %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -22,7 +22,7 @@
       <nav>
         <ul>
           <li class="top-bar-brand">
-            <strong><%= link_to root_path, aria: { label: ViegliRekini::Application::APP_NAME } do %>
+            <strong><%= link_to dashboard_path, aria: { label: ViegliRekini::Application::APP_NAME } do %>
               <%= tabler_icon("file-invoice", data: { size: "lg" }) %>
               <span class="top-bar-brand-text"><%= ViegliRekini::Application::APP_NAME %></span>
             <% end %></strong>
@@ -48,7 +48,7 @@
         <aside class="sidebar">
           <nav>
             <ul>
-              <li><%= link_to root_path, aria: current_page?(root_path) ? { current: "page" } : {} do %>
+              <li><%= link_to dashboard_path, aria: current_page?(dashboard_path) ? { current: "page" } : {} do %>
                   <%= tabler_icon("dashboard") %>
                   Dashboard
                 <% end %></li>

@@ -9,7 +9,7 @@ class AccountsController < ApplicationController
     @account = Current.user.account
 
     if @account.update(account_params)
-      redirect_to root_path, notice: "Settings updated."
+      redirect_to dashboard_path, notice: "Settings updated."
     else
       render :edit, status: :unprocessable_entity
     end

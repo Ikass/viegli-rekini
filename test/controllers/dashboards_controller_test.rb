@@ -11,7 +11,7 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
   test "redirects unauthenticated visitors to sign in" do
     sign_out
 
-    get root_path
+    get dashboard_path
 
     assert_redirected_to new_session_path
   end
@@ -19,7 +19,7 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
   test "does not count a past-due draft as overdue" do
     create_invoice(status: :draft, issued_on: Date.current - 30, due_on: Date.current - 1)
 
-    get root_path
+    get dashboard_path
 
     assert_response :success
     assert_select "a.summary-stat--link", false
@@ -30,7 +30,7 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
     create_invoice(status: :sent, invoice_number: "INV-0001",
                    issued_on: Date.current - 30, due_on: Date.current - 1)
 
-    get root_path
+    get dashboard_path
 
     assert_response :success
     assert_select ".summary-count", text: /1 overdue invoice/
@@ -43,7 +43,7 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
     create_invoice(status: :sent, invoice_number: "INV-0002",
                    issued_on: Date.current - 30, due_on: Date.current - 2)
 
-    get root_path
+    get dashboard_path
 
     assert_response :success
     assert_select ".summary-count", text: /2 overdue invoices/
@@ -54,7 +54,7 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
     invoice = create_invoice(status: :draft, issued_on: Date.current, due_on: Date.current + 30)
     add_priced_line_item(invoice)
 
-    get root_path
+    get dashboard_path
 
     assert_select "[data-testid='kpi-outstanding']", text: "€0.00"
   end
@@ -64,7 +64,7 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
                              issued_on: Date.current, due_on: Date.current + 30)
     add_priced_line_item(invoice)
 
-    get root_path
+    get dashboard_path
 
     assert_select "[data-testid='kpi-outstanding']", text: "€242.00"
   end

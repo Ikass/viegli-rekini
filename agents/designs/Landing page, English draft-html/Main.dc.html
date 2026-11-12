@@ -1,0 +1,335 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>viegli rēķini, invoices in three steps</title>
+<script src="./vendor/react.js"></script>
+<script src="./vendor/react-dom.js"></script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&amp;family=Inter:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;font-family:'Inter',system-ui,sans-serif;background:#FBF5E6;color:#1F2421}
+h1,h2,h3{font-family:'Bricolage Grotesque','Inter',system-ui,sans-serif}
+a{color:#0E4F52}
+a:hover{color:#093638}
+.btn:hover{filter:brightness(0.92)}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:3px solid #0E4F52;outline-offset:3px}
+.on-dark a:focus-visible,.on-dark summary:focus-visible{outline-color:#FBF5E6}
+details>summary{list-style:none;cursor:pointer}
+details>summary::-webkit-details-marker{display:none}
+details[open] .chev{transform:rotate(180deg)}
+</style>
+</helmet>
+
+<div style="--accent: {{accent}}; --ink: #1F2421; --muted: #5A5F58; --teal: #0E4F52; --cream: #FBF5E6; --line: #E7DEC8; background: #FBF5E6; color: #1F2421; font-size: 17px; line-height: 1.6">
+
+<!-- Top strip -->
+<div style="background: #0E4F52; color: #FBF5E6; text-align: center; padding: 10px 24px; font-size: 14px; font-weight: 500">
+Made in Latvia, for people who send their own invoices.
+</div>
+
+<!-- Nav -->
+<header style="max-width: 1120px; margin: 0 auto; padding: 20px 24px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px">
+<a href="#top" style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 800; font-size: 24px; color: #1F2421; text-decoration: none; letter-spacing: -0.02em">viegli <span style="color: var(--accent)">rēķini</span></a>
+<nav aria-label="Main" style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px 28px; font-size: 15px; font-weight: 500">
+<a href="#how" style="color: #1F2421; text-decoration: none; padding: 10px 0">How it works</a>
+<a href="#pricing" style="color: #1F2421; text-decoration: none; padding: 10px 0">Pricing</a>
+<a href="#faq" style="color: #1F2421; text-decoration: none; padding: 10px 0">Questions</a>
+<a href="#login" style="color: #1F2421; text-decoration: none; padding: 10px 0">Log in</a>
+<a class="btn" href="#start" style="background: var(--accent); color: #FFFFFF; text-decoration: none; padding: 12px 20px; border-radius: 10px; font-weight: 600; min-height: 20px">Create your first invoice</a>
+</nav>
+</header>
+
+<main id="top">
+
+<!-- Hero -->
+<section id="how" style="max-width: 1120px; margin: 0 auto; padding: 56px 24px 32px; text-align: center">
+<h1 style="margin: 0 auto; max-width: 860px; font-size: clamp(40px, 6vw, 68px); line-height: 1.04; letter-spacing: -0.03em; font-weight: 800">Invoices in three steps. Legal in Latvia.</h1>
+<p style="margin: 24px auto 0; max-width: 620px; font-size: 20px; color: #5A5F58">Choose the customer, add what you sold, send it. The app handles VAT, numbering and the e-invoice format.</p>
+<div style="margin-top: 32px; display: flex; flex-direction: column; align-items: center; gap: 12px">
+<a class="btn" id="start" href="#start" style="background: var(--accent); color: #FFFFFF; text-decoration: none; padding: 16px 32px; border-radius: 12px; font-weight: 600; font-size: 18px">Create your first invoice</a>
+<p style="margin: 0; font-size: 15px; color: #5A5F58">No credit card. Nothing to install.</p>
+</div>
+
+<!-- Three screens -->
+<div role="img" aria-label="Three app screens: choose a customer, add items, send the invoice" style="margin-top: 56px; display: flex; flex-wrap: wrap; justify-content: center; gap: 24px; text-align: left">
+
+<div style="flex: 1 1 300px; max-width: 340px">
+<div style="background: #FFFFFF; border: 1px solid #E7DEC8; border-radius: 18px; padding: 20px; box-shadow: 0 12px 32px rgba(31,36,33,0.08); min-height: 360px; box-sizing: border-box">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px">
+<span style="width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #FFFFFF; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center">1</span>
+<span style="font-weight: 600; font-size: 15px">New invoice, customer</span>
+</div>
+<div style="border: 1.5px solid #0E4F52; border-radius: 10px; padding: 12px 14px; font-size: 15px; color: #1F2421">Silva</div>
+<div style="margin-top: 8px; border: 1px solid #E7DEC8; border-radius: 10px; overflow: hidden; font-size: 14px">
+<div style="padding: 12px 14px; background: #D9ECE9; font-weight: 600">Silva Studio SIA<span style="display: block; font-weight: 400; color: #5A5F58; font-size: 13px">Saved customer</span></div>
+<div style="padding: 12px 14px; border-top: 1px solid #E7DEC8; color: #5A5F58">Silva Koks SIA</div>
+<div style="padding: 12px 14px; border-top: 1px solid #E7DEC8; color: #5A5F58">+ Add a new customer</div>
+</div>
+<div style="margin-top: 16px; font-size: 13px; color: #5A5F58">Address, registration number and VAT number fill in from the saved customer.</div>
+</div>
+<p style="margin: 16px 4px 0; font-size: 17px"><strong style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px">Pick</strong> your customer.</p>
+</div>
+
+<div style="flex: 1 1 300px; max-width: 340px">
+<div style="background: #FFFFFF; border: 1px solid #E7DEC8; border-radius: 18px; padding: 20px; box-shadow: 0 12px 32px rgba(31,36,33,0.08); min-height: 360px; box-sizing: border-box">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px">
+<span style="width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #FFFFFF; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center">2</span>
+<span style="font-weight: 600; font-size: 15px">New invoice, items</span>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid #E7DEC8; font-size: 15px"><span>Frame, oak, 40×50 cm<span style="display: block; font-size: 13px; color: #5A5F58">1 × €48.00</span></span><strong>€48.00</strong></div>
+<div style="display: flex; justify-content: space-between; gap: 12px; padding: 12px 0; border-bottom: 1px solid #E7DEC8; font-size: 15px"><span>Glass, cut to size<span style="display: block; font-size: 13px; color: #5A5F58">1 × €12.00</span></span><strong>€12.00</strong></div>
+<div style="margin-top: 12px; border: 1.5px dashed #0E4F52; border-radius: 10px; padding: 10px 14px; font-size: 14px; color: #0E4F52; font-weight: 600">+ Add from saved items</div>
+<div style="margin-top: 16px; font-size: 14px; color: #5A5F58; display: flex; flex-direction: column; gap: 4px">
+<div style="display: flex; justify-content: space-between"><span>Subtotal</span><span>€60.00</span></div>
+<div style="display: flex; justify-content: space-between"><span>VAT 21%</span><span>€12.60</span></div>
+<div style="display: flex; justify-content: space-between; color: #1F2421; font-weight: 700; font-size: 16px"><span>Total</span><span>€72.60</span></div>
+</div>
+</div>
+<p style="margin: 16px 4px 0; font-size: 17px"><strong style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px">Add</strong> what you sold.</p>
+</div>
+
+<div style="flex: 1 1 300px; max-width: 340px">
+<div style="background: #FFFFFF; border: 1px solid #E7DEC8; border-radius: 18px; padding: 20px; box-shadow: 0 12px 32px rgba(31,36,33,0.08); min-height: 360px; box-sizing: border-box">
+<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px">
+<span style="width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: #FFFFFF; font-weight: 700; font-size: 14px; display: flex; align-items: center; justify-content: center">3</span>
+<span style="font-weight: 600; font-size: 15px">Review and send</span>
+</div>
+<div style="border: 1px solid #E7DEC8; border-radius: 10px; padding: 14px; font-size: 14px; background: #FBF5E6">
+<div style="display: flex; justify-content: space-between"><strong>Invoice No. 0001</strong><span style="color: #5A5F58">Total €72.60</span></div>
+<div style="margin-top: 4px; color: #5A5F58">Silva Studio SIA</div>
+</div>
+<div style="margin-top: 12px; display: inline-flex; align-items: center; gap: 8px; background: #D9ECE9; color: #0E4F52; border-radius: 999px; padding: 6px 12px; font-size: 13px; font-weight: 600">
+<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12l5 5L20 7"></path></svg>
+Meets the e-invoice standard
+</div>
+<div style="margin-top: 20px; background: var(--accent); color: #FFFFFF; text-align: center; padding: 14px; border-radius: 10px; font-weight: 600">Send invoice</div>
+<div style="margin-top: 10px; display: flex; gap: 10px; font-size: 14px; font-weight: 600; color: #0E4F52">
+<div style="flex: 1; border: 1.5px solid #0E4F52; border-radius: 10px; padding: 10px; text-align: center">PDF</div>
+<div style="flex: 1; border: 1.5px solid #0E4F52; border-radius: 10px; padding: 10px; text-align: center">XML</div>
+</div>
+</div>
+<p style="margin: 16px 4px 0; font-size: 17px"><strong style="font-family: 'Bricolage Grotesque', sans-serif; font-size: 22px">Send</strong> it when it looks right. Nothing goes out before that.</p>
+</div>
+
+</div>
+</section>
+
+<!-- Contrast block -->
+<section class="on-dark" style="background: #0E4F52; color: #FBF5E6; margin-top: 64px">
+<div style="max-width: 820px; margin: 0 auto; padding: 88px 24px; text-align: center">
+<h2 style="margin: 0; font-size: clamp(32px, 4.5vw, 48px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 800">Most invoicing tools are made for accountants. You probably aren't one.</h2>
+<p style="margin: 24px 0 0; font-size: 20px; color: #D9ECE9">They come with ledgers, plans and menus you'll never open. You just want to send an invoice and get paid.</p>
+<p style="margin: 20px 0 0; font-size: 20px; font-weight: 600">Viegli rēķini does one job: it gets a correct invoice to your customer. The rest can come later.</p>
+</div>
+</section>
+
+<!-- Founder note -->
+<section style="max-width: 1120px; margin: 0 auto; padding: 96px 24px 32px">
+<div style="display: flex; flex-wrap: wrap; gap: 40px; align-items: flex-start">
+<div style="flex: 0 0 180px">
+<div role="img" aria-label="Photo of Reinis, placeholder" style="width: 180px; height: 180px; border-radius: 50%; background: #E7DEC8; border: 2px dashed #5A5F58; box-sizing: border-box; display: flex; align-items: center; justify-content: center; color: #5A5F58; font-size: 14px; text-align: center; padding: 16px">[YOUR PHOTO]</div>
+</div>
+<div style="flex: 1 1 420px; max-width: 680px">
+<h2 style="margin: 0 0 20px; font-size: 36px; line-height: 1.15; letter-spacing: -0.02em; font-weight: 800">Hi, I'm Reinis.</h2>
+<p style="margin: 0 0 16px; font-size: 19px">My wife sends the invoices for her parents' picture-framing business. On a family holiday she had to send one from her phone, in the latvija.lv portal. The portal wasn't built for phones and it's confusing to use, so it took her at least half an hour.</p>
+<p style="margin: 0 0 16px; font-size: 19px">That was one invoice, and it should have taken a couple of minutes. Instead she lost part of her holiday and got stressed. That's when I decided people need something easier, simpler and faster.</p>
+<p style="margin: 0 0 16px; font-size: 19px">I'm building it step by step, starting with the basic job done properly. If something confuses you, write to me. I read every message.</p>
+<p style="margin: 0; font-size: 17px; color: #5A5F58">Reinis, <a href="#contact" style="font-weight: 500">[YOUR EMAIL]</a></p>
+</div>
+</div>
+</section>
+
+<!-- Little things -->
+<section style="max-width: 1120px; margin: 0 auto; padding: 64px 24px 32px">
+<h2 style="margin: 0; font-size: clamp(30px, 4vw, 44px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 800">What it does.</h2>
+<p style="margin: 12px 0 0; font-size: 19px; color: #5A5F58; max-width: 640px">A short list, on purpose.</p>
+
+<div style="margin-top: 40px; display: flex; flex-wrap: wrap; gap: 24px">
+
+<div style="flex: 1 1 320px; background: #FFFFFF; border: 1px solid #E7DEC8; border-radius: 18px; padding: 24px">
+<div aria-hidden="true" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; font-size: 14px; font-weight: 600">
+<div style="background: var(--accent); color: #FFFFFF; padding: 12px 14px; border-radius: 10px">New invoice</div>
+<div style="border: 1.5px solid #0E4F52; color: #0E4F52; padding: 10px 14px; border-radius: 10px">Customers and items</div>
+<div style="border: 1.5px solid #0E4F52; color: #0E4F52; padding: 10px 14px; border-radius: 10px">My invoices</div>
+</div>
+<h3 style="margin: 0 0 8px; font-size: 21px; letter-spacing: -0.01em">Three things on your home screen</h3>
+<p style="margin: 0; color: #5A5F58; font-size: 16px">New invoice is the biggest button. The other two take you to your customers and items, and to your past invoices.</p>
+</div>
+
+<div style="flex: 1 1 320px; background: #FFFFFF; border: 1px solid #E7DEC8; border-radius: 18px; padding: 24px">
+<div aria-hidden="true" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; font-size: 14px">
+<span style="background: #D9ECE9; color: #0E4F52; padding: 8px 12px; border-radius: 999px; font-weight: 600">Silva Studio SIA</span>
+<span style="background: #F8DDD3; color: #7A2A18; padding: 8px 12px; border-radius: 999px; font-weight: 600">Frame, oak</span>
+<span style="background: #F8DDD3; color: #7A2A18; padding: 8px 12px; border-radius: 999px; font-weight: 600">Glass, cut to size</span>
+<span style="background: #D9ECE9; color: #0E4F52; padding: 8px 12px; border-radius: 999px; font-weight: 600">Koks SIA</span>
+</div>
+<h3 style="margin: 0 0 8px; font-size: 21px; letter-spacing: -0.01em">Saved customers and items</h3>
+<p style="margin: 0; color: #5A5F58; font-size: 16px">Enter them once. Next time it takes two clicks.</p>
+</div>
+
+<div style="flex: 1 1 320px; background: #FFFFFF; border: 1px solid #E7DEC8; border-radius: 18px; padding: 24px">
+<div aria-hidden="true" style="display: flex; gap: 8px; margin-bottom: 20px; font-size: 14px; font-weight: 600; font-family: 'Bricolage Grotesque', sans-serif">
+<span style="border: 1.5px solid #0E4F52; color: #0E4F52; padding: 8px 12px; border-radius: 8px">0001</span>
+<span style="border: 1.5px solid #0E4F52; color: #0E4F52; padding: 8px 12px; border-radius: 8px">0002</span>
+<span style="border: 1.5px solid #0E4F52; color: #0E4F52; padding: 8px 12px; border-radius: 8px">0003</span>
+<span style="border: 1.5px dashed #5A5F58; color: #5A5F58; padding: 8px 12px; border-radius: 8px">0004</span>
+</div>
+<h3 style="margin: 0 0 8px; font-size: 21px; letter-spacing: -0.01em">Invoice numbers don't skip or repeat</h3>
+<p style="margin: 0; color: #5A5F58; font-size: 16px">Numbering is locked in the database, so you can't end up with a gap or a duplicate.</p>
+</div>
+
+<div style="flex: 1 1 320px; background: #FFFFFF; border: 1px solid #E7DEC8; border-radius: 18px; padding: 24px">
+<div aria-hidden="true" style="margin-bottom: 20px">
+<span style="display: inline-flex; align-items: center; gap: 8px; background: #D9ECE9; color: #0E4F52; border-radius: 999px; padding: 8px 14px; font-size: 14px; font-weight: 600">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"></path></svg>
+Meets the e-invoice standard
+</span>
+</div>
+<h3 style="margin: 0 0 8px; font-size: 21px; letter-spacing: -0.01em">A check mark when it's correct</h3>
+<p style="margin: 0; color: #5A5F58; font-size: 16px">It shows up when the invoice meets the e-invoice standard.</p>
+</div>
+
+<div style="flex: 1 1 320px; background: #FFFFFF; border: 1px solid #E7DEC8; border-radius: 18px; padding: 24px">
+<div aria-hidden="true" style="display: flex; gap: 10px; margin-bottom: 20px; font-size: 14px; font-weight: 700">
+<span style="border: 1.5px solid #0E4F52; color: #0E4F52; padding: 12px 20px; border-radius: 10px">PDF</span>
+<span style="border: 1.5px solid #0E4F52; color: #0E4F52; padding: 12px 20px; border-radius: 10px">XML</span>
+</div>
+<h3 style="margin: 0 0 8px; font-size: 21px; letter-spacing: -0.01em">A PDF and an e-invoice</h3>
+<p style="margin: 0; color: #5A5F58; font-size: 16px">Every invoice comes as a PDF you can print and as a standard XML e-invoice.</p>
+</div>
+
+<div style="flex: 1 1 320px; background: #FFFFFF; border: 1px solid #E7DEC8; border-radius: 18px; padding: 24px">
+<div aria-hidden="true" style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 20px; font-size: 14px">
+<div style="display: flex; justify-content: space-between; border-bottom: 1px solid #E7DEC8; padding-bottom: 6px"><span>0003 · Silva Studio SIA</span><strong>€72.60</strong></div>
+<div style="display: flex; justify-content: space-between; border-bottom: 1px solid #E7DEC8; padding-bottom: 6px"><span>0002 · Koks SIA</span><strong>€140.00</strong></div>
+<div style="display: flex; justify-content: space-between"><span>0001 · Silva Studio SIA</span><strong>€36.30</strong></div>
+</div>
+<h3 style="margin: 0 0 8px; font-size: 21px; letter-spacing: -0.01em">Every invoice stays saved</h3>
+<p style="margin: 0; color: #5A5F58; font-size: 16px">All your invoices sit in one list, so an old one is quick to find.</p>
+</div>
+
+</div>
+</section>
+
+<!-- Built around Latvian law -->
+<section style="max-width: 1120px; margin: 0 auto; padding: 64px 24px 32px">
+<div style="background: #FFFFFF; border: 1px solid #E7DEC8; border-radius: 24px; padding: 48px 40px">
+<h2 style="margin: 0; font-size: clamp(30px, 4vw, 44px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 800">Built around Latvian law.</h2>
+<p style="margin: 12px 0 0; font-size: 19px; color: #5A5F58; max-width: 640px">You don't need to know the rules. The app does.</p>
+<div style="margin-top: 32px; display: flex; flex-wrap: wrap; gap: 32px">
+<div style="flex: 1 1 260px">
+<h3 style="margin: 0 0 8px; font-size: 20px">Required fields</h3>
+<p style="margin: 0; font-size: 16px; color: #5A5F58">Each invoice has the details the Accounting Law requires.</p>
+</div>
+<div style="flex: 1 1 260px">
+<h3 style="margin: 0 0 8px; font-size: 20px">VAT rules</h3>
+<p style="margin: 0; font-size: 16px; color: #5A5F58">VAT is calculated line by line, and the totals add up.</p>
+</div>
+<div style="flex: 1 1 260px">
+<h3 style="margin: 0 0 8px; font-size: 20px">E-invoice format</h3>
+<p style="margin: 0; font-size: 16px; color: #5A5F58">Standard XML (PEPPOL BIS Billing 3.0, EN 16931), which your customers' systems can read.</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing" style="max-width: 1120px; margin: 0 auto; padding: 64px 24px 32px">
+<h2 style="margin: 0; font-size: clamp(30px, 4vw, 44px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 800">Pay for each invoice you send.</h2>
+<p style="margin: 12px 0 0; font-size: 19px; color: #5A5F58; max-width: 640px">There's no plan to choose. Try a few invoices first.</p>
+<div style="margin-top: 32px; display: flex; flex-wrap: wrap; gap: 24px; align-items: stretch">
+<div style="flex: 1 1 320px; max-width: 420px; background: #FFFFFF; border: 2px solid #0E4F52; border-radius: 20px; padding: 32px">
+<div style="font-size: 14px; font-weight: 600; color: #0E4F52; text-transform: uppercase; letter-spacing: 0.06em">Per invoice</div>
+<div style="margin-top: 12px; font-family: 'Bricolage Grotesque', sans-serif; font-size: 56px; font-weight: 800; line-height: 1; letter-spacing: -0.03em">[€0.00]</div>
+<div style="margin-top: 4px; color: #5A5F58">per invoice sent, [excl. VAT]</div>
+<ul style="margin: 24px 0 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; font-size: 16px">
+<li style="display: flex; gap: 10px; align-items: flex-start"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E4F52" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5L20 7"></path></svg>[N] free invoices to try</li>
+<li style="display: flex; gap: 10px; align-items: flex-start"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E4F52" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5L20 7"></path></svg>A PDF and an XML e-invoice with each one</li>
+<li style="display: flex; gap: 10px; align-items: flex-start"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0E4F52" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 3px"><path d="M5 12l5 5L20 7"></path></svg>No monthly fee</li>
+</ul>
+<a class="btn" href="#start" style="margin-top: 28px; display: block; text-align: center; background: var(--accent); color: #FFFFFF; text-decoration: none; padding: 14px 24px; border-radius: 12px; font-weight: 600">Create your first invoice</a>
+</div>
+<div style="flex: 1 1 320px; max-width: 520px; align-self: center; font-size: 17px; color: #5A5F58">
+<p style="margin: 0 0 12px">[PRICING MODEL TO BE DECIDED. Drafted as per-invoice with a one-time free allowance. Replace with the final numbers.]</p>
+</div>
+</div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" style="max-width: 820px; margin: 0 auto; padding: 64px 24px 32px">
+<h2 style="margin: 0 0 8px; font-size: clamp(30px, 4vw, 44px); line-height: 1.1; letter-spacing: -0.02em; font-weight: 800">Questions</h2>
+<p style="margin: 0 0 32px; font-size: 19px; color: #5A5F58">Including what it can't do yet.</p>
+
+<h3 style="margin: 32px 0 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: #5A5F58">Getting started</h3>
+<details open="" style="border-top: 1px solid #E7DEC8; padding: 4px 0">
+<summary style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 0; font-weight: 600; font-size: 18px">Do I need an accountant to start?<svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M6 9l6 6 6-6"></path></svg></summary>
+<p style="margin: 0 0 16px; color: #5A5F58">No. Enter your company details once, then create your first invoice.</p>
+</details>
+<details open="" style="border-top: 1px solid #E7DEC8; padding: 4px 0">
+<summary style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 0; font-weight: 600; font-size: 18px">Do I need a credit card to try it?<svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M6 9l6 6 6-6"></path></svg></summary>
+<p style="margin: 0 0 16px; color: #5A5F58">No. The free invoices don't need payment details. [Confirm what happens when they run out.]</p>
+</details>
+<details open="" style="border-top: 1px solid #E7DEC8; border-bottom: 1px solid #E7DEC8; padding: 4px 0">
+<summary style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 0; font-weight: 600; font-size: 18px">What does it cost?<svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M6 9l6 6 6-6"></path></svg></summary>
+<p style="margin: 0 0 16px; color: #5A5F58">You pay for each invoice you send. The details are in the <a href="#pricing">pricing</a> section above.</p>
+</details>
+
+<h3 style="margin: 40px 0 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: #5A5F58">What it can and cannot do yet</h3>
+<details open="" style="border-top: 1px solid #E7DEC8; padding: 4px 0">
+<summary style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 0; font-weight: 600; font-size: 18px">Does it make e-invoices?<svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M6 9l6 6 6-6"></path></svg></summary>
+<p style="margin: 0 0 16px; color: #5A5F58">Yes. Each invoice comes as a PDF and as a standard XML e-invoice. [Describe how the invoice reaches the customer at launch.]</p>
+</details>
+<details open="" style="border-top: 1px solid #E7DEC8; padding: 4px 0">
+<summary style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 0; font-weight: 600; font-size: 18px">What can't it do yet?<svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M6 9l6 6 6-6"></path></svg></summary>
+<p style="margin: 0 0 12px; color: #5A5F58">Credit notes come soon after launch, then quotes and advance invoices. There's no bank sync and no setup for several shops yet.</p>
+<p style="margin: 0 0 16px; color: #5A5F58">If you need those now, this isn't the right tool yet. I'd rather you hear that before you sign up.</p>
+</details>
+<details open="" style="border-top: 1px solid #E7DEC8; border-bottom: 1px solid #E7DEC8; padding: 4px 0">
+<summary style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 0; font-weight: 600; font-size: 18px">Can I bring my customers over from another tool?<svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M6 9l6 6 6-6"></path></svg></summary>
+<p style="margin: 0 0 16px; color: #5A5F58">Not yet. You add each customer and item the first time you use them, and they're saved after that.</p>
+</details>
+
+<h3 style="margin: 40px 0 8px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.08em; color: #5A5F58">Your data</h3>
+<details open="" style="border-top: 1px solid #E7DEC8; padding: 4px 0">
+<summary style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 0; font-weight: 600; font-size: 18px">Where is my data?<svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M6 9l6 6 6-6"></path></svg></summary>
+<p style="margin: 0 0 16px; color: #5A5F58">[HOSTING LOCATION AND HOW IT IS PROTECTED]</p>
+</details>
+<details open="" style="border-top: 1px solid #E7DEC8; border-bottom: 1px solid #E7DEC8; padding: 4px 0">
+<summary style="display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 16px 0; font-weight: 600; font-size: 18px">Can I take my invoices with me?<svg class="chev" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M6 9l6 6 6-6"></path></svg></summary>
+<p style="margin: 0 0 16px; color: #5A5F58">[EXPORT PROMISE YOU CAN KEEP]</p>
+</details>
+</section>
+
+<!-- Closing CTA -->
+<section class="on-dark" style="background: #0E4F52; color: #FBF5E6; margin-top: 64px">
+<div style="max-width: 820px; margin: 0 auto; padding: 88px 24px; text-align: center">
+<h2 style="margin: 0; font-size: clamp(34px, 5vw, 56px); line-height: 1.08; letter-spacing: -0.03em; font-weight: 800">Send your first invoice today.</h2>
+<p style="margin: 20px 0 0; font-size: 19px; color: #D9ECE9">No credit card. Nothing to install.</p>
+<a class="btn" href="#start" style="margin-top: 32px; display: inline-block; background: var(--accent); color: #FFFFFF; text-decoration: none; padding: 16px 32px; border-radius: 12px; font-weight: 600; font-size: 18px">Create your first invoice</a>
+</div>
+</section>
+
+</main>
+
+<footer style="max-width: 1120px; margin: 0 auto; padding: 40px 24px 56px; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 16px; font-size: 14px; color: #5A5F58">
+<div>viegli rēķini · Built in Latvia · [COMPANY NAME AND REGISTRATION DETAILS]</div>
+<div style="display: flex; gap: 20px"><a href="#privacy">Privacy</a><a href="#terms">Terms</a><a href="#contact">Contact</a></div>
+</footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"accent":{"editor":"color","default":"#C8452B","options":["#C8452B","#B23A22","#D9552F","#0E4F52"]},"$preview":{"width":1360,"height":4700}}'>
+class Component extends DCLogic {
+renderVals() {
+return { accent: this.props.accent ?? '#C8452B' };
+}
+}
+</script>
+</body>
+</html>

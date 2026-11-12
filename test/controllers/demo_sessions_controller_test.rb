@@ -6,7 +6,7 @@ class DemoSessionsControllerTest < ActionDispatch::IntegrationTest
 
     post demo_session_path
 
-    assert_redirected_to root_path
+    assert_redirected_to dashboard_path
     assert_equal 1, user.sessions.count
   end
 

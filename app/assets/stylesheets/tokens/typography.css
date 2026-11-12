@@ -39,8 +39,8 @@
 /* Replace with project fonts. System stack is a safe default. */
 
 :root {
-  --font-base: system-ui, -apple-system, sans-serif;
-  --font-heading: system-ui, -apple-system, sans-serif;
+  --font-base: "IBM Plex Sans", system-ui, -apple-system, sans-serif;
+  --font-heading: "IBM Plex Serif", "IBM Plex Sans", system-ui, serif;
   --font-mono: ui-monospace, "Cascadia Code", "Source Code Pro",
                Menlo, Consolas, "DejaVu Sans Mono", monospace;
 }
@@ -50,6 +50,7 @@
 :root {
   --font-weight-regular: 400;
   --font-weight-medium:  500;
+  --font-weight-semibold: 600;
   --font-weight-bold:    700;
 }
 

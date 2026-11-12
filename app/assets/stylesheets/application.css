@@ -9,6 +9,7 @@
 @import "reset.css" layer(reset);
 
 /* Tokens */
+@import "tokens/fonts.css" layer(tokens);
 @import "tokens/colors.css" layer(tokens);
 @import "tokens/typography.css" layer(tokens);
 @import "tokens/spacing.css" layer(tokens);
@@ -42,6 +43,7 @@
 @import "blocks/invoice-doc.css" layer(blocks);
 @import "blocks/invoice-page.css" layer(blocks);
 @import "blocks/prose.css" layer(blocks);
+@import "blocks/landing.css" layer(blocks);
 
 /* Utilities */
 @import "utilities/icon.css" layer(utilities);

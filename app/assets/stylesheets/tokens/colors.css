@@ -21,18 +21,18 @@
 /* Surfaces and text live directly in the semantic aliases.   */
 
 :root {
-  /* Body text — warm dark brown, softer than pure black */
-  --palette-text: oklch(0.264 0.026 84);  /* #2B2416 */
+  /* Body text — deep warm ink, softer than pure black */
+  --palette-text: oklch(0.254 0.009 159);  /* #1F2421 */
 
-  /* Brand — coral (#C1531B) */
-  --palette-brand-light:  oklch(0.688 0.149 45);
-  --palette-brand:        oklch(0.576 0.155 43);
-  --palette-brand-dark:   oklch(0.450 0.140 42);
+  /* Brand — coral (#C8452B) */
+  --palette-brand-light:  oklch(0.618 0.174 36);
+  --palette-brand:        oklch(0.570 0.172 33);
+  --palette-brand-dark:   oklch(0.520 0.160 33);
 
-  /* Accent — teal (#1D5C66), used for links and secondary actions */
-  --palette-accent-light: oklch(0.774 0.091 208);
-  --palette-accent:       oklch(0.440 0.064 210);
-  --palette-accent-dark:  oklch(0.350 0.055 208);
+  /* Accent — teal (#0E4F52), used for links and secondary actions */
+  --palette-accent-light: oklch(0.740 0.080 200);
+  --palette-accent:       oklch(0.391 0.061 200);
+  --palette-accent-dark:  oklch(0.305 0.047 199);
 
   /* Semantic states — three-tier like brand/accent */
   --palette-success-light: oklch(0.90 0.035 155);
@@ -56,7 +56,7 @@
 
 :root {
   /* Surfaces — warm-cast, stepped by lightness */
-  --color-surface-base:    oklch(0.985 0.016 92);  /* warm cream */
+  --color-surface-base:    oklch(0.971 0.021 89);  /* warm cream (#FBF5E6) */
   --color-surface-raised:  oklch(0.995 0.008 90);  /* near-white cards */
   --color-surface-overlay: oklch(0.999 0.004 90);  /* modals/dropdowns — brightest */
   --color-surface-inset:   oklch(0.935 0.018 90);  /* sunken inputs */
@@ -64,8 +64,8 @@
 
   /* Text */
   --color-text:        var(--palette-text);
-  --color-text-muted:  oklch(0.400 0.007 82);
-  --color-text-subtle: oklch(0.550 0.008 84);
+  --color-text-muted:  oklch(0.479 0.013 137);  /* #5A5F58 */
+  --color-text-subtle: oklch(0.620 0.010 137);
   --color-text-invert: oklch(0.985 0.016 92);
 
   /* Links */
@@ -82,7 +82,7 @@
   --color-accent-hover: var(--palette-accent-dark);
 
   /* Borders */
-  --color-border:       oklch(0.919 0.037 92);  /* warm cream border (#EDE4C9) */
+  --color-border:       oklch(0.902 0.031 88);  /* warm cream border (#E7DEC8) */
   --color-border-focus: var(--palette-brand);
 
   /* Semantic states */
@@ -172,14 +172,14 @@
 /* These override both light and dark system preferences.    */
 
 [data-theme="light"] {
-  --color-surface-base:    oklch(0.985 0.016 92);
+  --color-surface-base:    oklch(0.971 0.021 89);
   --color-surface-raised:  oklch(0.995 0.008 90);
   --color-surface-overlay: oklch(0.999 0.004 90);
   --color-surface-chrome:  oklch(0.93 0.010 88);
 
   --color-text:        var(--palette-text);
-  --color-text-muted:  oklch(0.400 0.007 82);
-  --color-text-subtle: oklch(0.550 0.008 84);
+  --color-text-muted:  oklch(0.479 0.013 137);  /* #5A5F58 */
+  --color-text-subtle: oklch(0.620 0.010 137);
   --color-text-invert: oklch(0.985 0.016 92);
 
   --color-link:       var(--palette-accent);
@@ -187,7 +187,7 @@
 
   --color-brand:       var(--palette-brand);
   --color-brand-hover: var(--palette-brand-dark);
-  --color-border:      oklch(0.919 0.037 92);
+  --color-border:      oklch(0.902 0.031 88);
   --color-border-focus: var(--palette-brand);
 
   --color-success-bg:     var(--palette-success-light);

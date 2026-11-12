@@ -32,6 +32,8 @@ The map for the `agents/docs/` tree. Read this first — a doc not listed here i
 
 - `DEPLOY-PLAN.md` — portfolio-demo deploy plan: blockers, demo account, Fix 1 (numbering), Fix 2 (money), README, secrets scan.
 - `ANALYTICS-PLAN.md` — analytics/monitoring strategy: Cloudflare Web Analytics (built), Ahoy + Blazer, Sentry/GlitchTip, Mission Control, Uptime, Umami fallback, RentForge crossover.
+- `i18n-plan.md` — LV/EN internationalization plan (7 phases; Phase 6 = public pages in both languages).
+- `landing-page-plan.md` — the English landing page build (design → styles → routing), the first slice of i18n Phase 6.
 
 ## Notes (deep-dive explainers — read when you need to *understand*, not just follow)
 

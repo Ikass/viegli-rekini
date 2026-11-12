@@ -1,0 +1,6 @@
+# Latvian landing copy is written separately (not machine-translated). This file
+# is intentionally empty until that copy is supplied — see agents/docs/i18n-plan.md
+# Phase 6 and agents/docs/landing-page-plan.md Phase F.
+lv:
+  landing:
+    show: {}
