@@ -3,32 +3,39 @@
 require "test_helper"
 
 class LandingControllerTest < ActionDispatch::IntegrationTest
-  test "redirects / to the English page" do
+  test "renders the Latvian landing at /" do
     get "/"
-
-    assert_redirected_to root_path(locale: :en)
-  end
-
-  test "redirects authenticated visitors to the dashboard" do
-    sign_in_as(users(:one))
-
-    get "/"
-
-    assert_redirected_to dashboard_path
-  end
-
-  test "renders the English landing page" do
-    get root_path(locale: :en)
 
     assert_response :success
-    assert_select "h1", text: /Invoices in three steps/
+    assert_select "html[lang=lv]"
+    assert_select "h1", text: /Rēķins trīs soļos/
   end
 
-  test "sets the locale from the URL" do
+  test "renders the English landing at /en" do
     get "/en"
 
     assert_response :success
     assert_select "html[lang=en]"
+    assert_select "h1", text: /Invoices in three steps/
+  end
+
+  test "declares hreflang alternates and a canonical" do
+    get "/"
+
+    assert_select 'link[rel="alternate"][hreflang="lv"]', 1
+    assert_select 'link[rel="alternate"][hreflang="en"]', 1
+    assert_select 'link[rel="alternate"][hreflang="x-default"]', 1
+    assert_select 'link[rel="canonical"]', 1
+  end
+
+  test "links to the other language" do
+    get "/"
+
+    assert_select "nav a[hreflang=en]", text: "English"
+
+    get "/en"
+
+    assert_select "nav a[hreflang=lv]", text: "Latviešu"
   end
 
   test "does not require authentication" do

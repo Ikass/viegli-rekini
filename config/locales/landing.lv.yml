@@ -1,6 +1,191 @@
-# Latvian landing copy is written separately (not machine-translated). This file
-# is intentionally empty until that copy is supplied — see agents/docs/i18n-plan.md
-# Phase 6 and agents/docs/landing-page-plan.md Phase F.
 lv:
   landing:
-    show: {}
+    show:
+      meta_title: "ViegliRēķini — rēķins trīs soļos"
+      meta_description: "Izraksti pareizu rēķinu trīs soļos. PVN, numerāciju un e-rēķina formātu sakārto programma. Radīts Latvijā."
+
+      top_strip: "Radīts Latvijā tiem, kas paši izraksta savus rēķinus."
+
+      nav:
+        how_it_works: "Kā tas strādā"
+        pricing: "Cena"
+        questions: "Jautājumi"
+        log_in: "Pieslēgties"
+        create_first_invoice: "Izraksti pirmo rēķinu"
+
+      hero:
+        title: "Rēķins trīs soļos. Atbilst Latvijas likumiem."
+        subtitle: "Izvēlies klientu, pievieno, ko pārdevi, un nosūti. PVN, numerāciju un e-rēķina formātu sakārto programma."
+        cta: "Izraksti pirmo rēķinu"
+        reassurance: "Bez kredītkartes. Nekas nav jāinstalē."
+        screens_label: "Trīs programmas ekrāni: izvēlies klientu, pievieno preces un pakalpojumus, nosūti rēķinu"
+
+      steps:
+        one:
+          label: "Jauns rēķins · klients"
+          caption_lead: "Izvēlies"
+          caption_rest: "klientu."
+          screen:
+            input: "Silva"
+            saved_name: "Silva Studio SIA"
+            saved_tag: "Saglabāts klients"
+            other: "Silva Koks SIA"
+            add_new: "+ Pievienot jaunu klientu"
+            hint: "Adrese, reģistrācijas numurs un PVN numurs aizpildās no saglabātā klienta."
+        two:
+          label: "Jauns rēķins · preces un pakalpojumi"
+          caption_lead: "Pievieno,"
+          caption_rest: "ko pārdevi."
+          screen:
+            items:
+              - name: "Rāmis, ozols, 40×50 cm"
+                qty: "1 × 48,00 €"
+                total: "48,00 €"
+              - name: "Stikls, griezts pēc izmēra"
+                qty: "1 × 12,00 €"
+                total: "12,00 €"
+            add_from_saved: "+ Pievienot no saglabātajām"
+            subtotal_label: "Summa bez PVN"
+            subtotal: "60,00 €"
+            vat_label: "PVN 21%"
+            vat: "12,60 €"
+            total_label: "Kopā"
+            total: "72,60 €"
+        three:
+          label: "Pārbaudi un nosūti"
+          caption_lead: "Nosūti,"
+          caption_rest: "kad viss izskatās kārtībā. Līdz tam nekas neaiziet."
+          screen:
+            invoice_label: "Rēķins Nr. 0001"
+            total: "Kopā 72,60 €"
+            customer: "Silva Studio SIA"
+            standard: "Atbilst e-rēķina standartam"
+            send: "Nosūtīt rēķinu"
+            pdf: "PDF"
+            xml: "XML"
+
+      contrast:
+        title: "Lielākā daļa rēķinu programmu ir veidotas grāmatvežiem. Nevis tiem, kam rēķins vienkārši jāizraksta."
+        body: "Tajās ir grāmatvedības moduļi, tarifu plāni un izvēlnes, ko tu nekad neatvērsi. Tu gribi tikai izrakstīt rēķinu un saņemt naudu."
+        emphasis: "ViegliRēķini dara vienu darbu: nodod tavam klientam pareizu rēķinu. Pārējais nāks vēlāk."
+
+      founder:
+        title: "Sveiki, es esmu Reinis."
+        para_1: "Mana sieva izraksta rēķinus savu vecāku uzņēmumam, kas nodarbojas ar bilžu ierāmēšanu. Ģimenes atvaļinājumā viņai vajadzēja nosūtīt vienu rēķinu no telefona, latvija.lv portālā. Portāls nav veidots darbam telefonā, un tajā ir viegli apmaldīties, tāpēc viņa pie tā pavadīja vismaz pusstundu."
+        para_2: "Tas bija viens rēķins, un tam vajadzēja aizņemt dažas minūtes. Tā vietā viņa pazaudēja daļu atvaļinājuma un nostresojās. Tad es sapratu, ka cilvēkiem vajag kaut ko vieglāku, vienkāršāku un ātrāku."
+        para_3: "Es to veidoju pa soļiem, sākot ar pamatdarbu, kas jāizdara pareizi. Ja kaut kas nav skaidrs, uzraksti man. Es izlasu katru ziņu."
+        signature: "Reinis,"
+        email: "reinis@grittypublishing.com"
+        photo_alt: "Reiņa foto"
+
+      features:
+        heading: "Ko tas dara."
+        intro: "Īss saraksts, un tā ir ar nolūku."
+        cards:
+          home_screen:
+            menu:
+              new_invoice: "Jauns rēķins"
+              customers_and_items: "Klienti un preces"
+              my_invoices: "Mani rēķini"
+            title: "Trīs lietas sākuma ekrānā"
+            body: "Lielākā poga ir „Jauns rēķins”. Pārējās divas ved uz klientiem un precēm un uz iepriekšējiem rēķiniem."
+          saved:
+            pills:
+              - "Silva Studio SIA"
+              - "Rāmis, ozols"
+              - "Stikls, griezts pēc izmēra"
+              - "Koks SIA"
+            title: "Saglabāti klienti un preces"
+            body: "Ievadi tos vienreiz. Nākamreiz pietiks ar diviem klikšķiem."
+          numbering:
+            numbers: ["0001", "0002", "0003", "0004"]
+            title: "Rēķinu numuri netiek izlaisti un neatkārtojas"
+            body: "Numerāciju kontrolē pati datubāze, tāpēc nevar gadīties ne izlaists numurs, ne dublikāts."
+          check:
+            standard: "Atbilst e-rēķina standartam"
+            title: "Ķeksītis, kad viss ir pareizi"
+            body: "Tas parādās, kad rēķins atbilst e-rēķina standartam."
+          pdf_xml:
+            title: "PDF un e-rēķins"
+            body: "Katrs rēķins ir gan PDF, ko vari izdrukāt, gan standarta XML e-rēķins."
+          saved_invoices:
+            rows:
+              - label: "0003 · Silva Studio SIA"
+                amount: "72,60 €"
+              - label: "0002 · Koks SIA"
+                amount: "140,00 €"
+              - label: "0001 · Silva Studio SIA"
+                amount: "36,30 €"
+            title: "Katrs rēķins paliek saglabāts"
+            body: "Visi rēķini ir vienā sarakstā, tāpēc vecu rēķinu var ātri atrast."
+
+      law:
+        heading: "Veidots pēc Latvijas likumiem."
+        intro: "Noteikumi tev nav jāzina. Tos zina programma."
+        columns:
+          fields:
+            title: "Obligātie rekvizīti"
+            body: "Katrā rēķinā ir tie rekvizīti, ko prasa Grāmatvedības likums."
+          vat:
+            title: "PVN noteikumi"
+            body: "PVN tiek aprēķināts katrai pozīcijai, un summas sakrīt."
+          e_invoice:
+            title: "E-rēķina formāts"
+            body: "Standarta XML (PEPPOL BIS Billing 3.0, EN 16931), ko saprot tavu klientu sistēmas."
+
+      pricing:
+        heading: "Maksā par katru nosūtīto rēķinu."
+        intro: "Nav jāizvēlas tarifu plāns. Vispirms izmēģini pāris rēķinus."
+        card:
+          label: "Par rēķinu"
+          price: "[0,00 €]"
+          unit: "par katru nosūtīto rēķinu, [bez PVN]"
+          features:
+            - "[N] bezmaksas rēķini izmēģināšanai"
+            - "Katram rēķinam PDF un XML e-rēķins"
+            - "Nav mēneša maksas"
+        cta: "Izraksti pirmo rēķinu"
+
+      faq:
+        heading: "Jautājumi"
+        intro: "Arī par to, ko tas vēl nespēj."
+        groups:
+          getting_started:
+            label: "Kā sākt"
+            items:
+              - question: "Vai man vajag grāmatvedi, lai sāktu?"
+                answer: "Nē. Vienreiz ievadi sava uzņēmuma datus un izraksti pirmo rēķinu."
+              - question: "Vai izmēģināšanai vajag kredītkarti?"
+                answer: "Nē. Bezmaksas rēķiniem maksājumu dati nav vajadzīgi. [Precizēt, kas notiek, kad tie beidzas.]"
+              - question: "Cik tas maksā?"
+                answer: "Tu maksā par katru nosūtīto rēķinu. Sīkāk skaties sadaļā „Cena” augstāk."
+          capabilities:
+            label: "Ko tas var un ko vēl nevar"
+            items:
+              - question: "Vai tas izveido e-rēķinus?"
+                answer: "Jā. Katrs rēķins ir gan PDF, gan standarta XML e-rēķins. [Aprakstīt, kā rēķins nonāk pie klienta, kad sistēma sāk darboties.]"
+              - question: "Ko tas vēl nespēj?"
+                answer:
+                  - "Kredītrēķini nāks drīz pēc sākuma, tad piedāvājumi un avansa rēķini. Vēl nav bankas sinhronizācijas, un nevar iestatīt vairākus veikalus."
+                  - "Ja tev tas vajadzīgs jau tagad, šis rīks tev vēl nederēs. Labāk, lai tu to uzzini pirms reģistrēšanās."
+              - question: "Vai varu pārnest klientus no cita rīka?"
+                answer: "Pagaidām nē. Katru klientu un preci pievieno pirmo reizi, kad tos izmanto, un pēc tam tie paliek saglabāti."
+          data:
+            label: "Tavi dati"
+            items:
+              - question: "Kur glabājas mani dati?"
+                answer: "[Datu glabāšanas vieta un aizsardzība]"
+              - question: "Vai varu paņemt savus rēķinus līdzi?"
+                answer: "[Eksporta solījums, ko vari izpildīt]"
+
+      closing:
+        title: "Nosūti pirmo rēķinu jau šodien."
+        body: "Bez kredītkartes. Nekas nav jāinstalē."
+        cta: "Izraksti pirmo rēķinu"
+
+      footer:
+        made_in: "Radīts Latvijā"
+        company: 'SIA "Gritty Publishing" · Reģ. nr. 40203365593'
+        privacy: "Privātuma politika"
+        terms: "Lietošanas noteikumi"
+        contact: "Kontakti"

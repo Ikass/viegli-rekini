@@ -2,9 +2,18 @@
 <html lang="<%= I18n.locale %>">
   <head>
     <title><%= content_for(:title) || t("landing.show.meta_title") %></title>
+    <meta name="description" content="<%= t("landing.show.meta_description") %>">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
+
+    <% lv_url = root_url %>
+    <% en_url = root_url(locale: :en) %>
+    <link rel="canonical" href="<%= I18n.locale == :en ? en_url : lv_url %>">
+    <link rel="alternate" hreflang="lv" href="<%= lv_url %>">
+    <link rel="alternate" hreflang="en" href="<%= en_url %>">
+    <link rel="alternate" hreflang="x-default" href="<%= lv_url %>">
+
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
     <%= yield :head %>

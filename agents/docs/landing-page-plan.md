@@ -73,9 +73,12 @@ The Latvian page at `/` follows later, when the LV copy is supplied.
 - Update `tokens/typography.css` with the Plex families.
 - New `blocks/landing.css` for the marketing sections; responsive from 375px.
 
-### F. Latvian copy (later)
-- Fill `landing.lv.yml` (written by Reinis, not machine-translated); flip `/` from
-  redirect to a real page; add `hreflang`/canonical + language switcher.
+### F. Latvian copy — DONE (2026-11-12)
+- `landing.lv.yml` filled from Reinis's copy in `agents/docs/landing-copy-lv.md`.
+- `/` serves Latvian (no more redirect); `/en` serves English.
+- Added `hreflang`/`canonical` in the layout + a nav language switcher (`/` ⇄ `/en`).
+- The landing controller defaults `/` to `:lv`; `default_locale` stays `:en` until the
+  app itself is translated (i18n-plan Phase 3). Money in Latvian format (`48,00 €`).
 
 ### G. QA
 - 375px both languages; `bin/ci`; `AGENTS.md`/`ARCHITECTURE.md` i18n section.

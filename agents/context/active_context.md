@@ -1,12 +1,14 @@
 # Active Context — ViegliRēķini
 
 ## Current work
-The English landing page shipped (2026-11-12) as the first slice of the i18n plan (Phase 6):
-`/` → 302 to `/en` (Latvian copy pending), `/dashboard` is now the app home, brand is
-`ViegliRēķini`, and the design system palette + fonts were reconciled to the mockup (coral
-`#C8452B`, teal `#0E4F52`, cream `#FBF5E6`; IBM Plex Sans/Serif self-hosted). i18n foundation
-landed (`available_locales [:lv, :en]`, `switch_locale`, `landing.{en,lv}.yml`). Plan:
-`agents/docs/landing-page-plan.md`. Tests: 191 unit + 4 system green.
+The landing page is live in both languages (2026-11-12): Latvian at `/`, English at `/en`,
+with `hreflang`/canonical and a nav language switcher. `/dashboard` is the app home, the
+brand is `ViegliRēķini`, and the design system palette + fonts were reconciled to the mockup
+(coral `#C8452B`, teal `#0E4F52`, cream `#FBF5E6`; IBM Plex Sans/Serif self-hosted). i18n
+foundation landed (`available_locales [:lv, :en]`, `switch_locale`, `landing.{lv,en}.yml`;
+the landing controller defaults `/` to `:lv` while `default_locale` stays `:en` until the app
+is translated). Plans: `agents/docs/landing-page-plan.md`, `agents/docs/i18n-plan.md`.
+Tests: 192 unit + 4 system green.
 
 Older (still live): CV-critical fixes, mobile/UI polish, system-test hardening, and the README
 rewrite (re-deployed 2026-10-11). Cloudflare Web Analytics on the login page (2026-10-12). The
@@ -29,10 +31,8 @@ Peppol web validation. Sentry error tracking built + deployed 2026-10-14 (EU DSN
   `9939`/`0218`; manual validation documented in `agents/docs/specs/ubl-invoice-generation.md`.
 
 ## Next
-- Landing: write the Latvian copy (`landing.lv.yml`), flip `/` from redirect to a real page, add
-  `hreflang`/canonical + a language switcher (i18n-plan Phases 4/6).
 - i18n-plan Phases 2–5 (extract app strings, add `rails-i18n` + `i18n-tasks`, Latvian app UI,
-  invoice document language) — not started.
+  invoice document language) — not started; this is when `default_locale` flips to `:lv`.
 - Fill the landing placeholders (pricing numbers, FAQ answers, legal pages) when decided.
 - `MoneyAmount` VO (optional cleanup). Backups (Litestream → R2) still pending. Uptime check on
   `/up`; then Ahoy + Blazer.

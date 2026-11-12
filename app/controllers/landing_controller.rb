@@ -1,17 +1,24 @@
 # frozen_string_literal: true
 
-# Public marketing page. Latvian is the eventual default at `/`; until the LV
-# copy is supplied, `/` redirects to the English page at `/en`
-# (see agents/docs/landing-page-plan.md).
+# Public marketing page. Latvian is the default public language at `/`;
+# English lives at `/en`. Copy is in config/locales/landing.{lv,en}.yml.
 class LandingController < ApplicationController
   layout "landing"
   allow_unauthenticated_access
 
-  # Latvian is the eventual default at `/`; until the LV copy is supplied, `/`
-  # redirects — signed-in users to their dashboard, guests to the English page.
   def show
-    return if params[:locale].present?
+  end
 
-    redirect_to(authenticated? ? dashboard_path : root_path(locale: :en), status: :found)
+  private
+
+  # `/` is the Latvian page (the product's default public language); `/en` is
+  # English. The logged-in app has no locale prefix and keeps `default_locale`.
+  def locale_from_params
+    requested = params[:locale]
+    if requested && I18n.available_locales.map(&:to_s).include?(requested)
+      requested.to_sym
+    else
+      :lv
+    end
   end
 end

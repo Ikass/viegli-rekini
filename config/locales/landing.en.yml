@@ -2,6 +2,7 @@ en:
   landing:
     show:
       meta_title: "ViegliRēķini — invoices in three steps"
+      meta_description: "Create a correct invoice in three steps. VAT, numbering and the e-invoice format are handled for you. Made in Latvia."
 
       top_strip: "Made in Latvia, for people who send their own invoices."
 
@@ -183,6 +184,7 @@ en:
         cta: "Create your first invoice"
 
       footer:
+        made_in: "Built in Latvia"
         company: 'SIA "Gritty Publishing" · Reg. no. 40203365593'
         privacy: "Privacy"
         terms: "Terms"
