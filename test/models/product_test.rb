@@ -22,7 +22,7 @@ class ProductTest < ActiveSupport::TestCase
       tax_category_code: "S"
     )
     assert_not product.valid?
-    assert_includes product.errors[:name], "can't be blank"
+    assert_includes product.errors[:name], I18n.t("errors.messages.blank")
   end
 
   test "requires default_price_cents" do
@@ -34,7 +34,7 @@ class ProductTest < ActiveSupport::TestCase
       tax_category_code: "S"
     )
     assert_not product.valid?
-    assert_includes product.errors[:default_price_cents], "can't be blank"
+    assert_includes product.errors[:default_price_cents], I18n.t("errors.messages.blank")
   end
 
   test "requires non-negative default_price_cents" do
@@ -46,7 +46,7 @@ class ProductTest < ActiveSupport::TestCase
       tax_category_code: "S"
     )
     assert_not product.valid?
-    assert_includes product.errors[:default_price_cents], "must be greater than or equal to 0"
+    assert_includes product.errors[:default_price_cents], I18n.t("errors.messages.greater_than_or_equal_to", count: 0)
   end
 
   test "requires integer default_price_cents" do
@@ -58,7 +58,7 @@ class ProductTest < ActiveSupport::TestCase
       tax_category_code: "S"
     )
     assert_not product.valid?
-    assert_includes product.errors[:default_price_cents], "must be an integer"
+    assert_includes product.errors[:default_price_cents], I18n.t("errors.messages.not_an_integer")
   end
 
   test "requires default_vat_rate" do
@@ -70,7 +70,7 @@ class ProductTest < ActiveSupport::TestCase
       tax_category_code: "S"
     )
     assert_not product.valid?
-    assert_includes product.errors[:default_vat_rate], "can't be blank"
+    assert_includes product.errors[:default_vat_rate], I18n.t("errors.messages.blank")
   end
 
   test "requires non-negative default_vat_rate" do
@@ -82,7 +82,7 @@ class ProductTest < ActiveSupport::TestCase
       tax_category_code: "S"
     )
     assert_not product.valid?
-    assert_includes product.errors[:default_vat_rate], "must be greater than or equal to 0"
+    assert_includes product.errors[:default_vat_rate], I18n.t("errors.messages.greater_than_or_equal_to", count: 0)
   end
 
   test "requires unit_code" do
@@ -94,7 +94,7 @@ class ProductTest < ActiveSupport::TestCase
       tax_category_code: "S"
     )
     assert_not product.valid?
-    assert_includes product.errors[:unit_code], "can't be blank"
+    assert_includes product.errors[:unit_code], I18n.t("errors.messages.blank")
   end
 
   test "requires valid unit_code" do
@@ -106,7 +106,7 @@ class ProductTest < ActiveSupport::TestCase
       tax_category_code: "S"
     )
     assert_not product.valid?
-    assert_includes product.errors[:unit_code], "is not included in the list"
+    assert_includes product.errors[:unit_code], I18n.t("errors.messages.inclusion")
   end
 
   test "allows all valid unit codes" do
@@ -131,7 +131,7 @@ class ProductTest < ActiveSupport::TestCase
       tax_category_code: nil
     )
     assert_not product.valid?
-    assert_includes product.errors[:tax_category_code], "can't be blank"
+    assert_includes product.errors[:tax_category_code], I18n.t("errors.messages.blank")
   end
 
   test "requires valid tax_category_code" do
@@ -143,7 +143,7 @@ class ProductTest < ActiveSupport::TestCase
       tax_category_code: "INVALID"
     )
     assert_not product.valid?
-    assert_includes product.errors[:tax_category_code], "is not included in the list"
+    assert_includes product.errors[:tax_category_code], I18n.t("errors.messages.inclusion")
   end
 
   test "allows all valid tax category codes" do

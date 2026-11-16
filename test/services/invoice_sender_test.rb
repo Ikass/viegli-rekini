@@ -65,7 +65,7 @@ class InvoiceSenderTest < ActiveSupport::TestCase
     result = InvoiceSender.new.send_invoice(invoice: @invoice)
 
     assert_not result.success?
-    assert_equal "Invoice cannot be sent from sent status.", result.error
+    assert_equal I18n.t("services.invoice_sender.cannot_send_from", status: "sent"), result.error
     assert @invoice.reload.sent?
   end
 
@@ -75,7 +75,7 @@ class InvoiceSenderTest < ActiveSupport::TestCase
     result = InvoiceSender.new.send_invoice(invoice: @invoice)
 
     assert_not result.success?
-    assert_equal "Invoice cannot be sent from paid status.", result.error
+    assert_equal I18n.t("services.invoice_sender.cannot_send_from", status: "paid"), result.error
     assert @invoice.reload.paid?
   end
 
@@ -85,7 +85,7 @@ class InvoiceSenderTest < ActiveSupport::TestCase
     result = InvoiceSender.new.send_invoice(invoice: @invoice)
 
     assert_not result.success?
-    assert_equal "Invoice cannot be sent from void status.", result.error
+    assert_equal I18n.t("services.invoice_sender.cannot_send_from", status: "void"), result.error
     assert @invoice.reload.void?
   end
 
@@ -104,11 +104,11 @@ class InvoiceSenderTest < ActiveSupport::TestCase
     result = InvoiceSender.new.send_invoice(invoice: @invoice)
 
     assert_not result.success?
-    assert_includes result.error, "Cannot send invoice — missing"
-    assert_includes result.error, "Company name"
-    assert_includes result.error, "Registration number"
-    assert_includes result.error, "Address"
-    assert_includes result.error, "IBAN"
+    assert_includes result.error, I18n.t("services.invoice_sender.missing", missing: "").split(":").first
+    assert_includes result.error, Account.human_attribute_name(:company_name)
+    assert_includes result.error, Account.human_attribute_name(:registration_number)
+    assert_includes result.error, Account.human_attribute_name(:address)
+    assert_includes result.error, Account.human_attribute_name(:bank_account)
   end
 
   test "fails when invoice has no line items" do
@@ -117,6 +117,6 @@ class InvoiceSenderTest < ActiveSupport::TestCase
     result = InvoiceSender.new.send_invoice(invoice: @invoice)
 
     assert_not result.success?
-    assert_includes result.error, "Line items"
+    assert_includes result.error, I18n.t("services.invoice_sender.line_items")
   end
 end

@@ -19,7 +19,7 @@ class ClientsTest < ApplicationSystemTestCase
     fill_field_via_js("input[name='client[country]']", "Latvija")
     submit_via_native_form
 
-    assert_text "Client created"
+    assert_text I18n.t("controllers.clients.created")
     assert_text "Anna Ozola"
     assert_text "Ozola SIA"
   end
@@ -30,7 +30,7 @@ class ClientsTest < ApplicationSystemTestCase
     fill_field_via_js("input[name='client[name]']", "Updated Name")
     submit_via_native_form
 
-    assert_text "Client updated"
+    assert_text I18n.t("controllers.clients.updated")
     assert_text "Updated Name"
   end
 

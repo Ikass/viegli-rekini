@@ -8,7 +8,7 @@ class ApplicationSystemTestCase < ActionDispatch::SystemTestCase
     fill_field_via_js("input[name='email_address']", user.email_address)
     fill_field_via_js("input[name='password']", "password")
     submit_via_native_form
-    assert_text "Invoices"
+    assert_text I18n.t("layouts.application.invoices")
   end
 
   # Turbo's fetch-based form submission doesn't work reliably in system tests.

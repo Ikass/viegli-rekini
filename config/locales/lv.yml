@@ -1,0 +1,341 @@
+---
+lv:
+  accounts:
+    edit:
+      address: Adrese
+      bank_details: Bankas dati
+      company_details: Uzņēmuma dati
+      invoice_settings: Rēķinu iestatījumi
+      save: Saglabāt iestatījumus
+      title: Iestatījumi
+  activerecord:
+    attributes:
+      account:
+        address: Adrese
+        bank_account: IBAN
+        bank_name: Bankas nosaukums
+        bank_swift: SWIFT/BIC
+        city: Pilsēta
+        company_name: Uzņēmuma nosaukums
+        country: Valsts
+        invoice_number_padding: Numura garums
+        invoice_prefix: Rēķina prefikss
+        payment_terms: Apmaksas noteikumi
+        postal_code: Pasta indekss
+        registration_number: Reģistrācijas numurs
+        vat_number: PVN numurs
+      client:
+        address: Adrese
+        city: Pilsēta
+        company_name: Uzņēmuma nosaukums
+        country: Valsts
+        country_code: Valsts kods
+        delivery_channel: Piegādes kanāls
+        e_adrese_id: E-adreses ID
+        email: E-pasts
+        iban: IBAN
+        is_budget_institution: Budžeta iestāde
+        name: Nosaukums
+        postal_code: Pasta indekss
+        registration_number: Reģistrācijas numurs
+        vat_number: PVN numurs
+        vat_regime: PVN režīms
+      invoice:
+        buyer_reference: Pircēja atsauce
+        client_id: Klients
+        due_on: Apmaksas termiņš
+        invoice_number: Numurs
+        issued_on: Izrakstīšanas datums
+        notes: Piezīmes
+      line_item:
+        description: Apraksts
+        quantity: Daudzums
+        tax_category_code: PVN kategorija
+        unit_code: Mērvienība
+        unit_price: Vienības cena
+        vat_rate: PVN likme
+      product:
+        default_price: Cena
+        default_vat_rate: PVN likme
+        description: Apraksts
+        name: Nosaukums
+        tax_category_code: PVN kategorija
+        unit_code: Mērvienība
+    errors:
+      models:
+        invoice:
+          attributes:
+            client:
+              must_belong_to_account: nepieder tavam kontam
+    models:
+      account: Konts
+      client: Klients
+      invoice: Rēķins
+      line_item: Rinda
+      product: Prece
+      user: Lietotājs
+  clients:
+    edit:
+      title: Rediģēt %{name}
+    form:
+      address: Adrese
+      budget_institution: Budžeta iestāde
+      client_details: Klienta dati
+      country_code: Valsts kods (ISO)
+      e_invoice_delivery: E-rēķina piegāde
+      save: Saglabāt klientu
+    index:
+      add_first: Pievieno pirmo klientu
+      company: Uzņēmums
+      email: E-pasts
+      empty: Vēl nav klientu.
+      name: Nosaukums
+      new: Jauns klients
+      title: Klienti
+      vat_number: PVN numurs
+    new:
+      title: Jauns klients
+    show:
+      address: Adrese
+      back: Atpakaļ uz klientiem
+      client_details: Klienta dati
+      delete_confirm: Dzēst %{name}? To nevar atsaukt.
+      e_invoice_delivery: E-rēķina piegāde
+      'yes': Jā
+  controllers:
+    accounts:
+      updated: Iestatījumi saglabāti.
+    clients:
+      created: Klients izveidots.
+      deleted: Klients dzēsts.
+      updated: Klients atjaunināts.
+    demo_sessions:
+      rate_limited: Mēģini vēlreiz vēlāk.
+      unavailable: Demo konts pagaidām nav pieejams — mēģini vēlāk.
+      welcome: Laipni lūgts demo!
+    invoice_payments:
+      only_sent: Maksājumu var reģistrēt tikai nosūtītiem rēķiniem.
+      recorded: Maksājums reģistrēts.
+    invoice_voids:
+      already_void: Rēķins jau ir anulēts.
+      voided: Rēķins anulēts.
+    invoices:
+      buyer_needs_identifier: Lai eksportētu XML, šim pircējam jānorāda PVN vai reģistrācijas numurs.
+      created: Rēķins izveidots.
+      deleted: Rēķins dzēsts.
+      locked: Šis rēķins ir bloķēts un to vairs nevar rediģēt.
+      only_draft_deletable: Dzēst var tikai melnraksta rēķinus.
+      sent: Rēķins nosūtīts.
+      updated: Rēķins atjaunināts.
+      vat_required: Lai eksportētu XML, konta iestatījumos jānorāda PVN numurs.
+    line_items:
+      added: Rinda pievienota.
+      only_draft_editable: Rindas var rediģēt tikai melnraksta rēķinos.
+      removed: Rinda noņemta.
+      updated: Rinda atjaunināta.
+    passwords:
+      invalid_link: Paroles atiestatīšanas saite nav derīga vai ir beigusies.
+      mismatch: Paroles nesakrīt.
+      rate_limited: Mēģini vēlreiz vēlāk.
+      reset: Parole ir atiestatīta.
+      sent: Paroles atiestatīšanas instrukcijas nosūtītas (ja lietotājs ar šādu e-pastu pastāv).
+    products:
+      created: Prece izveidota.
+      deleted: Prece dzēsta.
+      updated: Prece atjaunināta.
+    registrations:
+      disabled: Reģistrācija šim demo ir atslēgta.
+    sessions:
+      invalid_credentials: Izmēģini citu e-pasta adresi vai paroli.
+      rate_limited: Mēģini vēlreiz vēlāk.
+  dashboards:
+    new_invoice: Jauns rēķins
+    recent_activity: Pēdējā aktivitāte
+    summary:
+      outstanding: Neapmaksāts
+      overdue: Nokavēts
+      overdue_count:
+        one: "%{count} nokavēts rēķins"
+        other: "%{count} nokavēti rēķini"
+        zero: "%{count} nokavētu rēķinu"
+      paid_this_month: Apmaksāts (šajā mēnesī)
+    title: Sākums
+    view_all: Skatīt visus
+  enums:
+    client_delivery_channel:
+      e_adrese: e-adrese
+      email: e-pasts
+    client_vat_regime:
+      export: eksports
+      reverse_charge: apgrieztā maksāšana
+      standard: standarta
+    invoice_status:
+      draft: melnraksts
+      overdue: nokavēts
+      paid: apmaksāts
+      sent: nosūtīts
+      void: anulēts
+    short_tax_categories:
+      AE: 0% (AE)
+      E: 0% (E)
+      G: 0% (G)
+      S: 21% (S)
+      S12: 12% (S12)
+      S5: 5% (S5)
+      Z: 0% (Z)
+    tax_categories:
+      AE: Apgrieztā maksāšana (AE)
+      E: Atbrīvots no nodokļa (E)
+      G: Ārpus tvēruma (G)
+      S: Standartlikme — 21% (S)
+      S12: Samazinātā likme — 12% (S)
+      S5: Samazinātā likme — 5% (S)
+      Z: Nulles likme (Z)
+    unit_codes:
+      ANN: gads
+      C62: gab.
+      DAY: diena
+      HUR: stunda
+      KGM: kilograms
+      LTR: litrs
+      MON: mēnesis
+      MTK: kvadrātmetrs
+      MTR: metrs
+      PK: iepakojums
+      QAN: ceturksnis
+      WEE: nedēļa
+  invoices:
+    form:
+      add_from_product: Pievienot no preces
+      add_from_product_placeholder: Pievienot no preces…
+      add_line_item: Pievienot rindu
+      buyer_reference_placeholder: piem., pasūtījuma numurs (neobligāti)
+      description: Apraksts
+      invoice_details: Rēķina dati
+      line_items: Rindas
+      qty: Daudz.
+      save: Saglabāt rēķinu
+      select_client: Izvēlies klientu
+      subtotal: Summa bez PVN
+      total: Kopā
+      totals: Kopsummas
+      unit: Mērvienība
+      unit_price: Vienības cena
+      vat: PVN
+    index:
+      create_first: Izveido pirmo rēķinu
+      empty: Vēl nav rēķinu.
+      group_total: 'Grupas kopsumma:'
+      new: Jauns rēķins
+      title: Rēķini
+      total: 'Kopā:'
+    line_item_fields:
+      description: Apraksts
+      quantity: Daudzums
+      remove: Noņemt rindu
+      unit_price: Vienības cena
+    new:
+      title: Jauns rēķins
+    show:
+      activity: Aktivitāte
+      back: Atpakaļ uz rēķiniem
+      created: Izveidots
+      delete_draft: Dzēst melnrakstu
+      delete_draft_confirm: Dzēst šo melnrakstu? To nevar atsaukt.
+      download_xml: Lejupielādēt XML
+      more: Vairāk
+      paid: Apmaksāts
+      print: Drukāt
+      record_payment: Reģistrēt maksājumu
+      send: Nosūtīt rēķinu
+      sent: Nosūtīts
+      void: Anulēt rēķinu
+      void_confirm: Anulējot rēķinu, tā numurs paliek rezervēts, bet rēķins tiek atzīmēts kā atcelts. To nevar atsaukt.
+      voided: Anulēts
+    table:
+      client: Klients
+      due: Termiņš
+      issued: Izrakstīts
+      number: Numurs
+      status: Statuss
+      total: Kopā
+  layouts:
+    application:
+      account: Konts
+      clients: Klienti
+      dashboard: Sākums
+      invoices: Rēķini
+      products: Preces
+      sign_in: Pieslēgties
+      sign_out: Izrakstīties
+  line_items:
+    edit:
+      back: Atpakaļ uz rēķinu
+      title: Rediģēt rindu
+    form:
+      unit_price: Vienības cena (€)
+      vat_rate: PVN likme (%)
+    new:
+      back: Atpakaļ uz rēķinu
+      invoice: 'Rēķins:'
+      title: Pievienot rindu
+  passwords:
+    edit:
+      back_to_sign_in: Atpakaļ uz pieslēgšanos
+      confirm_password: Apstiprini jauno paroli
+      confirm_password_placeholder: Atkārto jauno paroli
+      new_password: Jaunā parole
+      new_password_placeholder: Ievadi jauno paroli
+      title: Atjaunini paroli
+      update_password: Atjaunināt paroli
+    new:
+      back_to_sign_in: Atpakaļ uz pieslēgšanos
+      email: E-pasts
+      email_placeholder: Ievadi savu e-pasta adresi
+      submit: Nosūtīt atiestatīšanas instrukcijas
+      title: Aizmirsi paroli?
+  products:
+    edit:
+      title: Rediģēt %{name}
+    form:
+      price: Cena (€)
+      product_details: Preces dati
+      save: Saglabāt preci
+      vat_rate: PVN likme (%)
+    index:
+      add_first: Pievieno pirmo preci
+      empty: Vēl nav preču.
+      name: Nosaukums
+      new: Jauna prece
+      price: Cena
+      title: Preces
+      unit: Mērvienība
+      vat_rate: PVN likme
+    new:
+      title: Jauna prece
+    show:
+      back: Atpakaļ uz precēm
+      delete_confirm: Dzēst %{name}? To nevar atsaukt.
+      product_details: Preces dati
+  services:
+    invoice_sender:
+      cannot_send_from: Rēķinu nevar nosūtīt no statusa „%{status}”.
+      line_items: Rindas
+      missing: 'Nevar nosūtīt rēķinu — trūkst: %{missing}.'
+      tax_category_for_line: PVN kategorija rindai %{line}
+      unit_code_for_line: Mērvienība rindai %{line}
+  sessions:
+    new:
+      email: E-pasts
+      password: Parole
+      sign_in: Pieslēgties
+      subtitle: Pieslēdzies, lai turpinātu
+      title: Laipni lūdzam atpakaļ
+      try_demo: Izmēģini demo
+  shared:
+    actions:
+      cancel: Atcelt
+      delete: Dzēst
+      edit: Rediģēt
+    footer:
+      tagline: Vienkārša rēķinu izrakstīšana mazajiem uzņēmumiem

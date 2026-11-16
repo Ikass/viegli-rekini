@@ -14,6 +14,6 @@ class DemoSessionsControllerTest < ActionDispatch::IntegrationTest
     post demo_session_path
 
     assert_redirected_to new_session_path
-    assert_equal "The demo account is not available yet — please try again later.", flash[:alert]
+    assert_equal I18n.t("controllers.demo_sessions.unavailable"), flash[:alert]
   end
 end

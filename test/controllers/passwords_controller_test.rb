@@ -14,7 +14,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
 
     follow_redirect!
-    assert_notice "reset instructions sent"
+    assert_notice I18n.t("controllers.passwords.sent")
   end
 
   test "create for an unknown user redirects but sends no mail" do
@@ -23,7 +23,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
 
     follow_redirect!
-    assert_notice "reset instructions sent"
+    assert_notice I18n.t("controllers.passwords.sent")
   end
 
   test "edit" do
@@ -36,7 +36,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_password_path
 
     follow_redirect!
-    assert_notice "reset link is invalid"
+    assert_notice I18n.t("controllers.passwords.invalid_link")
   end
 
   test "update" do
@@ -46,7 +46,7 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     end
 
     follow_redirect!
-    assert_notice "Password has been reset"
+    assert_notice I18n.t("controllers.passwords.reset")
   end
 
   test "update with non matching passwords" do
@@ -57,11 +57,11 @@ class PasswordsControllerTest < ActionDispatch::IntegrationTest
     end
 
     follow_redirect!
-    assert_notice "Passwords did not match"
+    assert_notice I18n.t("controllers.passwords.mismatch")
   end
 
   private
     def assert_notice(text)
-      assert_select "p", /#{text}/
+      assert_select "p", /#{Regexp.escape(text)}/
     end
 end

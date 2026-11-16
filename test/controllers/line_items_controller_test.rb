@@ -65,7 +65,7 @@ class LineItemsControllerTest < ActionDispatch::IntegrationTest
 
     get edit_line_item_path(line_item)
     assert_redirected_to invoice_path(@invoice)
-    assert_equal "Line items can only be edited on draft invoices.", flash[:alert]
+    assert_equal I18n.t("controllers.line_items.only_draft_editable"), flash[:alert]
   end
 
   test "create rejects non-draft invoices" do

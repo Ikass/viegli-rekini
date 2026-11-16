@@ -32,7 +32,7 @@ copy already shipped (`landing.lv.yml`) and the proposed list from the plan.
 | seller | pārdevējs | |
 | client | klients | |
 | product | prece (pl. preces) | |
-| line item | pozīcija | "rēķina pozīcija" where full clarity helps |
+| line item | rinda | |
 | goods and services | preces un pakalpojumi | the landing's phrase for invoice items |
 | subtotal | summa bez PVN | matches the landing |
 | total | kopā | |
@@ -130,7 +130,7 @@ copy already shipped (`landing.lv.yml`) and the proposed list from the plan.
 
 | EN | LV |
 |---|---|
-| dashboard | panelis |
+| dashboard | sākums |
 | outstanding | neapmaksāts |
 | overdue | nokavēts |
 | paid (this month) | apmaksāts (šajā mēnesī) |
@@ -142,17 +142,11 @@ copy already shipped (`landing.lv.yml`) and the proposed list from the plan.
 | try the demo | izmēģini demo |
 | forgot your password? | aizmirsi paroli? |
 
-## Open choices — please confirm or correct
+## Open choices — all resolved (2026-11-16)
 
-1. **"Dashboard"** → *panelis* (standard Latvian SaaS term). Alternative: *sākums*
-   (ties in with "sākuma ekrāns" on the landing). I'd go with *panelis*.
-2. **"Void"** → *anulēts* (annulled). Alternative: *atcelts* (cancelled).
-   *Anulēts* is the stronger, more accounting-appropriate word.
-3. **"Line item"** → *pozīcija*. Alternative: *rinda* (row) or *prece un
-   pakalpojums*. *Pozīcija* is the standard invoice term.
-4. **"Reverse charge"** → *apgrieztā maksāšana* (the PVN likums term). Kept as the
-   full phrase rather than a short label, since it appears in a select dropdown.
-5. **"Bill to"** (invoice document) → *pircējs*. The plan suggested pircējs/
-   pārdevējs for buyer/seller — I'll use those on the invoice document.
-6. **"Sign out"** → *izrakstīties* (the reflexive "to sign oneself out"); "sign in"
-   → *pieslēgties*. Mirrors the landing's "Pieslēgties" for login.
+1. **Dashboard** → *sākums*.
+2. **Void** → *anulēts*.
+3. **Line item** → *rinda*.
+4. **Reverse charge** → *apgrieztā maksāšana*.
+5. **Bill to** → *pircējs*.
+6. **Sign out / sign in** → *izrakstīties* / *pieslēgties*.

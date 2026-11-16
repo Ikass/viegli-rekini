@@ -29,7 +29,7 @@ class InvoicesTest < ApplicationSystemTestCase
     fill_field_via_js("input[name='client[postal_code]']", "LV-1001")
     fill_field_via_js("input[name='client[country]']", "Latvija")
     submit_via_native_form
-    assert_text "Client created"
+    assert_text I18n.t("controllers.clients.created")
     assert_text "System Test Client"
 
     # --- Create a product ---
@@ -39,7 +39,7 @@ class InvoicesTest < ApplicationSystemTestCase
     fill_field_via_js("input[name='product[default_vat_rate]']", "21")
     fill_field_via_js("textarea[name='product[description]']", "Testa pakalpojums sistēmu testēšanai")
     submit_via_native_form
-    assert_text "Product created"
+    assert_text I18n.t("controllers.products.created")
 
     # --- Create an invoice ---
     visit new_invoice_url
@@ -54,22 +54,22 @@ class InvoicesTest < ApplicationSystemTestCase
     sleep 0.5
 
     submit_via_native_form
-    assert_text "Invoice created"
-    assert_text "Draft"
+    assert_text I18n.t("controllers.invoices.created")
+    assert_text I18n.t("enums.invoice_status.draft")
     assert_text "System Test Client"
-    assert_text "€181.50"
+    assert_text ActionController::Base.helpers.number_to_currency(181.5, unit: "€")
 
     # --- Send the invoice ---
     send_invoice_via_js
     assert_selector "span.badge[data-status='sent']"
-    assert_text "Record payment"
+    assert_text I18n.t("invoices.show.record_payment")
 
     # --- Record payment ---
     page.execute_script("document.querySelector('form.button_to[action*=\"invoice_payments\"]')?.submit()")
     assert_selector "span.badge[data-status='paid']"
 
     # --- Visit print view ---
-    click_link "Print"
+    click_link I18n.t("invoices.show.print")
     assert_text "INV-"
     assert_text "System Test Client"
     assert_text "Testa pakalpojums sistēmu testēšanai"
@@ -85,7 +85,7 @@ class InvoicesTest < ApplicationSystemTestCase
     sleep 0.5
 
     submit_via_native_form
-    assert_text "Invoice created"
+    assert_text I18n.t("controllers.invoices.created")
 
     send_invoice_via_js
     assert_selector "span.badge[data-status='sent']"

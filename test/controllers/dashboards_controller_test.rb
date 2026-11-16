@@ -23,7 +23,7 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assert_select "a.summary-stat--link", false
-    assert_select "[data-testid='kpi-overdue']", text: "€0.00"
+    assert_select "[data-testid='kpi-overdue']", text: ActionController::Base.helpers.number_to_currency(0, unit: "€")
   end
 
   test "counts a sent invoice past its due date as overdue (singular)" do
@@ -33,7 +33,7 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
     get dashboard_path
 
     assert_response :success
-    assert_select ".summary-count", text: /1 overdue invoice/
+    assert_select ".summary-count", text: I18n.t("dashboards.summary.overdue_count", count: 1)
     assert_select "a.summary-stat--link[href=?]", invoices_path(status: "overdue")
   end
 
@@ -46,7 +46,7 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
     get dashboard_path
 
     assert_response :success
-    assert_select ".summary-count", text: /2 overdue invoices/
+    assert_select ".summary-count", text: I18n.t("dashboards.summary.overdue_count", count: 2)
     assert_select "a.summary-stat--link[href=?]", invoices_path(status: "overdue")
   end
 
@@ -56,7 +56,7 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
 
     get dashboard_path
 
-    assert_select "[data-testid='kpi-outstanding']", text: "€0.00"
+    assert_select "[data-testid='kpi-outstanding']", text: ActionController::Base.helpers.number_to_currency(0, unit: "€")
   end
 
   test "counts sent invoices towards outstanding" do
@@ -66,7 +66,7 @@ class DashboardsControllerTest < ActionDispatch::IntegrationTest
 
     get dashboard_path
 
-    assert_select "[data-testid='kpi-outstanding']", text: "€242.00"
+    assert_select "[data-testid='kpi-outstanding']", text: ActionController::Base.helpers.number_to_currency(242.0, unit: "€")
   end
 
   private

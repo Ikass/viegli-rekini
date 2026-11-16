@@ -16,11 +16,9 @@ module ViegliRekini
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 8.1
 
-    # Internationalization. English ships first (landing page + app UI are
-    # English today). The default flips to `:lv` once the Latvian translations
-    # land (i18n-plan Phase 3) — flipping now would break the still-unlocalized
-    # app pages that read `en.yml`.
-    config.i18n.default_locale = :en
+    # Internationalization. Latvian is the default interface language; English is
+    # the fallback (and the language shown to portfolio viewers via /en).
+    config.i18n.default_locale = :lv
     config.i18n.available_locales = %i[lv en]
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do

@@ -8,7 +8,7 @@ class SessionsSystemTest < ApplicationSystemTestCase
 
     assert_current_path dashboard_path
 
-    click_button "Sign out"
+    click_button I18n.t("layouts.application.sign_out")
 
     assert_current_path root_path
     assert_text "Rēķins trīs soļos"

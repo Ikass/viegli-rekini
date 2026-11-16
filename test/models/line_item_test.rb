@@ -34,7 +34,7 @@ class LineItemTest < ActiveSupport::TestCase
       vat_rate: 21
     )
     assert_not item.valid?
-    assert_includes item.errors[:description], "can't be blank"
+    assert_includes item.errors[:description], I18n.t("errors.messages.blank")
   end
 
   test "requires quantity" do
@@ -46,7 +46,7 @@ class LineItemTest < ActiveSupport::TestCase
       vat_rate: 21
     )
     assert_not item.valid?
-    assert_includes item.errors[:quantity], "can't be blank"
+    assert_includes item.errors[:quantity], I18n.t("errors.messages.blank")
   end
 
   test "quantity must be greater than 0" do
@@ -59,7 +59,7 @@ class LineItemTest < ActiveSupport::TestCase
       vat_rate: 21
     )
     assert_not item.valid?
-    assert_includes item.errors[:quantity], "must be greater than 0"
+    assert_includes item.errors[:quantity], I18n.t("errors.messages.greater_than", count: 0)
   end
 
   test "requires unit_price_cents" do
@@ -72,7 +72,7 @@ class LineItemTest < ActiveSupport::TestCase
       vat_rate: 21
     )
     assert_not item.valid?
-    assert_includes item.errors[:unit_price_cents], "can't be blank"
+    assert_includes item.errors[:unit_price_cents], I18n.t("errors.messages.blank")
   end
 
   test "unit_price_cents must be non-negative" do
@@ -85,7 +85,7 @@ class LineItemTest < ActiveSupport::TestCase
       vat_rate: 21
     )
     assert_not item.valid?
-    assert_includes item.errors[:unit_price_cents], "must be greater than or equal to 0"
+    assert_includes item.errors[:unit_price_cents], I18n.t("errors.messages.greater_than_or_equal_to", count: 0)
   end
 
   test "requires vat_rate" do
@@ -98,7 +98,7 @@ class LineItemTest < ActiveSupport::TestCase
       vat_rate: nil
     )
     assert_not item.valid?
-    assert_includes item.errors[:vat_rate], "can't be blank"
+    assert_includes item.errors[:vat_rate], I18n.t("errors.messages.blank")
   end
 
   test "vat_rate must be non-negative" do
@@ -111,7 +111,7 @@ class LineItemTest < ActiveSupport::TestCase
       vat_rate: -1
     )
     assert_not item.valid?
-    assert_includes item.errors[:vat_rate], "must be greater than or equal to 0"
+    assert_includes item.errors[:vat_rate], I18n.t("errors.messages.greater_than_or_equal_to", count: 0)
   end
 
   test "requires unit_code" do
@@ -124,7 +124,7 @@ class LineItemTest < ActiveSupport::TestCase
       vat_rate: 21
     )
     assert_not item.valid?
-    assert_includes item.errors[:unit_code], "can't be blank"
+    assert_includes item.errors[:unit_code], I18n.t("errors.messages.blank")
   end
 
   test "requires valid unit_code" do
@@ -137,7 +137,7 @@ class LineItemTest < ActiveSupport::TestCase
       vat_rate: 21
     )
     assert_not item.valid?
-    assert_includes item.errors[:unit_code], "is not included in the list"
+    assert_includes item.errors[:unit_code], I18n.t("errors.messages.inclusion")
   end
 
   test "requires tax_category_code" do
@@ -150,7 +150,7 @@ class LineItemTest < ActiveSupport::TestCase
       vat_rate: 21
     )
     assert_not item.valid?
-    assert_includes item.errors[:tax_category_code], "can't be blank"
+    assert_includes item.errors[:tax_category_code], I18n.t("errors.messages.blank")
   end
 
   test "requires valid tax_category_code" do
@@ -163,7 +163,7 @@ class LineItemTest < ActiveSupport::TestCase
       vat_rate: 21
     )
     assert_not item.valid?
-    assert_includes item.errors[:tax_category_code], "is not included in the list"
+    assert_includes item.errors[:tax_category_code], I18n.t("errors.messages.inclusion")
   end
 
   test "unit_price virtual attribute converts from cents" do

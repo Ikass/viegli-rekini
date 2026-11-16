@@ -75,7 +75,7 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     invoice = @user.account.invoices.create!(client: @client, invoice_number: "INV-0002b", issued_on: Date.current, due_on: Date.current + 14.days, status: :sent)
     get edit_invoice_path(invoice)
     assert_redirected_to invoice_path(invoice)
-    assert_equal "This invoice is locked and can no longer be edited.", flash[:alert]
+    assert_equal I18n.t("controllers.invoices.locked"), flash[:alert]
   end
 
   test "update" do
@@ -132,7 +132,7 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert invoice.reload.draft?
     assert_equal "Still saved", invoice.notes
-    assert_includes response.body, "Cannot send invoice"
+    assert_includes response.body, I18n.t("services.invoice_sender.missing", missing: "").split(":").first
   end
 
   test "destroy" do
@@ -206,7 +206,7 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     get ubl_invoice_path(invoice)
 
     assert_redirected_to invoice_path(invoice)
-    assert_match /VAT number/, flash[:alert]
+    assert_equal I18n.t("controllers.invoices.vat_required"), flash[:alert]
   end
 
   test "ubl blocks export when the buyer has no business identifier" do
@@ -217,6 +217,6 @@ class InvoicesControllerTest < ActionDispatch::IntegrationTest
     get ubl_invoice_path(invoice)
 
     assert_redirected_to invoice_path(invoice)
-    assert_match /VAT number or registration number/, flash[:alert]
+    assert_equal I18n.t("controllers.invoices.buyer_needs_identifier"), flash[:alert]
   end
 end

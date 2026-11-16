@@ -106,7 +106,7 @@ class InvoiceTest < ActiveSupport::TestCase
     )
 
     assert_not invoice.valid?
-    assert_includes invoice.errors[:client], "must belong to your account"
+    assert_includes invoice.errors[:client], I18n.t("activerecord.errors.models.invoice.attributes.client.must_belong_to_account")
   end
 
   test "overdue? is true for sent invoices past their due date" do
