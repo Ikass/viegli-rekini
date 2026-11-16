@@ -24,6 +24,9 @@ gem "sentry-rails"
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 gem "bcrypt", "~> 3.1.7"
 
+# Locale data for non-English locales (Latvian plural rules, date/number formats)
+gem "rails-i18n", "~> 8.0"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
 
@@ -56,6 +59,9 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # i18n health check (missing/unused keys, normalisation) — runs in the test suite
+  gem "i18n-tasks", "~> 1.0"
 end
 
 group :development do

@@ -1,191 +1,184 @@
+---
 en:
   landing:
     show:
-      meta_title: "ViegliRēķini — invoices in three steps"
-      meta_description: "Create a correct invoice in three steps. VAT, numbering and the e-invoice format are handled for you. Made in Latvia."
-
-      top_strip: "Made in Latvia, for people who send their own invoices."
-
-      nav:
-        how_it_works: "How it works"
-        pricing: "Pricing"
-        questions: "Questions"
-        log_in: "Log in"
-        create_first_invoice: "Create your first invoice"
-
+      closing:
+        body: No credit card. Nothing to install.
+        cta: Create your first invoice
+        title: Send your first invoice today.
+      contrast:
+        body: They come with ledgers, plans and menus you'll never open. You just want to send an invoice and get paid.
+        emphasis: 'ViegliRēķini does one job: it gets a correct invoice to your customer. The rest can come later.'
+        title: Most invoicing tools are made for accountants. You probably aren't one.
+      faq:
+        groups:
+          capabilities:
+            items:
+            - question: Does it make e-invoices?
+              answer: Yes. Each invoice comes as a PDF and as a standard XML e-invoice. [Describe how the invoice reaches the customer at launch.]
+            - question: What can't it do yet?
+              answer:
+              - Credit notes come soon after launch, then quotes and advance invoices. There's no bank sync and no setup for several shops yet.
+              - If you need those now, this isn't the right tool yet. I'd rather you hear that before you sign up.
+            - question: Can I bring my customers over from another tool?
+              answer: Not yet. You add each customer and item the first time you use them, and they're saved after that.
+            label: What it can and cannot do yet
+          data:
+            items:
+            - question: Where is my data?
+              answer: "[HOSTING LOCATION AND HOW IT IS PROTECTED]"
+            - question: Can I take my invoices with me?
+              answer: "[EXPORT PROMISE YOU CAN KEEP]"
+            label: Your data
+          getting_started:
+            items:
+            - question: Do I need an accountant to start?
+              answer: No. Enter your company details once, then create your first invoice.
+            - question: Do I need a credit card to try it?
+              answer: No. The free invoices don't need payment details. [Confirm what happens when they run out.]
+            - question: What does it cost?
+              answer: You pay for each invoice you send. The details are in the pricing section above.
+            label: Getting started
+        heading: Questions
+        intro: Including what it can't do yet.
+      features:
+        cards:
+          check:
+            body: It shows up when the invoice meets the e-invoice standard.
+            standard: Meets the e-invoice standard
+            title: A check mark when it's correct
+          home_screen:
+            body: New invoice is the biggest button. The other two take you to your customers and items, and to your past invoices.
+            menu:
+              customers_and_items: Customers and items
+              my_invoices: My invoices
+              new_invoice: New invoice
+            title: Three things on your home screen
+          numbering:
+            body: Numbering is locked in the database, so you can't end up with a gap or a duplicate.
+            numbers:
+            - '0001'
+            - '0002'
+            - '0003'
+            - '0004'
+            title: Invoice numbers don't skip or repeat
+          pdf_xml:
+            body: Every invoice comes as a PDF you can print and as a standard XML e-invoice.
+            title: A PDF and an e-invoice
+          saved:
+            body: Enter them once. Next time it takes two clicks.
+            pills:
+            - Silva Studio SIA
+            - Frame, oak
+            - Glass, cut to size
+            - Koks SIA
+            title: Saved customers and items
+          saved_invoices:
+            body: All your invoices sit in one list, so an old one is quick to find.
+            rows:
+            - label: 0003 · Silva Studio SIA
+              amount: "€72.60"
+            - label: 0002 · Koks SIA
+              amount: "€140.00"
+            - label: 0001 · Silva Studio SIA
+              amount: "€36.30"
+            title: Every invoice stays saved
+        heading: What it does.
+        intro: A short list, on purpose.
+      footer:
+        company: SIA "Gritty Publishing" · Reg. no. 40203365593
+        contact: Contact
+        made_in: Built in Latvia
+        privacy: Privacy
+        terms: Terms
+      founder:
+        email: reinis@grittypublishing.com
+        para_1: My wife sends the invoices for her parents' picture-framing business. On a family holiday she had to send one from her phone, in the latvija.lv portal. The portal wasn't built for phones and it's confusing to use, so it took her at least half an hour.
+        para_2: That was one invoice, and it should have taken a couple of minutes. Instead she lost part of her holiday and got stressed. That's when I decided people need something easier, simpler and faster.
+        para_3: I'm building it step by step, starting with the basic job done properly. If something confuses you, write to me. I read every message.
+        photo_alt: Photo of Reinis
+        signature: Reinis,
+        title: Hi, I'm Reinis.
       hero:
-        title: "Invoices in three steps. Legal in Latvia."
-        subtitle: "Choose the customer, add what you sold, send it. The app handles VAT, numbering and the e-invoice format."
-        cta: "Create your first invoice"
-        reassurance: "No credit card. Nothing to install."
-        screens_label: "Three app screens: choose a customer, add items, send the invoice"
-
+        cta: Create your first invoice
+        reassurance: No credit card. Nothing to install.
+        screens_label: 'Three app screens: choose a customer, add items, send the invoice'
+        subtitle: Choose the customer, add what you sold, send it. The app handles VAT, numbering and the e-invoice format.
+        title: Invoices in three steps. Legal in Latvia.
+      law:
+        columns:
+          e_invoice:
+            body: Standard XML (PEPPOL BIS Billing 3.0, EN 16931), which your customers' systems can read.
+            title: E-invoice format
+          fields:
+            body: Each invoice has the details the Accounting Law requires.
+            title: Required fields
+          vat:
+            body: VAT is calculated line by line, and the totals add up.
+            title: VAT rules
+        heading: Built around Latvian law.
+        intro: You don't need to know the rules. The app does.
+      meta_description: Create a correct invoice in three steps. VAT, numbering and the e-invoice format are handled for you. Made in Latvia.
+      meta_title: ViegliRēķini — invoices in three steps
+      nav:
+        create_first_invoice: Create your first invoice
+        how_it_works: How it works
+        log_in: Log in
+        pricing: Pricing
+        questions: Questions
+      pricing:
+        card:
+          features:
+          - "[N] free invoices to try"
+          - A PDF and an XML e-invoice with each one
+          - No monthly fee
+          label: Per invoice
+          price: "[€0.00]"
+          unit: per invoice sent, [excl. VAT]
+        cta: Create your first invoice
+        heading: Pay for each invoice you send.
+        intro: There's no plan to choose. Try a few invoices first.
       steps:
         one:
-          label: "New invoice, customer"
-          caption_lead: "Pick"
-          caption_rest: "your customer."
+          caption_lead: Pick
+          caption_rest: your customer.
+          label: New invoice, customer
           screen:
-            input: "Silva"
-            saved_name: "Silva Studio SIA"
-            saved_tag: "Saved customer"
-            other: "Silva Koks SIA"
             add_new: "+ Add a new customer"
-            hint: "Address, registration number and VAT number fill in from the saved customer."
-        two:
-          label: "New invoice, items"
-          caption_lead: "Add"
-          caption_rest: "what you sold."
-          screen:
-            items:
-              - name: "Frame, oak, 40×50 cm"
-                qty: "1 × €48.00"
-                total: "€48.00"
-              - name: "Glass, cut to size"
-                qty: "1 × €12.00"
-                total: "€12.00"
-            add_from_saved: "+ Add from saved items"
-            subtotal_label: "Subtotal"
-            subtotal: "€60.00"
-            vat_label: "VAT 21%"
-            vat: "€12.60"
-            total_label: "Total"
-            total: "€72.60"
+            hint: Address, registration number and VAT number fill in from the saved customer.
+            input: Silva
+            other: Silva Koks SIA
+            saved_name: Silva Studio SIA
+            saved_tag: Saved customer
         three:
-          label: "Review and send"
-          caption_lead: "Send"
-          caption_rest: "it when it looks right. Nothing goes out before that."
+          caption_lead: Send
+          caption_rest: it when it looks right. Nothing goes out before that.
+          label: Review and send
           screen:
-            invoice_label: "Invoice No. 0001"
-            total: "Total €72.60"
-            customer: "Silva Studio SIA"
-            standard: "Meets the e-invoice standard"
-            send: "Send invoice"
-            pdf: "PDF"
-            xml: "XML"
-
-      contrast:
-        title: "Most invoicing tools are made for accountants. You probably aren't one."
-        body: "They come with ledgers, plans and menus you'll never open. You just want to send an invoice and get paid."
-        emphasis: "ViegliRēķini does one job: it gets a correct invoice to your customer. The rest can come later."
-
-      founder:
-        title: "Hi, I'm Reinis."
-        para_1: "My wife sends the invoices for her parents' picture-framing business. On a family holiday she had to send one from her phone, in the latvija.lv portal. The portal wasn't built for phones and it's confusing to use, so it took her at least half an hour."
-        para_2: "That was one invoice, and it should have taken a couple of minutes. Instead she lost part of her holiday and got stressed. That's when I decided people need something easier, simpler and faster."
-        para_3: "I'm building it step by step, starting with the basic job done properly. If something confuses you, write to me. I read every message."
-        signature: "Reinis,"
-        email: "reinis@grittypublishing.com"
-        photo_alt: "Photo of Reinis"
-
-      features:
-        heading: "What it does."
-        intro: "A short list, on purpose."
-        cards:
-          home_screen:
-            menu:
-              new_invoice: "New invoice"
-              customers_and_items: "Customers and items"
-              my_invoices: "My invoices"
-            title: "Three things on your home screen"
-            body: "New invoice is the biggest button. The other two take you to your customers and items, and to your past invoices."
-          saved:
-            pills:
-              - "Silva Studio SIA"
-              - "Frame, oak"
-              - "Glass, cut to size"
-              - "Koks SIA"
-            title: "Saved customers and items"
-            body: "Enter them once. Next time it takes two clicks."
-          numbering:
-            numbers: ["0001", "0002", "0003", "0004"]
-            title: "Invoice numbers don't skip or repeat"
-            body: "Numbering is locked in the database, so you can't end up with a gap or a duplicate."
-          check:
-            standard: "Meets the e-invoice standard"
-            title: "A check mark when it's correct"
-            body: "It shows up when the invoice meets the e-invoice standard."
-          pdf_xml:
-            title: "A PDF and an e-invoice"
-            body: "Every invoice comes as a PDF you can print and as a standard XML e-invoice."
-          saved_invoices:
-            rows:
-              - label: "0003 · Silva Studio SIA"
-                amount: "€72.60"
-              - label: "0002 · Koks SIA"
-                amount: "€140.00"
-              - label: "0001 · Silva Studio SIA"
-                amount: "€36.30"
-            title: "Every invoice stays saved"
-            body: "All your invoices sit in one list, so an old one is quick to find."
-
-      law:
-        heading: "Built around Latvian law."
-        intro: "You don't need to know the rules. The app does."
-        columns:
-          fields:
-            title: "Required fields"
-            body: "Each invoice has the details the Accounting Law requires."
-          vat:
-            title: "VAT rules"
-            body: "VAT is calculated line by line, and the totals add up."
-          e_invoice:
-            title: "E-invoice format"
-            body: "Standard XML (PEPPOL BIS Billing 3.0, EN 16931), which your customers' systems can read."
-
-      pricing:
-        heading: "Pay for each invoice you send."
-        intro: "There's no plan to choose. Try a few invoices first."
-        card:
-          label: "Per invoice"
-          price: "[€0.00]"
-          unit: "per invoice sent, [excl. VAT]"
-          features:
-            - "[N] free invoices to try"
-            - "A PDF and an XML e-invoice with each one"
-            - "No monthly fee"
-        cta: "Create your first invoice"
-
-      faq:
-        heading: "Questions"
-        intro: "Including what it can't do yet."
-        groups:
-          getting_started:
-            label: "Getting started"
+            customer: Silva Studio SIA
+            invoice_label: Invoice No. 0001
+            pdf: PDF
+            send: Send invoice
+            standard: Meets the e-invoice standard
+            total: Total €72.60
+            xml: XML
+        two:
+          caption_lead: Add
+          caption_rest: what you sold.
+          label: New invoice, items
+          screen:
+            add_from_saved: "+ Add from saved items"
             items:
-              - question: "Do I need an accountant to start?"
-                answer: "No. Enter your company details once, then create your first invoice."
-              - question: "Do I need a credit card to try it?"
-                answer: "No. The free invoices don't need payment details. [Confirm what happens when they run out.]"
-              - question: "What does it cost?"
-                answer: "You pay for each invoice you send. The details are in the pricing section above."
-          capabilities:
-            label: "What it can and cannot do yet"
-            items:
-              - question: "Does it make e-invoices?"
-                answer: "Yes. Each invoice comes as a PDF and as a standard XML e-invoice. [Describe how the invoice reaches the customer at launch.]"
-              - question: "What can't it do yet?"
-                answer:
-                  - "Credit notes come soon after launch, then quotes and advance invoices. There's no bank sync and no setup for several shops yet."
-                  - "If you need those now, this isn't the right tool yet. I'd rather you hear that before you sign up."
-              - question: "Can I bring my customers over from another tool?"
-                answer: "Not yet. You add each customer and item the first time you use them, and they're saved after that."
-          data:
-            label: "Your data"
-            items:
-              - question: "Where is my data?"
-                answer: "[HOSTING LOCATION AND HOW IT IS PROTECTED]"
-              - question: "Can I take my invoices with me?"
-                answer: "[EXPORT PROMISE YOU CAN KEEP]"
-
-      closing:
-        title: "Send your first invoice today."
-        body: "No credit card. Nothing to install."
-        cta: "Create your first invoice"
-
-      footer:
-        made_in: "Built in Latvia"
-        company: 'SIA "Gritty Publishing" · Reg. no. 40203365593'
-        privacy: "Privacy"
-        terms: "Terms"
-        contact: "Contact"
+            - name: Frame, oak, 40×50 cm
+              qty: 1 × €48.00
+              total: "€48.00"
+            - name: Glass, cut to size
+              qty: 1 × €12.00
+              total: "€12.00"
+            subtotal: "€60.00"
+            subtotal_label: Subtotal
+            total: "€72.60"
+            total_label: Total
+            vat: "€12.60"
+            vat_label: VAT 21%
+      top_strip: Made in Latvia, for people who send their own invoices.
