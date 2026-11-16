@@ -10,28 +10,28 @@
   <% end %>
 
   <section aria-labelledby="invoice-details-heading" style="margin-block-end: var(--space-l);">
-    <h2 id="invoice-details-heading" class="section-label">Invoice details</h2>
+    <h2 id="invoice-details-heading" class="section-label"><%= t(".invoice_details") %></h2>
     <div class="card">
       <div>
         <div class="field">
-          <%= form.label :client_id, "Client" %>
-          <%= form.collection_select :client_id, Current.user.account.clients, :id, :name, { prompt: "Select a client" }, required: true %>
+          <%= form.label :client_id %>
+          <%= form.collection_select :client_id, Current.user.account.clients, :id, :name, { prompt: t(".select_client") }, required: true %>
         </div>
 
         <div class="fields-inline" style="margin-block-start: var(--space-s);">
           <div class="field">
-            <%= form.label :issued_on, "Issued on" %>
+            <%= form.label :issued_on %>
             <%= form.date_field :issued_on, required: true %>
           </div>
           <div class="field">
-            <%= form.label :due_on, "Due on" %>
+            <%= form.label :due_on %>
             <%= form.date_field :due_on, required: true %>
           </div>
         </div>
 
         <div class="field" style="margin-block-start: var(--space-s);">
-          <%= form.label :buyer_reference, "Buyer reference" %>
-          <%= form.text_field :buyer_reference, placeholder: "e.g. purchase order number (optional)" %>
+          <%= form.label :buyer_reference %>
+          <%= form.text_field :buyer_reference, placeholder: t(".buyer_reference_placeholder") %>
         </div>
 
         <div class="field" style="margin-block-start: var(--space-s);">
@@ -43,18 +43,18 @@
   </section>
 
   <section aria-labelledby="line-items-heading" style="margin-block-end: var(--space-l);">
-    <h2 id="line-items-heading" class="section-label">Line items</h2>
+    <h2 id="line-items-heading" class="section-label"><%= t(".line_items") %></h2>
     <div class="card">
       <div>
         <div class="table-wrapper">
           <table class="table line-items-form">
             <thead>
               <tr>
-                <th>Description</th>
-                <th class="col-numeric">Qty</th>
-                <th>Unit</th>
-                <th class="col-numeric">Unit price</th>
-                <th>VAT</th>
+                <th><%= t(".description") %></th>
+                <th class="col-numeric"><%= t(".qty") %></th>
+                <th><%= t(".unit") %></th>
+                <th class="col-numeric"><%= t(".unit_price") %></th>
+                <th><%= t(".vat") %></th>
                 <th class="col-actions"></th>
               </tr>
             </thead>
@@ -75,11 +75,11 @@
         <div class="cluster" style="margin-block-start: var(--space-s);">
           <button type="button" data-action="line-items#add" class="button">
             <%= tabler_icon("plus") %>
-            Add line item
+            <%= t(".add_line_item") %>
           </button>
           <%= select_tag :product_adder,
-                options_for_select([ [ "Add from product…", "" ] ]) + options_from_collection_for_select(Current.user.account.products, :id, :name),
-                aria: { label: "Add from product" },
+                options_for_select([ [ t(".add_from_product_placeholder"), "" ] ]) + options_from_collection_for_select(Current.user.account.products, :id, :name),
+                aria: { label: t(".add_from_product") },
                 style: "inline-size: 16rem;",
                 data: { line_items_target: "productSelector", action: "line-items#addFromProduct" } %>
         </div>
@@ -88,15 +88,15 @@
   </section>
 
   <section aria-labelledby="totals-heading" style="margin-block-end: var(--space-l);">
-    <h2 id="totals-heading" class="section-label">Totals</h2>
+    <h2 id="totals-heading" class="section-label"><%= t(".totals") %></h2>
     <div class="card">
       <div>
         <dl>
-          <dt>Subtotal</dt>
+          <dt><%= t(".subtotal") %></dt>
           <dd><%= number_to_currency(invoice.subtotal / 100.0, unit: "€") %></dd>
-          <dt>VAT</dt>
+          <dt><%= t(".vat") %></dt>
           <dd><%= number_to_currency(invoice.vat_total / 100.0, unit: "€") %></dd>
-          <dt>Total</dt>
+          <dt><%= t(".total") %></dt>
           <dd><strong><%= number_to_currency(invoice.total / 100.0, unit: "€") %></strong></dd>
         </dl>
       </div>
@@ -106,11 +106,11 @@
   <div class="form-actions">
     <%= form.button name: "commit", value: "save", class: "button", data: { variant: "primary" } do %>
       <%= tabler_icon("check") %>
-      Save invoice
+      <%= t(".save") %>
     <% end %>
     <%= link_to (invoice.persisted? ? invoice_path(invoice) : invoices_path), class: "button" do %>
       <%= tabler_icon("x") %>
-      Cancel
+      <%= t("shared.actions.cancel") %>
     <% end %>
   </div>
 <% end %>

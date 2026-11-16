@@ -8,10 +8,10 @@ class RegistrationsController < ApplicationController
   allow_unauthenticated_access only: %i[new create]
 
   def new
-    redirect_to new_session_path, notice: "Sign-up is disabled for this demo."
+    redirect_to new_session_path, notice: t("controllers.registrations.disabled")
   end
 
   def create
-    redirect_to new_session_path, notice: "Sign-up is disabled for this demo."
+    redirect_to new_session_path, notice: t("controllers.registrations.disabled")
   end
 end

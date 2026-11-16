@@ -10,11 +10,15 @@ class InvoiceSender
   end
 
   def send_invoice(invoice:)
-    return Result.new(success: false, invoice: invoice, error: "Invoice cannot be sent from #{invoice.status} status.") unless invoice.draft?
+    unless invoice.draft?
+      return Result.new(success: false, invoice: invoice,
+        error: I18n.t("services.invoice_sender.cannot_send_from", status: invoice.status))
+    end
 
     missing = missing_legal_fields(invoice)
     if missing.any?
-      return Result.new(success: false, invoice: invoice, error: "Cannot send invoice — missing: #{missing.join(", ")}.")
+      return Result.new(success: false, invoice: invoice,
+        error: I18n.t("services.invoice_sender.missing", missing: missing.join(", ")))
     end
 
     invoice.transaction do
@@ -32,13 +36,13 @@ class InvoiceSender
 
     account = invoice.account
     SELLER_REQUIRED_FIELDS.each do |field|
-      missing << field.to_s.humanize if account.public_send(field).blank?
+      missing << Account.human_attribute_name(field) if account.public_send(field).blank?
     end
 
-    missing << "Line items" if invoice.line_items.empty?
+    missing << I18n.t("services.invoice_sender.line_items") if invoice.line_items.empty?
     invoice.line_items.each_with_index do |item, index|
-      missing << "Unit code for line #{index + 1}" if item.unit_code.blank?
-      missing << "Tax category for line #{index + 1}" if item.tax_category_code.blank?
+      missing << I18n.t("services.invoice_sender.unit_code_for_line", line: index + 1) if item.unit_code.blank?
+      missing << I18n.t("services.invoice_sender.tax_category_for_line", line: index + 1) if item.tax_category_code.blank?
     end
 
     missing

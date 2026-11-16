@@ -108,7 +108,7 @@ class InvoiceSenderTest < ActiveSupport::TestCase
     assert_includes result.error, "Company name"
     assert_includes result.error, "Registration number"
     assert_includes result.error, "Address"
-    assert_includes result.error, "Bank account"
+    assert_includes result.error, "IBAN"
   end
 
   test "fails when invoice has no line items" do

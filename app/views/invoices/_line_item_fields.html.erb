@@ -10,17 +10,17 @@
     <% end %>
     <%= form.hidden_field :position %>
 
-    <%= form.text_field :description, required: true, aria: { label: "Description" }, data: { line_item_fill: "description" } %>
+    <%= form.text_field :description, required: true, aria: { label: t(".description") }, data: { line_item_fill: "description" } %>
   </td>
   <td class="col-numeric">
-    <%= form.number_field :quantity, step: "0.01", min: "0.01", required: true, value: (form.object.quantity.presence || 1), aria: { label: "Quantity" }, data: { line_item_fill: "quantity" } %>
+    <%= form.number_field :quantity, step: "0.01", min: "0.01", required: true, value: (form.object.quantity.presence || 1), aria: { label: t(".quantity") }, data: { line_item_fill: "quantity" } %>
   </td>
   <td>
     <%= form.hidden_field :unit_code, value: unit_code, data: { line_item_fill: "unitCode" } %>
-    <span class="line-item-meta" data-line-item-fill="unitLabel"><%= LineItem::UNIT_CODES[unit_code] %></span>
+    <span class="line-item-meta" data-line-item-fill="unitLabel"><%= unit_code_label(unit_code) %></span>
   </td>
   <td class="col-numeric">
-    <%= form.number_field :unit_price, step: "0.01", min: "0", required: true, aria: { label: "Unit price" }, data: { line_item_fill: "unitPrice" } %>
+    <%= form.number_field :unit_price, step: "0.01", min: "0", required: true, aria: { label: t(".unit_price") }, data: { line_item_fill: "unitPrice" } %>
   </td>
   <td>
     <%= form.hidden_field :tax_category_code, value: (form.object.tax_category_code.presence || "S"), data: { line_item_fill: "taxCategory" } %>
@@ -28,7 +28,7 @@
     <span class="line-item-meta" data-line-item-fill="vatLabel"><%= vat_rate_percentage(vat_rate) %></span>
   </td>
   <td class="col-actions">
-    <button type="button" data-action="line-items#remove" class="button" data-variant="ghost-danger" aria-label="Remove line item">
+    <button type="button" data-action="line-items#remove" class="button" data-variant="ghost-danger" aria-label="<%= t('.remove') %>">
       <%= tabler_icon("trash") %>
     </button>
   </td>

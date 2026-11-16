@@ -13,7 +13,7 @@ class LineItemsController < ApplicationController
     @line_item = @invoice.line_items.build(line_item_params)
 
     if @line_item.save
-      redirect_to invoice_path(@invoice), notice: "Line item added."
+      redirect_to invoice_path(@invoice), notice: t("controllers.line_items.added")
     else
       render :new, status: :unprocessable_entity
     end
@@ -24,7 +24,7 @@ class LineItemsController < ApplicationController
 
   def update
     if @line_item.update(line_item_params)
-      redirect_to invoice_path(@line_item.invoice), notice: "Line item updated."
+      redirect_to invoice_path(@line_item.invoice), notice: t("controllers.line_items.updated")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -33,7 +33,7 @@ class LineItemsController < ApplicationController
   def destroy
     invoice = @line_item.invoice
     @line_item.destroy
-    redirect_to invoice_path(invoice), notice: "Line item removed."
+    redirect_to invoice_path(invoice), notice: t("controllers.line_items.removed")
   end
 
   private
@@ -42,7 +42,7 @@ class LineItemsController < ApplicationController
     invoice = @line_item ? @line_item.invoice : @invoice
     return if invoice.draft?
 
-    redirect_to invoice, alert: "Line items can only be edited on draft invoices."
+    redirect_to invoice, alert: t("controllers.line_items.only_draft_editable")
   end
 
   def set_invoice

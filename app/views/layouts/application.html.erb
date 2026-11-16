@@ -30,14 +30,14 @@
           <% if authenticated? %>
             <li><%= link_to edit_account_path, class: "button", data: { variant: "ghost" } do %>
               <%= tabler_icon("settings") %>
-              Account
+              <%= t(".account") %>
             <% end %></li>
             <li><%= button_to session_path, method: :delete, class: "button", data: { variant: "ghost-danger" } do %>
               <%= tabler_icon("logout") %>
-              Sign out
+              <%= t(".sign_out") %>
             <% end %></li>
           <% else %>
-            <li><%= link_to "Sign in", new_session_path, class: "button", data: { variant: "ghost" } %></li>
+            <li><%= link_to t(".sign_in"), new_session_path, class: "button", data: { variant: "ghost" } %></li>
           <% end %>
         </ul>
       </nav>
@@ -50,19 +50,19 @@
             <ul>
               <li><%= link_to dashboard_path, aria: current_page?(dashboard_path) ? { current: "page" } : {} do %>
                   <%= tabler_icon("dashboard") %>
-                  Dashboard
+                  <%= t(".dashboard") %>
                 <% end %></li>
               <li><%= link_to invoices_path, aria: controller_name == "invoices" ? { current: "page" } : {} do %>
                   <%= tabler_icon("file-invoice") %>
-                  Invoices
+                  <%= t(".invoices") %>
                 <% end %></li>
               <li><%= link_to clients_path, aria: controller_name == "clients" ? { current: "page" } : {} do %>
                   <%= tabler_icon("users") %>
-                  Clients
+                  <%= t(".clients") %>
                 <% end %></li>
               <li><%= link_to products_path, aria: controller_name == "products" ? { current: "page" } : {} do %>
                   <%= tabler_icon("package") %>
-                  Products
+                  <%= t(".products") %>
                 <% end %></li>
             </ul>
           </nav>

@@ -6,7 +6,7 @@ class InvoiceSendsController < ApplicationController
     result = InvoiceSender.new.send_invoice(invoice: invoice)
 
     if result.success?
-      redirect_to invoice_path(invoice), notice: "Invoice sent."
+      redirect_to invoice_path(invoice), notice: t("controllers.invoices.sent")
     else
       redirect_to invoice_path(invoice), alert: result.error
     end

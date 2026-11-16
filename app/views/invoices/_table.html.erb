@@ -3,12 +3,12 @@
   <table class="table">
     <thead>
       <tr>
-        <th>Number</th>
-        <th>Client</th>
-        <th class="hide-mobile">Issued</th>
-        <th class="hide-mobile">Due</th>
-        <th class="col-numeric">Total</th>
-        <th>Status</th>
+        <th><%= t(".number") %></th>
+        <th><%= t(".client") %></th>
+        <th class="hide-mobile"><%= t(".issued") %></th>
+        <th class="hide-mobile"><%= t(".due") %></th>
+        <th class="col-numeric"><%= t(".total") %></th>
+        <th><%= t(".status") %></th>
       </tr>
     </thead>
     <tbody>
@@ -21,7 +21,7 @@
           <td class="col-numeric"><%= number_to_currency(invoice.total / 100.0, unit: "€") %></td>
           <td>
             <span class="badge" data-status="<%= invoice.display_status %>">
-              <%= invoice.display_status.humanize %>
+              <%= invoice_status_label(invoice.display_status) %>
             </span>
           </td>
         </tr>

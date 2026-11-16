@@ -11,32 +11,32 @@
 
   <article class="card auth-card">
     <header class="auth-card-header">
-      <h2 class="auth-title">Welcome back</h2>
-      <p class="auth-subtitle">Sign in to continue</p>
+      <h2 class="auth-title"><%= t(".title") %></h2>
+      <p class="auth-subtitle"><%= t(".subtitle") %></p>
     </header>
 
     <div class="stack">
       <%= form_with url: session_path, html: { class: "stack" } do |form| %>
         <fieldset class="stack auth-fieldset">
           <div class="field">
-            <%= form.label :email_address, "Email" %>
+            <%= form.label :email_address, t(".email") %>
             <%= form.email_field :email_address, required: true, autofocus: true,
                 autocomplete: "username", placeholder: "name@company.com",
                 value: params[:email_address] %>
           </div>
 
           <div class="field">
-            <%= form.label :password, "Password" %>
+            <%= form.label :password, t(".password") %>
             <%= form.password_field :password, required: true,
                 autocomplete: "current-password", placeholder: "••••••••••", maxlength: 72 %>
           </div>
         </fieldset>
 
-        <%= form.button "Sign in", class: "button",
+        <%= form.button t(".sign_in"), class: "button",
             data: { variant: "primary", width: "full" } %>
       <% end %>
 
-      <%= button_to "Try the demo", demo_session_path, class: "button",
+      <%= button_to t(".try_demo"), demo_session_path, class: "button",
           data: { variant: "secondary", width: "full" } %>
     </div>
   </article>

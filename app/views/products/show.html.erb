@@ -4,24 +4,24 @@
 
 <div class="stack">
   <section aria-labelledby="product-details-heading" style="margin-block-end: var(--space-l);">
-    <h2 id="product-details-heading" class="section-label">Product details</h2>
+    <h2 id="product-details-heading" class="section-label"><%= t(".product_details") %></h2>
     <div class="card">
       <div>
         <dl>
-          <dt>Price</dt>
+          <dt><%= Product.human_attribute_name(:default_price) %></dt>
           <dd><%= number_to_currency(@product.default_price_cents / 100.0, unit: "€") %></dd>
 
-          <dt>Unit</dt>
-          <dd><%= LineItem::UNIT_CODES[@product.unit_code] || @product.unit_code %></dd>
+          <dt><%= Product.human_attribute_name(:unit_code) %></dt>
+          <dd><%= unit_code_label(@product.unit_code) %></dd>
 
-          <dt>VAT category</dt>
-          <dd><%= LineItem::TAX_CATEGORY_CODES[@product.tax_category_code] || @product.tax_category_code %></dd>
+          <dt><%= Product.human_attribute_name(:tax_category_code) %></dt>
+          <dd><%= tax_category_label(@product.tax_category_code) %></dd>
 
-          <dt>VAT rate</dt>
+          <dt><%= Product.human_attribute_name(:default_vat_rate) %></dt>
           <dd><%= vat_rate_percentage(@product.default_vat_rate) %></dd>
 
           <% if @product.description.present? %>
-            <dt>Description</dt>
+            <dt><%= Product.human_attribute_name(:description) %></dt>
             <dd><%= @product.description %></dd>
           <% end %>
         </dl>
@@ -32,15 +32,15 @@
   <div class="form-actions">
     <%= link_to edit_product_path(@product), class: "button" do %>
       <%= tabler_icon("edit") %>
-      Edit
+      <%= t("shared.actions.edit") %>
     <% end %>
-    <%= button_to product_path(@product), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Delete #{@product.name}? This cannot be undone." } } do %>
+    <%= button_to product_path(@product), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: t(".delete_confirm", name: @product.name) } } do %>
       <%= tabler_icon("trash") %>
-      Delete
+      <%= t("shared.actions.delete") %>
     <% end %>
     <%= link_to products_path, class: "button", data: { variant: "ghost" } do %>
       <%= tabler_icon("arrow-left") %>
-      Back to products
+      <%= t(".back") %>
     <% end %>
   </div>
 </div>

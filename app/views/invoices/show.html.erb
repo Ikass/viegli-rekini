@@ -3,56 +3,56 @@
     <header class="invoice-toolbar">
       <%= link_to invoices_path, class: "invoice-toolbar-back" do %>
         <%= tabler_icon("arrow-left") %>
-        Back to invoices
+        <%= t(".back") %>
       <% end %>
 
       <div class="cluster">
         <% unless @invoice.paid? || @invoice.void? %>
           <%= link_to print_invoice_path(@invoice), target: "_blank", class: "button", data: { size: "xs" } do %>
             <%= tabler_icon("printer") %>
-            Print
+            <%= t(".print") %>
           <% end %>
         <% end %>
 
         <% if @invoice.draft? %>
           <%= button_tag name: "commit", value: "send", type: "submit", form: "invoice_form", class: "button", data: { variant: "primary", size: "xs" } do %>
             <%= tabler_icon("send") %>
-            Send invoice
+            <%= t(".send") %>
           <% end %>
         <% elsif @invoice.sent? %>
           <%= button_to invoice_invoice_payments_path(@invoice), method: :post, class: "button", data: { variant: "primary", size: "xs" } do %>
             <%= tabler_icon("check") %>
-            Record payment
+            <%= t(".record_payment") %>
           <% end %>
         <% else %>
           <%= link_to print_invoice_path(@invoice), target: "_blank", class: "button", data: { variant: "primary", size: "xs" } do %>
             <%= tabler_icon("printer") %>
-            Print
+            <%= t(".print") %>
           <% end %>
         <% end %>
 
         <% if @invoice.sent? || @invoice.paid? %>
           <%= link_to ubl_invoice_path(@invoice), class: "button", data: { size: "xs" } do %>
             <%= tabler_icon("download") %>
-            Download XML
+            <%= t(".download_xml") %>
           <% end %>
         <% end %>
 
         <% unless @invoice.void? %>
           <details class="overflow-menu" data-controller="overflow-menu" data-action="click@window->overflow-menu#close keydown@window->overflow-menu#closeOnEscape">
-            <summary class="button" data-size="xs" title="More" aria-label="More">
+            <summary class="button" data-size="xs" title="<%= t('.more') %>" aria-label="<%= t('.more') %>">
               <%= tabler_icon("dots-vertical") %>
             </summary>
             <div class="overflow-menu-content">
               <% if @invoice.draft? %>
-                <%= button_to invoice_path(@invoice), method: :delete, class: "button", data: { variant: "danger", size: "xs" }, form: { data: { turbo_confirm: "Delete this draft? This cannot be undone." } } do %>
+                <%= button_to invoice_path(@invoice), method: :delete, class: "button", data: { variant: "danger", size: "xs" }, form: { data: { turbo_confirm: t(".delete_draft_confirm") } } do %>
                   <%= tabler_icon("trash") %>
-                  Delete draft
+                  <%= t(".delete_draft") %>
                 <% end %>
               <% else %>
-                <%= button_to invoice_invoice_voids_path(@invoice), method: :post, class: "button", data: { variant: "danger", size: "xs" }, form: { data: { turbo_confirm: "Voiding keeps this invoice number reserved but marks it as cancelled. This can't be undone." } } do %>
+                <%= button_to invoice_invoice_voids_path(@invoice), method: :post, class: "button", data: { variant: "danger", size: "xs" }, form: { data: { turbo_confirm: t(".void_confirm") } } do %>
                   <%= tabler_icon("ban") %>
-                  Void invoice
+                  <%= t(".void") %>
                 <% end %>
               <% end %>
             </div>
@@ -63,7 +63,7 @@
 
     <div class="invoice-heading">
       <h1><%= invoice_number_or_draft(@invoice) %></h1>
-      <span class="badge" data-status="<%= @invoice.display_status %>"><%= @invoice.display_status.humanize %></span>
+      <span class="badge" data-status="<%= @invoice.display_status %>"><%= invoice_status_label(@invoice.display_status) %></span>
     </div>
 
     <% if @invoice.draft? %>
@@ -78,17 +78,17 @@
 
     <% unless @invoice.draft? %>
       <section class="invoice-activity" aria-labelledby="invoice-activity-heading">
-        <h2 id="invoice-activity-heading" class="section-label">Activity</h2>
+        <h2 id="invoice-activity-heading" class="section-label"><%= t(".activity") %></h2>
         <ol class="invoice-activity-list">
-          <li><span>Created</span><time datetime="<%= @invoice.created_at.iso8601 %>"><%= @invoice.created_at.to_date %></time></li>
+          <li><span><%= t(".created") %></span><time datetime="<%= @invoice.created_at.iso8601 %>"><%= @invoice.created_at.to_date %></time></li>
           <% if @invoice.sent_at.present? %>
-            <li><span>Sent</span><time datetime="<%= @invoice.sent_at.iso8601 %>"><%= @invoice.sent_at.to_date %></time></li>
+            <li><span><%= t(".sent") %></span><time datetime="<%= @invoice.sent_at.iso8601 %>"><%= @invoice.sent_at.to_date %></time></li>
           <% end %>
           <% if @invoice.paid_at.present? %>
-            <li><span>Paid</span><time datetime="<%= @invoice.paid_at.iso8601 %>"><%= @invoice.paid_at.to_date %></time></li>
+            <li><span><%= t(".paid") %></span><time datetime="<%= @invoice.paid_at.iso8601 %>"><%= @invoice.paid_at.to_date %></time></li>
           <% end %>
           <% if @invoice.voided_at.present? %>
-            <li><span>Voided</span><time datetime="<%= @invoice.voided_at.iso8601 %>"><%= @invoice.voided_at.to_date %></time></li>
+            <li><span><%= t(".voided") %></span><time datetime="<%= @invoice.voided_at.iso8601 %>"><%= @invoice.voided_at.to_date %></time></li>
           <% end %>
         </ol>
       </section>

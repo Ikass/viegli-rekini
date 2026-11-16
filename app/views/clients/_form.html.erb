@@ -10,7 +10,7 @@
   <% end %>
 
   <section aria-labelledby="client-info-heading" style="margin-block-end: var(--space-l);">
-    <h2 id="client-info-heading" class="section-label">Client details</h2>
+    <h2 id="client-info-heading" class="section-label"><%= t(".client_details") %></h2>
     <div class="card">
       <div>
         <div class="fields-grid">
@@ -19,7 +19,7 @@
             <%= form.text_field :name, required: true, autofocus: true %>
           </div>
           <div class="field">
-            <%= form.label :company_name, "Company name" %>
+            <%= form.label :company_name %>
             <%= form.text_field :company_name %>
           </div>
           <div class="field">
@@ -27,19 +27,19 @@
             <%= form.email_field :email %>
           </div>
           <div class="field">
-            <%= form.label :registration_number, "Registration number" %>
+            <%= form.label :registration_number %>
             <%= form.text_field :registration_number %>
           </div>
           <div class="field">
-            <%= form.label :vat_number, "VAT number" %>
+            <%= form.label :vat_number %>
             <%= form.text_field :vat_number %>
           </div>
           <div class="field">
-            <%= form.label :vat_regime, "VAT regime" %>
-            <%= form.select :vat_regime, Client.vat_regimes.map { |k, _| [k.to_s.humanize, k] } %>
+            <%= form.label :vat_regime %>
+            <%= form.select :vat_regime, Client.vat_regimes.map { |k, _| [ client_vat_regime_label(k), k ] } %>
           </div>
           <div class="field">
-            <%= form.label :iban, "IBAN" %>
+            <%= form.label :iban %>
             <%= form.text_field :iban %>
           </div>
         </div>
@@ -48,7 +48,7 @@
   </section>
 
   <section aria-labelledby="address-heading" style="margin-block-end: var(--space-l);">
-    <h2 id="address-heading" class="section-label">Address</h2>
+    <h2 id="address-heading" class="section-label"><%= t(".address") %></h2>
     <div class="card">
       <div>
         <div class="fields-grid">
@@ -69,7 +69,7 @@
             <%= form.text_field :country %>
           </div>
           <div class="field">
-            <%= form.label :country_code, "Country code (ISO)" %>
+            <%= form.label :country_code, t(".country_code") %>
             <%= form.text_field :country_code, placeholder: "LV" %>
           </div>
         </div>
@@ -78,23 +78,23 @@
   </section>
 
   <section aria-labelledby="delivery-heading" style="margin-block-end: var(--space-l);">
-    <h2 id="delivery-heading" class="section-label">e-Invoice delivery</h2>
+    <h2 id="delivery-heading" class="section-label"><%= t(".e_invoice_delivery") %></h2>
     <div class="card">
       <div>
         <div class="fields-grid">
           <div class="field">
-            <%= form.label :delivery_channel, "Delivery channel" %>
-            <%= form.select :delivery_channel, Client.delivery_channels.map { |k, _| [k.humanize, k] } %>
+            <%= form.label :delivery_channel %>
+            <%= form.select :delivery_channel, Client.delivery_channels.map { |k, _| [ client_delivery_channel_label(k), k ] } %>
           </div>
           <div class="field">
-            <%= form.label :e_adrese_id, "E-adrese ID" %>
+            <%= form.label :e_adrese_id %>
             <%= form.text_field :e_adrese_id %>
           </div>
         </div>
         <div class="field" style="margin-block-start: var(--space-s);">
           <label>
             <%= form.check_box :is_budget_institution %>
-            Budget institution
+            <%= t(".budget_institution") %>
           </label>
         </div>
       </div>
@@ -104,11 +104,11 @@
   <div class="form-actions">
     <%= form.button class: "button", data: { variant: "primary" } do %>
       <%= tabler_icon("check") %>
-      Save client
+      <%= t(".save") %>
     <% end %>
     <%= link_to client.persisted? ? client_path(client) : clients_path, class: "button" do %>
       <%= tabler_icon("x") %>
-      Cancel
+      <%= t("shared.actions.cancel") %>
     <% end %>
   </div>
 <% end %>

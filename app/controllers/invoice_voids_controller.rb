@@ -6,9 +6,9 @@ class InvoiceVoidsController < ApplicationController
     result = InvoiceVoider.new.void_invoice(invoice: invoice)
 
     if result.success?
-      redirect_to invoice_path(invoice), notice: "Invoice voided."
+      redirect_to invoice_path(invoice), notice: t("controllers.invoice_voids.voided")
     else
-      redirect_to invoice_path(invoice), alert: "Invoice is already void."
+      redirect_to invoice_path(invoice), alert: t("controllers.invoice_voids.already_void")
     end
   end
 end

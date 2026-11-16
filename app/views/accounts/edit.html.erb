@@ -1,6 +1,6 @@
-<% content_for :title, "Settings" %>
+<% content_for :title, t(".title") %>
 
-<h1>Settings</h1>
+<h1><%= t(".title") %></h1>
 
 <%= form_with model: @account, url: account_path, html: { class: "stack" } do |form| %>
   <% if @account.errors.any? %>
@@ -12,7 +12,7 @@
   <% end %>
 
   <section aria-labelledby="company-heading" style="margin-block-end: var(--space-l);">
-    <h2 id="company-heading" class="section-label">Company details</h2>
+    <h2 id="company-heading" class="section-label"><%= t(".company_details") %></h2>
     <div class="card">
       <div>
         <div class="fields-grid">
@@ -25,7 +25,7 @@
             <%= form.text_field :registration_number %>
           </div>
           <div class="field">
-            <%= form.label :vat_number, "VAT number" %>
+            <%= form.label :vat_number %>
             <%= form.text_field :vat_number %>
           </div>
         </div>
@@ -34,7 +34,7 @@
   </section>
 
   <section aria-labelledby="address-heading" style="margin-block-end: var(--space-l);">
-    <h2 id="address-heading" class="section-label">Address</h2>
+    <h2 id="address-heading" class="section-label"><%= t(".address") %></h2>
     <div class="card">
       <div>
         <div class="fields-grid">
@@ -60,7 +60,7 @@
   </section>
 
   <section aria-labelledby="bank-heading" style="margin-block-end: var(--space-l);">
-    <h2 id="bank-heading" class="section-label">Bank details</h2>
+    <h2 id="bank-heading" class="section-label"><%= t(".bank_details") %></h2>
     <div class="card">
       <div>
         <div class="fields-grid">
@@ -69,11 +69,11 @@
             <%= form.text_field :bank_name %>
           </div>
           <div class="field">
-            <%= form.label :bank_account, "IBAN" %>
+            <%= form.label :bank_account %>
             <%= form.text_field :bank_account %>
           </div>
           <div class="field">
-            <%= form.label :bank_swift, "SWIFT/BIC" %>
+            <%= form.label :bank_swift %>
             <%= form.text_field :bank_swift %>
           </div>
         </div>
@@ -82,7 +82,7 @@
   </section>
 
   <section aria-labelledby="invoice-heading" style="margin-block-end: var(--space-l);">
-    <h2 id="invoice-heading" class="section-label">Invoice settings</h2>
+    <h2 id="invoice-heading" class="section-label"><%= t(".invoice_settings") %></h2>
     <div class="card">
       <div style="display: flex; flex-direction: column; gap: var(--space-s);">
         <div class="fields-inline">
@@ -91,7 +91,7 @@
             <%= form.text_field :invoice_prefix %>
           </div>
           <div class="field">
-            <%= form.label :invoice_number_padding, "Number padding" %>
+            <%= form.label :invoice_number_padding %>
             <%= form.number_field :invoice_number_padding, min: 1, max: 10 %>
           </div>
         </div>
@@ -106,11 +106,11 @@
   <div class="form-actions">
     <%= form.button class: "button", data: { variant: "primary" } do %>
       <%= tabler_icon("check") %>
-      Save settings
+      <%= t(".save") %>
     <% end %>
     <%= link_to dashboard_path, class: "button" do %>
       <%= tabler_icon("x") %>
-      Cancel
+      <%= t("shared.actions.cancel") %>
     <% end %>
   </div>
 <% end %>

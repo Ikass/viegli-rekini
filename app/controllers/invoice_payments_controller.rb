@@ -6,9 +6,9 @@ class InvoicePaymentsController < ApplicationController
     result = InvoicePaymentRecorder.new.record_payment(invoice: invoice)
 
     if result.success?
-      redirect_to invoice_path(invoice), notice: "Payment recorded."
+      redirect_to invoice_path(invoice), notice: t("controllers.invoice_payments.recorded")
     else
-      redirect_to invoice_path(invoice), alert: "Payment can only be recorded for sent invoices."
+      redirect_to invoice_path(invoice), alert: t("controllers.invoice_payments.only_sent")
     end
   end
 end

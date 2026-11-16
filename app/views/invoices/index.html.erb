@@ -1,8 +1,8 @@
 <div class="cluster" data-justify="space-between">
-  <h1>Invoices</h1>
+  <h1><%= t(".title") %></h1>
   <%= link_to new_invoice_path, class: "button", data: { variant: "primary" } do %>
     <%= tabler_icon("plus") %>
-    New invoice
+    <%= t(".new") %>
   <% end %>
 </div>
 
@@ -10,10 +10,10 @@
   <% if @status_filter %>
     <%# Filtered view (e.g. /invoices?status=overdue) — one group. %>
     <section class="flow">
-      <h2 class="invoice-group-heading"><%= @status_filter.titleize %></h2>
+      <h2 class="invoice-group-heading"><%= invoice_status_label(@status_filter) %></h2>
       <%= render "table", invoices: @invoices %>
       <p>
-        <strong>Total:</strong>
+        <strong><%= t(".total") %></strong>
         <%= number_to_currency(@invoices.sum(&:total) / 100.0, unit: "€") %>
       </p>
     </section>
@@ -24,18 +24,18 @@
       <% next if group.empty? %>
 
       <section class="flow">
-        <h2 class="invoice-group-heading"><%= status.to_s.titleize %></h2>
+        <h2 class="invoice-group-heading"><%= invoice_status_label(status.to_s) %></h2>
         <%= render "table", invoices: group %>
         <p>
-          <strong>Group total:</strong>
+          <strong><%= t(".group_total") %></strong>
           <%= number_to_currency(group.sum(&:total) / 100.0, unit: "€") %>
         </p>
       </section>
     <% end %>
   <% end %>
 <% else %>
-  <p>No invoices yet. <%= link_to new_invoice_path, class: "button" do %>
+  <p><%= t(".empty") %> <%= link_to new_invoice_path, class: "button" do %>
   <%= tabler_icon("plus") %>
-  Create your first invoice
+  <%= t(".create_first") %>
 <% end %>.</p>
 <% end %>

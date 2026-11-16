@@ -34,7 +34,7 @@ class ProductsController < ApplicationController
     @product = Current.user.account.products.build(product_params)
 
     if @product.save
-      redirect_to @product, notice: "Product created."
+      redirect_to @product, notice: t("controllers.products.created")
     else
       render :new, status: :unprocessable_entity
     end
@@ -45,7 +45,7 @@ class ProductsController < ApplicationController
 
   def update
     if @product.update(product_params)
-      redirect_to @product, notice: "Product updated."
+      redirect_to @product, notice: t("controllers.products.updated")
     else
       render :edit, status: :unprocessable_entity
     end
@@ -53,7 +53,7 @@ class ProductsController < ApplicationController
 
   def destroy
     @product.destroy
-    redirect_to products_path, notice: "Product deleted."
+    redirect_to products_path, notice: t("controllers.products.deleted")
   end
 
   private

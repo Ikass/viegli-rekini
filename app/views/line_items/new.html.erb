@@ -1,7 +1,7 @@
-<h1>Add Line Item</h1>
+<h1><%= t(".title") %></h1>
 
-<p>Invoice: <%= invoice_number_or_draft(@invoice) %></p>
+<p><%= t(".invoice") %> <%= invoice_number_or_draft(@invoice) %></p>
 
 <%= render "form", line_item: @line_item, url: invoice_line_items_path(@invoice) %>
 
-<%= link_to "Back to invoice", invoice_path(@invoice), class: "button" %>
+<%= link_to t(".back"), invoice_path(@invoice), class: "button" %>

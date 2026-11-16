@@ -37,13 +37,13 @@ class InvoicesController < ApplicationController
 
   def ubl
     if @invoice.account.vat_number.blank?
-      redirect_to @invoice, alert: "A VAT number is required in your account settings before an XML can be exported."
+      redirect_to @invoice, alert: t("controllers.invoices.vat_required")
       return
     end
 
     builder = UblInvoiceBuilder.new(@invoice)
     if builder.buyer_endpoint_id.nil?
-      redirect_to @invoice, alert: "This buyer needs a VAT number or registration number before an XML can be exported."
+      redirect_to @invoice, alert: t("controllers.invoices.buyer_needs_identifier")
       return
     end
 
@@ -67,7 +67,7 @@ class InvoicesController < ApplicationController
     @invoice.client = resolve_client
 
     if @invoice.save
-      redirect_to @invoice, notice: "Invoice created."
+      redirect_to @invoice, notice: t("controllers.invoices.created")
     else
       # Ensure there are always line item fields to render, even after a validation failure.
       @invoice.line_items.build(position: @invoice.line_items.size) if @invoice.line_items.empty?
@@ -79,13 +79,13 @@ class InvoicesController < ApplicationController
     if @invoice.draft?
       redirect_to @invoice
     else
-      redirect_to @invoice, alert: "This invoice is locked and can no longer be edited."
+      redirect_to @invoice, alert: t("controllers.invoices.locked")
     end
   end
 
   def update
     unless @invoice.draft?
-      redirect_to @invoice, alert: "This invoice is locked and can no longer be edited."
+      redirect_to @invoice, alert: t("controllers.invoices.locked")
       return
     end
 
@@ -96,13 +96,13 @@ class InvoicesController < ApplicationController
       if params[:commit] == "send"
         result = InvoiceSender.new.send_invoice(invoice: @invoice)
         if result.success?
-          redirect_to @invoice, notice: "Invoice sent."
+          redirect_to @invoice, notice: t("controllers.invoices.sent")
         else
           flash.now[:alert] = result.error
           render :show, status: :unprocessable_entity
         end
       else
-        redirect_to @invoice, notice: "Invoice updated."
+        redirect_to @invoice, notice: t("controllers.invoices.updated")
       end
     else
       render :show, status: :unprocessable_entity
@@ -111,12 +111,12 @@ class InvoicesController < ApplicationController
 
   def destroy
     unless @invoice.draft?
-      redirect_to @invoice, alert: "Only draft invoices can be deleted."
+      redirect_to @invoice, alert: t("controllers.invoices.only_draft_deletable")
       return
     end
 
     @invoice.destroy
-    redirect_to invoices_path, notice: "Invoice deleted."
+    redirect_to invoices_path, notice: t("controllers.invoices.deleted")
   end
 
   private

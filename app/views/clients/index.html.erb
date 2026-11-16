@@ -1,10 +1,10 @@
-<% content_for :title, "Clients" %>
+<% content_for :title, t(".title") %>
 
 <div class="cluster" data-justify="space-between">
-  <h1>Clients</h1>
+  <h1><%= t(".title") %></h1>
   <%= link_to new_client_path, class: "button", data: { variant: "primary" } do %>
   <%= tabler_icon("plus") %>
-  New client
+  <%= t(".new") %>
 <% end %>
 </div>
 
@@ -13,10 +13,10 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Name</th>
-          <th class="hide-mobile">Company</th>
-          <th class="hide-mobile">Email</th>
-          <th class="hide-mobile">VAT number</th>
+          <th><%= t(".name") %></th>
+          <th class="hide-mobile"><%= t(".company") %></th>
+          <th class="hide-mobile"><%= t(".email") %></th>
+          <th class="hide-mobile"><%= t(".vat_number") %></th>
           <th class="col-actions"></th>
         </tr>
       </thead>
@@ -30,7 +30,7 @@
             <td class="col-actions">
               <%= link_to edit_client_path(client), class: "button" do %>
                 <%= tabler_icon("edit") %>
-                Edit
+                <%= t("shared.actions.edit") %>
               <% end %>
             </td>
           </tr>
@@ -39,8 +39,8 @@
     </table>
   </div>
 <% else %>
-  <p>No clients yet. <%= link_to new_client_path, class: "button" do %>
+  <p><%= t(".empty") %> <%= link_to new_client_path, class: "button" do %>
   <%= tabler_icon("plus") %>
-  Add your first client
+  <%= t(".add_first") %>
 <% end %>.</p>
 <% end %>

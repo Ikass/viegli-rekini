@@ -1,5 +1,5 @@
-<h1>Edit Line Item</h1>
+<h1><%= t(".title") %></h1>
 
 <%= render "form", line_item: @line_item, url: line_item_path(@line_item) %>
 
-<%= link_to "Back to invoice", invoice_path(@line_item.invoice), class: "button" %>
+<%= link_to t(".back"), invoice_path(@line_item.invoice), class: "button" %>

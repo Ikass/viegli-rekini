@@ -4,40 +4,40 @@
 
 <div class="stack">
   <section aria-labelledby="client-details-heading" style="margin-block-end: var(--space-l);">
-    <h2 id="client-details-heading" class="section-label">Client details</h2>
+    <h2 id="client-details-heading" class="section-label"><%= t(".client_details") %></h2>
     <div class="card">
       <div>
         <dl>
           <% if @client.company_name.present? %>
-            <dt>Company</dt>
+            <dt><%= Client.human_attribute_name(:company_name) %></dt>
             <dd><%= @client.company_name %></dd>
           <% end %>
 
           <% if @client.email.present? %>
-            <dt>Email</dt>
+            <dt><%= Client.human_attribute_name(:email) %></dt>
             <dd><%= @client.email %></dd>
           <% end %>
 
           <% if @client.registration_number.present? %>
-            <dt>Registration number</dt>
+            <dt><%= Client.human_attribute_name(:registration_number) %></dt>
             <dd><%= @client.registration_number %></dd>
           <% end %>
 
           <% if @client.vat_number.present? %>
-            <dt>VAT number</dt>
+            <dt><%= Client.human_attribute_name(:vat_number) %></dt>
             <dd><%= @client.vat_number %></dd>
           <% end %>
 
-          <dt>VAT regime</dt>
-          <dd><%= @client.vat_regime.humanize %></dd>
+          <dt><%= Client.human_attribute_name(:vat_regime) %></dt>
+          <dd><%= client_vat_regime_label(@client.vat_regime) %></dd>
 
           <% if @client.country_code.present? %>
-            <dt>Country code</dt>
+            <dt><%= Client.human_attribute_name(:country_code) %></dt>
             <dd><%= @client.country_code %></dd>
           <% end %>
 
           <% if @client.iban.present? %>
-            <dt>IBAN</dt>
+            <dt><%= Client.human_attribute_name(:iban) %></dt>
             <dd><%= @client.iban %></dd>
           <% end %>
         </dl>
@@ -47,27 +47,27 @@
 
   <% if @client.address.present? || @client.city.present? || @client.postal_code.present? || @client.country.present? %>
     <section aria-labelledby="client-address-heading" style="margin-block-end: var(--space-l);">
-      <h2 id="client-address-heading" class="section-label">Address</h2>
+      <h2 id="client-address-heading" class="section-label"><%= t(".address") %></h2>
       <div class="card">
         <div>
           <dl>
             <% if @client.address.present? %>
-              <dt>Address</dt>
+              <dt><%= Client.human_attribute_name(:address) %></dt>
               <dd><%= @client.address %></dd>
             <% end %>
 
             <% if @client.city.present? %>
-              <dt>City</dt>
+              <dt><%= Client.human_attribute_name(:city) %></dt>
               <dd><%= @client.city %></dd>
             <% end %>
 
             <% if @client.postal_code.present? %>
-              <dt>Postal code</dt>
+              <dt><%= Client.human_attribute_name(:postal_code) %></dt>
               <dd><%= @client.postal_code %></dd>
             <% end %>
 
             <% if @client.country.present? %>
-              <dt>Country</dt>
+              <dt><%= Client.human_attribute_name(:country) %></dt>
               <dd><%= @client.country %></dd>
             <% end %>
           </dl>
@@ -77,20 +77,20 @@
   <% end %>
 
   <section aria-labelledby="client-delivery-heading" style="margin-block-end: var(--space-l);">
-    <h2 id="client-delivery-heading" class="section-label">e-Invoice delivery</h2>
+    <h2 id="client-delivery-heading" class="section-label"><%= t(".e_invoice_delivery") %></h2>
     <div class="card">
       <div>
         <dl>
-          <dt>Delivery channel</dt>
-          <dd><%= @client.delivery_channel.humanize %></dd>
+          <dt><%= Client.human_attribute_name(:delivery_channel) %></dt>
+          <dd><%= client_delivery_channel_label(@client.delivery_channel) %></dd>
 
           <% if @client.is_budget_institution? %>
-            <dt>Budget institution</dt>
-            <dd>Yes</dd>
+            <dt><%= Client.human_attribute_name(:is_budget_institution) %></dt>
+            <dd><%= t(".yes") %></dd>
           <% end %>
 
           <% if @client.e_adrese_id.present? %>
-            <dt>E-adrese ID</dt>
+            <dt><%= Client.human_attribute_name(:e_adrese_id) %></dt>
             <dd><%= @client.e_adrese_id %></dd>
           <% end %>
         </dl>
@@ -101,15 +101,15 @@
   <div class="form-actions">
     <%= link_to edit_client_path(@client), class: "button" do %>
       <%= tabler_icon("edit") %>
-      Edit
+      <%= t("shared.actions.edit") %>
     <% end %>
-    <%= button_to client_path(@client), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: "Delete #{@client.name}? This cannot be undone." } } do %>
+    <%= button_to client_path(@client), method: :delete, class: "button", data: { variant: "danger" }, form: { data: { turbo_confirm: t(".delete_confirm", name: @client.name) } } do %>
       <%= tabler_icon("trash") %>
-      Delete
+      <%= t("shared.actions.delete") %>
     <% end %>
     <%= link_to clients_path, class: "button", data: { variant: "ghost" } do %>
       <%= tabler_icon("arrow-left") %>
-      Back to clients
+      <%= t(".back") %>
     <% end %>
   </div>
 </div>

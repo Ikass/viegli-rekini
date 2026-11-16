@@ -1,5 +1,153 @@
 ---
 en:
+  accounts:
+    edit:
+      address: Address
+      bank_details: Bank details
+      company_details: Company details
+      invoice_settings: Invoice settings
+      save: Save settings
+      title: Settings
+  activerecord:
+    attributes:
+      account:
+        address: Address
+        bank_account: IBAN
+        bank_name: Bank name
+        bank_swift: SWIFT/BIC
+        city: City
+        company_name: Company name
+        country: Country
+        invoice_number_padding: Number padding
+        invoice_prefix: Invoice prefix
+        payment_terms: Payment terms
+        postal_code: Postal code
+        registration_number: Registration number
+        vat_number: VAT number
+      client:
+        address: Address
+        city: City
+        company_name: Company name
+        country: Country
+        country_code: Country code
+        delivery_channel: Delivery channel
+        e_adrese_id: E-adrese ID
+        email: Email
+        iban: IBAN
+        is_budget_institution: Budget institution
+        name: Name
+        postal_code: Postal code
+        registration_number: Registration number
+        vat_number: VAT number
+        vat_regime: VAT regime
+      invoice:
+        buyer_reference: Buyer reference
+        client_id: Client
+        due_on: Due on
+        invoice_number: Number
+        issued_on: Issued on
+        notes: Notes
+      line_item:
+        description: Description
+        quantity: Quantity
+        tax_category_code: VAT category
+        unit_code: Unit
+        unit_price: Unit price
+        vat_rate: VAT rate
+      product:
+        default_price: Price
+        default_vat_rate: VAT rate
+        description: Description
+        name: Name
+        tax_category_code: VAT category
+        unit_code: Unit
+    errors:
+      models:
+        invoice:
+          attributes:
+            client:
+              must_belong_to_account: must belong to your account
+    models:
+      account: Account
+      client: Client
+      invoice: Invoice
+      line_item: Line item
+      product: Product
+      user: User
+  clients:
+    edit:
+      title: Edit %{name}
+    form:
+      address: Address
+      budget_institution: Budget institution
+      client_details: Client details
+      country_code: Country code (ISO)
+      e_invoice_delivery: e-Invoice delivery
+      save: Save client
+    index:
+      add_first: Add your first client
+      company: Company
+      email: Email
+      empty: No clients yet.
+      name: Name
+      new: New client
+      title: Clients
+      vat_number: VAT number
+    new:
+      title: New client
+    show:
+      address: Address
+      back: Back to clients
+      client_details: Client details
+      delete_confirm: Delete %{name}? This cannot be undone.
+      e_invoice_delivery: e-Invoice delivery
+      'yes': 'Yes'
+  controllers:
+    accounts:
+      updated: Settings updated.
+    clients:
+      created: Client created.
+      deleted: Client deleted.
+      updated: Client updated.
+    demo_sessions:
+      rate_limited: Try again later.
+      unavailable: The demo account is not available yet — please try again later.
+      welcome: Welcome to the demo!
+    invoice_payments:
+      only_sent: Payment can only be recorded for sent invoices.
+      recorded: Payment recorded.
+    invoice_voids:
+      already_void: Invoice is already void.
+      voided: Invoice voided.
+    invoices:
+      buyer_needs_identifier: This buyer needs a VAT number or registration number before an XML can be exported.
+      created: Invoice created.
+      deleted: Invoice deleted.
+      locked: This invoice is locked and can no longer be edited.
+      only_draft_deletable: Only draft invoices can be deleted.
+      sent: Invoice sent.
+      updated: Invoice updated.
+      vat_required: A VAT number is required in your account settings before an XML can be exported.
+    line_items:
+      added: Line item added.
+      only_draft_editable: Line items can only be edited on draft invoices.
+      removed: Line item removed.
+      updated: Line item updated.
+    passwords:
+      invalid_link: Password reset link is invalid or has expired.
+      mismatch: Passwords did not match.
+      rate_limited: Try again later.
+      reset: Password has been reset.
+      sent: Password reset instructions sent (if user with that email address exists).
+    products:
+      created: Product created.
+      deleted: Product deleted.
+      updated: Product updated.
+    registrations:
+      disabled: Sign-up is disabled for this demo.
+    sessions:
+      invalid_credentials: Try another email address or password.
+      rate_limited: Try again later.
   dashboards:
     new_invoice: New invoice
     recent_activity: Recent activity
@@ -12,3 +160,181 @@ en:
       paid_this_month: Paid (this month)
     title: Dashboard
     view_all: View all
+  enums:
+    client_delivery_channel:
+      e_adrese: E-adrese
+      email: Email
+    client_vat_regime:
+      export: Export
+      reverse_charge: Reverse charge
+      standard: Standard
+    invoice_status:
+      draft: Draft
+      overdue: Overdue
+      paid: Paid
+      sent: Sent
+      void: Void
+    short_tax_categories:
+      AE: 0% (AE)
+      E: 0% (E)
+      G: 0% (G)
+      S: 21% (S)
+      S12: 12% (S12)
+      S5: 5% (S5)
+      Z: 0% (Z)
+    tax_categories:
+      AE: Reverse charge (AE)
+      E: Exempt from tax (E)
+      G: Out of scope (G)
+      S: Standard rate — 21% (S)
+      S12: Reduced rate — 12% (S)
+      S5: Reduced rate — 5% (S)
+      Z: Zero rated (Z)
+    unit_codes:
+      ANN: Year
+      C62: Piece
+      DAY: Day
+      HUR: Hour
+      KGM: Kilogram
+      LTR: Litre
+      MON: Month
+      MTK: Square metre
+      MTR: Metre
+      PK: Pack
+      QAN: Quarter
+      WEE: Week
+  invoices:
+    form:
+      add_from_product: Add from product
+      add_from_product_placeholder: Add from product…
+      add_line_item: Add line item
+      buyer_reference_placeholder: e.g. purchase order number (optional)
+      description: Description
+      invoice_details: Invoice details
+      line_items: Line items
+      qty: Qty
+      save: Save invoice
+      select_client: Select a client
+      subtotal: Subtotal
+      total: Total
+      totals: Totals
+      unit: Unit
+      unit_price: Unit price
+      vat: VAT
+    index:
+      create_first: Create your first invoice
+      empty: No invoices yet.
+      group_total: 'Group total:'
+      new: New invoice
+      title: Invoices
+      total: 'Total:'
+    line_item_fields:
+      description: Description
+      quantity: Quantity
+      remove: Remove line item
+      unit_price: Unit price
+    new:
+      title: New Invoice
+    show:
+      activity: Activity
+      back: Back to invoices
+      created: Created
+      delete_draft: Delete draft
+      delete_draft_confirm: Delete this draft? This cannot be undone.
+      download_xml: Download XML
+      more: More
+      paid: Paid
+      print: Print
+      record_payment: Record payment
+      send: Send invoice
+      sent: Sent
+      void: Void invoice
+      void_confirm: Voiding keeps this invoice number reserved but marks it as cancelled. This can't be undone.
+      voided: Voided
+    table:
+      client: Client
+      due: Due
+      issued: Issued
+      number: Number
+      status: Status
+      total: Total
+  layouts:
+    application:
+      account: Account
+      clients: Clients
+      dashboard: Dashboard
+      invoices: Invoices
+      products: Products
+      sign_in: Sign in
+      sign_out: Sign out
+  line_items:
+    edit:
+      back: Back to invoice
+      title: Edit Line Item
+    form:
+      unit_price: Unit price (€)
+      vat_rate: VAT rate (%)
+    new:
+      back: Back to invoice
+      invoice: 'Invoice:'
+      title: Add Line Item
+  passwords:
+    edit:
+      back_to_sign_in: Back to sign in
+      confirm_password: Confirm new password
+      confirm_password_placeholder: Repeat new password
+      new_password: New password
+      new_password_placeholder: Enter new password
+      title: Update your password
+      update_password: Update password
+    new:
+      back_to_sign_in: Back to sign in
+      email: Email
+      email_placeholder: Enter your email address
+      submit: Email reset instructions
+      title: Forgot your password?
+  products:
+    edit:
+      title: Edit %{name}
+    form:
+      price: Price (€)
+      product_details: Product details
+      save: Save product
+      vat_rate: VAT rate (%)
+    index:
+      add_first: Add your first product
+      empty: No products yet.
+      name: Name
+      new: New product
+      price: Price
+      title: Products
+      unit: Unit
+      vat_rate: VAT rate
+    new:
+      title: New product
+    show:
+      back: Back to products
+      delete_confirm: Delete %{name}? This cannot be undone.
+      product_details: Product details
+  services:
+    invoice_sender:
+      cannot_send_from: Invoice cannot be sent from %{status} status.
+      line_items: Line items
+      missing: 'Cannot send invoice — missing: %{missing}.'
+      tax_category_for_line: Tax category for line %{line}
+      unit_code_for_line: Unit code for line %{line}
+  sessions:
+    new:
+      email: Email
+      password: Password
+      sign_in: Sign in
+      subtitle: Sign in to continue
+      title: Welcome back
+      try_demo: Try the demo
+  shared:
+    actions:
+      cancel: Cancel
+      delete: Delete
+      edit: Edit
+    footer:
+      tagline: Simple invoicing for small businesses

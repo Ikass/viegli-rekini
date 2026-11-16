@@ -1,10 +1,10 @@
-<% content_for :title, "Products" %>
+<% content_for :title, t(".title") %>
 
 <div class="cluster" data-justify="space-between">
-  <h1>Products</h1>
+  <h1><%= t(".title") %></h1>
   <%= link_to new_product_path, class: "button", data: { variant: "primary" } do %>
   <%= tabler_icon("plus") %>
-  New product
+  <%= t(".new") %>
 <% end %>
 </div>
 
@@ -13,10 +13,10 @@
     <table class="table">
       <thead>
         <tr>
-          <th>Name</th>
-          <th class="col-numeric">Price</th>
-          <th class="hide-mobile">Unit</th>
-          <th class="col-numeric hide-mobile">VAT rate</th>
+          <th><%= t(".name") %></th>
+          <th class="col-numeric"><%= t(".price") %></th>
+          <th class="hide-mobile"><%= t(".unit") %></th>
+          <th class="col-numeric hide-mobile"><%= t(".vat_rate") %></th>
           <th class="col-actions"></th>
         </tr>
       </thead>
@@ -25,11 +25,11 @@
           <tr>
             <td><%= link_to product.name, product %></td>
             <td class="col-numeric"><%= number_to_currency(product.default_price_cents / 100.0, unit: "€") %></td>
-            <td class="hide-mobile"><%= LineItem::UNIT_CODES[product.unit_code] || product.unit_code %></td>
+            <td class="hide-mobile"><%= unit_code_label(product.unit_code) %></td>
             <td class="col-numeric hide-mobile"><%= vat_rate_percentage(product.default_vat_rate) %></td>
             <td class="col-actions"><%= link_to edit_product_path(product), class: "button" do %>
               <%= tabler_icon("edit") %>
-              Edit
+              <%= t("shared.actions.edit") %>
             <% end %></td>
           </tr>
         <% end %>
@@ -37,8 +37,8 @@
     </table>
   </div>
 <% else %>
-  <p>No products yet. <%= link_to new_product_path, class: "button" do %>
+  <p><%= t(".empty") %> <%= link_to new_product_path, class: "button" do %>
   <%= tabler_icon("plus") %>
-  Add your first product
+  <%= t(".add_first") %>
 <% end %>.</p>
 <% end %>

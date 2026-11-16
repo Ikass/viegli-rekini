@@ -15,26 +15,26 @@
 
   <article class="card auth-card">
     <header class="auth-card-header">
-      <h2 class="auth-title">Forgot your password?</h2>
+      <h2 class="auth-title"><%= t(".title") %></h2>
     </header>
 
     <div class="stack">
       <%= form_with url: passwords_path, html: { class: "stack" } do |form| %>
         <div class="field">
-          <%= form.label :email_address, "Email" %>
+          <%= form.label :email_address, t(".email") %>
           <%= form.email_field :email_address, required: true, autofocus: true,
-              autocomplete: "username", placeholder: "Enter your email address",
+              autocomplete: "username", placeholder: t(".email_placeholder"),
               value: params[:email_address] %>
         </div>
 
-        <%= form.button "Email reset instructions", class: "button",
+        <%= form.button t(".submit"), class: "button",
             data: { variant: "primary", width: "full" } %>
       <% end %>
     </div>
 
     <footer class="auth-card-footer">
       <p class="auth-footer-text">
-        <%= link_to "Back to sign in", new_session_path %>
+        <%= link_to t(".back_to_sign_in"), new_session_path %>
       </p>
     </footer>
   </article>

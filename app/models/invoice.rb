@@ -73,6 +73,6 @@ class Invoice < ApplicationRecord
 
   def client_belongs_to_account
     return unless client && account_id
-    errors.add(:client, "must belong to your account") unless client.account_id == account_id
+    errors.add(:client, :must_belong_to_account) unless client.account_id == account_id
   end
 end

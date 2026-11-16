@@ -1,5 +1,5 @@
-<% content_for :title, "Edit #{@client.name}" %>
+<% content_for :title, t(".title", name: @client.name) %>
 
-<h1>Edit <%= @client.name %></h1>
+<h1><%= t(".title", name: @client.name) %></h1>
 
 <%= render "form", client: @client %>
