@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   # Public landing page. Latvian is the default locale at `/` (no prefix) and
-  # English lives at `/en`. Until the LV copy is written, `/` redirects to `/en`
-  # (handled in LandingController#show). See agents/docs/landing-page-plan.md.
+  # English lives at `/en`. The logged-in app has no locale prefix. See
+  # agents/docs/landing-page-plan.md.
   scope "(:locale)", locale: /en/ do
     root "landing#show"
   end

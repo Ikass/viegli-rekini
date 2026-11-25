@@ -48,6 +48,20 @@
   color: var(--landing-teal-dark);
 }
 
+/* Headings inherit colour from `body` by default — but base/global.css
+   targets h1–h6 directly, so dark mode's light `--color-text` would win
+   over the pinned light palette. Re-pin headings inside the landing. */
+.landing-page :is(h1, h2, h3, h4, h5, h6) {
+  color: var(--landing-ink);
+}
+
+/* Same reason: the global ::selection uses the theme's text colour,
+   which is near-white in dark mode — unreadable on the cream page. */
+.landing-page ::selection {
+  background-color: oklch(from var(--landing-coral) l c h / 0.25);
+  color: var(--landing-ink);
+}
+
 .landing-page a:focus-visible,
 .landing-page button:focus-visible,
 .landing-page summary:focus-visible {
@@ -176,6 +190,24 @@
 
 .landing-nav > a:not(.landing-btn):hover {
   color: var(--landing-teal);
+}
+
+/* Language switcher — flag emoji + ISO code */
+.landing-lang {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.landing-lang-flag {
+  width: 22px;
+  height: 11px;
+  border: 1px solid var(--landing-line);
+  border-radius: 2px;
+}
+
+.landing-lang-code {
+  font-weight: 600;
 }
 
 /* ── Hero ─────────────────────────────────────────────────── */

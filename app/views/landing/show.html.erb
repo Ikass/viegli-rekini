@@ -10,9 +10,21 @@
     <a href="#pricing"><%= t(".nav.pricing") %></a>
     <a href="#faq"><%= t(".nav.questions") %></a>
     <a href="<%= new_session_path %>"><%= t(".nav.log_in") %></a>
-    <%= link_to (I18n.locale == :en ? "Latviešu" : "English"),
-          I18n.locale == :en ? root_path : root_path(locale: :en),
-          hreflang: (I18n.locale == :en ? "lv" : "en") %>
+    <%# Language switcher — flag + ISO code pointing at the *other* locale.
+        `locale: nil` clears the recalled :locale segment — bare root_path on
+        /en would otherwise generate /en again instead of `/`. %>
+    <%
+      target_locale = I18n.locale == :en ? :lv : :en
+      lang_path = target_locale == :lv ? root_path(locale: nil) : root_path(locale: :en)
+      lang_name = target_locale == :lv ? "Latviešu" : "English"
+      lang_code = target_locale == :lv ? "LV" : "EN"
+      lang_flag = target_locale == :lv ? "lv" : "gb"
+    %>
+    <%= link_to lang_path, class: "landing-lang", hreflang: target_locale.to_s,
+          title: lang_name, aria: { label: lang_name } do %>
+      <%= flag_svg(lang_flag, class: "landing-lang-flag") %>
+      <span class="landing-lang-code"><%= lang_code %></span>
+    <% end %>
     <a href="#start" class="landing-btn"><%= t(".nav.create_first_invoice") %></a>
   </nav>
 </header>
